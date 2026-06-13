@@ -36,7 +36,6 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [visitorId] = useState(createVisitorId);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,7 +49,7 @@ export default function ChatWidget() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/concierge/sessions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ visitor_id: visitorId, source: "public" }),
+        body: JSON.stringify({ visitor_id: createVisitorId(), source: "public" }),
       });
       const data = (await res.json()) as SessionResponse;
       if (data.session_id) {
