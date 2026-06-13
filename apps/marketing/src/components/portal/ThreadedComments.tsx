@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { MessageCircle, Send, User } from "lucide-react";
-import type { AuthUser, ThreadsResponse, CommentsResponse } from "@/lib/types";
+import type { AuthUser, ThreadsResponse, CommentsResponse } from "@xc/api/types";
 
 interface ThreadedCommentsProps {
   engagementID: string;

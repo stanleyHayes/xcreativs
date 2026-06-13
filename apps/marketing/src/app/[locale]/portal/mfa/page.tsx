@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Shield, CheckCircle, Copy } from "lucide-react";
-import type { AuthUser, MFAEnrollmentResponse } from "@/lib/types";
+import type { AuthUser, MFAEnrollmentResponse } from "@xc/api/types";
 
 function readStoredUser(): AuthUser | null {
   if (typeof window === "undefined") return null;

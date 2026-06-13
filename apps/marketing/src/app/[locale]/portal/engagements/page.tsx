@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { ArrowRight } from "lucide-react";
 
 interface Engagement {

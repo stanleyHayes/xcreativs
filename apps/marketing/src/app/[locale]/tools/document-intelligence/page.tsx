@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { FileSearch, ArrowRight, Loader2, Calendar, DollarSign, Building2, AlertCircle, FileText } from "lucide-react";
 
 interface ExtractedResult {

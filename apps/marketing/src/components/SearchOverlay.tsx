@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
-import type { SearchResultItem, SearchResponse } from "@/lib/types";
+import { api } from "@xc/api";
+import type { SearchResultItem, SearchResponse } from "@xc/api/types";
 import { Search, X, FileText, Briefcase, BookOpen, Globe, AlertTriangle, CheckSquare, MessageSquare, Loader2 } from "lucide-react";
 
 type SearchResult = SearchResultItem;

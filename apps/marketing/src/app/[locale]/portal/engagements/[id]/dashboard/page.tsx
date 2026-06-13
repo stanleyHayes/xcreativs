@@ -2,8 +2,8 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
-import type { DashboardResponse, Entity } from "@/lib/types";
+import { api } from "@xc/api";
+import type { DashboardResponse, Entity } from "@xc/api/types";
 import { CheckCircle, Clock, AlertCircle } from "lucide-react";
 
 interface Milestone {

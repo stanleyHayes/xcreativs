@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Wallet } from "lucide-react";
 import { useCurrency } from "@/components/CurrencyProvider";
 

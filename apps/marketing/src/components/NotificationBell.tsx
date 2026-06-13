@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { api } from "@/lib/api";
-import type { NotificationItem, NotificationsResponse } from "@/lib/types";
+import { api } from "@xc/api";
+import type { NotificationItem, NotificationsResponse } from "@xc/api/types";
 import { Bell, Check, Loader2 } from "lucide-react";
 
 export default function NotificationBell() {

@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
-import type { Entity } from "@/lib/types";
+import { api } from "@xc/api";
+import type { Entity } from "@xc/api/types";
 import { ArrowLeft } from "lucide-react";
 
 interface Dossier {

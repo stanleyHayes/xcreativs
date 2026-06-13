@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Briefcase, Clock, CheckCircle, XCircle, Calendar, Mail } from "lucide-react";
 
 interface JobApplication {

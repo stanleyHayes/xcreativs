@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Bell, Save } from "lucide-react";
-import type { NotificationPreferences } from "@/lib/types";
+import type { NotificationPreferences } from "@xc/api/types";
 
 const segmentOptions = ["client", "partner", "candidate", "prospect"];
 

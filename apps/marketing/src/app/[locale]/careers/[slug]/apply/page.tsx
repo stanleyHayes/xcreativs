@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { FileUpload } from "@/components/FileUpload";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { useRouter, useParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 

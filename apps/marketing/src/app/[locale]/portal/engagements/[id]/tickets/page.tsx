@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Ticket, Clock, AlertCircle, CheckCircle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 
 interface SupportTicket {

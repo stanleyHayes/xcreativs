@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { FileUpload } from "@/components/FileUpload";
 import { Palette, CheckCircle } from "lucide-react";
 

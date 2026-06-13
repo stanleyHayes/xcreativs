@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/api";
-import type { WebhooksResponse, WebhookDeliveriesResponse } from "@/lib/types";
+import { api } from "@xc/api";
+import type { WebhooksResponse, WebhookDeliveriesResponse } from "@xc/api/types";
 import { Webhook, Plus, Trash2, Loader2, Send, CheckCircle, XCircle, Clock, RefreshCw } from "lucide-react";
 
 interface WebhookSub {

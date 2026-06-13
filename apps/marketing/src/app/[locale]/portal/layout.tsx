@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
-import type { AuthUser } from "@/lib/types";
+import { api } from "@xc/api";
+import type { AuthUser } from "@xc/api/types";
 import {
   LayoutDashboard,
   LogOut,

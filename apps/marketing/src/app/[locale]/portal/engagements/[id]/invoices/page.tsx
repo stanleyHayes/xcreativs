@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Receipt, CheckCircle, Clock, XCircle, Plus, X, Link2 } from "lucide-react";
 import { useCurrency } from "@/components/CurrencyProvider";
 

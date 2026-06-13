@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { ArrowLeft, CheckCircle, Users } from "lucide-react";
 
 export default function TalentNetworkPage() {

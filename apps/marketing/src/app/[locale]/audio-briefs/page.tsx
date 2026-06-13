@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Clock, User, Play, Rss, Headphones } from "lucide-react";
 import PageBanner from "@/components/PageBanner";
 

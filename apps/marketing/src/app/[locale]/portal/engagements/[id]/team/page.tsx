@@ -2,9 +2,9 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Mail, CheckCircle, Clock, Plus, X, Loader2, Trash2 } from "lucide-react";
-import type { TeamMembersResponse } from "@/lib/types";
+import type { TeamMembersResponse } from "@xc/api/types";
 
 interface TeamMember {
   ID: string;

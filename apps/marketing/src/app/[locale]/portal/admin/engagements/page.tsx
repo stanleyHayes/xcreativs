@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Briefcase, Plus, Loader2, Save, X, Building2, Globe } from "lucide-react";
 
 interface Engagement {

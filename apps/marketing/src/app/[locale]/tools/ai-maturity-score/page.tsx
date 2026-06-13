@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
-import type { AssessmentTemplateResponse } from "@/lib/types";
+import { api } from "@xc/api";
+import type { AssessmentTemplateResponse } from "@xc/api/types";
 import { Brain, ArrowRight, CheckCircle, RotateCcw, TrendingUp, Target, Database, Users, Shield } from "lucide-react";
 
 interface AssessmentTemplate {

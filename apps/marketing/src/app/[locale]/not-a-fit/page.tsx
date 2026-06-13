@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Heart, ArrowRight, BookOpen, Wrench, Handshake, Mail, CheckCircle } from "lucide-react";
 
 const alternatives = [

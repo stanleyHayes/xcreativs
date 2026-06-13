@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { MonitorPlay, Plus, X, ExternalLink, Ban, Copy } from "lucide-react";
 
 interface Demo {

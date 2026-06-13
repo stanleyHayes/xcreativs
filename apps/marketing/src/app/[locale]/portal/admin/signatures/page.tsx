@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { FileSignature, Send, CheckCircle, Clock, XCircle, Eye, Loader2, X, Download } from "lucide-react";
 
 const statusColors: Record<string, string> = {

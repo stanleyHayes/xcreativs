@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { FileText, Newspaper, Calculator, CheckCircle, Calendar, Mail } from "lucide-react";
 import PageBanner from "@/components/PageBanner";
 

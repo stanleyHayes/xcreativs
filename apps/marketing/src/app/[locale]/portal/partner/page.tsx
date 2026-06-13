@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Briefcase, FileText, Users, ShoppingCart, TrendingUp, ArrowRight, Globe, Percent } from "lucide-react";
 import { useCurrency } from "@/components/CurrencyProvider";
-import type { Entity } from "@/lib/types";
+import type { Entity } from "@xc/api/types";
 
 interface PartnerInfo {
   OrgName?: string;

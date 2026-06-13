@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 
 // Placeholder imagery — swap the files in /public/media to replace site-wide.
 const MEDIA = [
@@ -16,7 +16,7 @@ const MEDIA = [
 import { ArrowRight, ArrowUpRight, Briefcase, FlaskConical, Building2, Landmark, Network } from "lucide-react";
 import LiveEngagementCounter from "./LiveEngagementCounter";
 import HeroBackdrop from "./decor/HeroBackdrop";
-import type { HoldingTreeResponse } from "@/lib/types";
+import type { HoldingTreeResponse } from "@xc/api/types";
 
 interface ServiceItem {
   Slug: string;

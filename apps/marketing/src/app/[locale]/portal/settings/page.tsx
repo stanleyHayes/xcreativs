@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Mail, Save, CheckCircle } from "lucide-react";
-import type { AuthUser } from "@/lib/types";
+import type { AuthUser } from "@xc/api/types";
 
 function getStoredUser(): AuthUser | null {
   if (typeof window === "undefined") return null;

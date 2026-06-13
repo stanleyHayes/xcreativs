@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Download, Image as ImageIcon, Images, FileText, Palette, Camera } from "lucide-react";
 import PageBanner from "@/components/PageBanner";
 

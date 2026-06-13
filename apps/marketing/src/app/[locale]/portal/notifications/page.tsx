@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Bell, Check, CheckCheck, Loader2, Inbox } from "lucide-react";
-import type { NotificationItem } from "@/lib/types";
+import type { NotificationItem } from "@xc/api/types";
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);

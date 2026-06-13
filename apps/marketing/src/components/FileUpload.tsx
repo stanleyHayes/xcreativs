@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Upload, Check, Loader2, X } from "lucide-react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 
 interface FileUploadProps {
   /** Current uploaded URL (controlled). */

@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, Star, Clock, Tag } from "lucide-react";
 

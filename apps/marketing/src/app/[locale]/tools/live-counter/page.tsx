@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { Activity, Briefcase, CheckSquare, AlertTriangle, Users, TrendingUp, RefreshCw } from "lucide-react";
 
 interface CounterData {

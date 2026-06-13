@@ -1,0 +1,14 @@
+{
+  "name": "@xc/api",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/api.ts",
+    "./types": "./src/types.ts",
+    "./useApi": "./src/useApi.ts",
+    "./pwa/sync": "./src/pwa/sync.ts"
+  },
+  "peerDependencies": {
+    "react": "^19"
+  }
+}

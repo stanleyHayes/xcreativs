@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import { FileUpload } from "@/components/FileUpload";
 import { FileText, CheckCircle, XCircle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import ThreadedComments from "@/components/portal/ThreadedComments";

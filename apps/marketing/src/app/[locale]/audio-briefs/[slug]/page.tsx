@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
-import { api } from "@/lib/api";
+import { api } from "@xc/api";
 import Link from "next/link";
 import { ArrowLeft, Play, Pause, Clock, User, Download } from "lucide-react";
 
