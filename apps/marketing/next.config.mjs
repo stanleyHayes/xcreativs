@@ -20,7 +20,7 @@ const securityHeaders = [
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
-  transpilePackages: ["@xc/api", "@xc/i18n"],
+  transpilePackages: ["@xc/api", "@xc/i18n", "@xc/ui"],
   async rewrites() {
     return [
       { source: "/api/:path*", destination: `${API_PROXY_URL}/api/:path*` },

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { FlaskConical } from "lucide-react";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 export const metadata: Metadata = {
   title: "Labs — XCreativs Technologies",

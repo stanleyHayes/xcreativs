@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { api } from "@xc/api";
-import { FileUpload } from "@/components/FileUpload";
+import { FileUpload } from "@xc/ui/FileUpload";
 import { Palette, CheckCircle } from "lucide-react";
 
 export default function AdminThemesPage() {

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Briefcase, Users } from "lucide-react";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 export const metadata: Metadata = {
   title: "Careers — XCreativs Technologies",

@@ -1,0 +1,255 @@
+/* Design system (shared via @xc/ui). The consuming app imports "tailwindcss"
+   and `@source`s this package before importing this file. */
+
+/* ---------------------------------------------------------------------------
+   XCreativs — "Sovereign Editorial" design system
+   Display: Fraunces (high-contrast serif) · Body: Hanken Grotesk (grotesque)
+   Brand accent: signal blue, kept deliberate over warm paper / near-black ink.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --color-signal: #0066cc;        /* brand blue — matches the mark */
+  --color-signal-ink: #0a4ea0;    /* pressed / active */
+  --color-foundation: #ffffff;    /* clean white */
+  --color-gravity: #0b0c0f;       /* cool near-black ink */
+  --color-hairline: #e4e7ec;      /* cool grey hairline */
+  --color-soft: #f4f6fa;          /* cool light panel */
+  --color-mist: #697086;          /* cool secondary text */
+}
+
+.dark {
+  --color-signal: #5b93ff;
+  --color-signal-ink: #3f7bff;
+  --color-foundation: #07070a;
+  --color-gravity: #f3f1ea;
+  --color-hairline: #20212b;
+  --color-soft: #101117;
+  --color-mist: #9a9aa6;
+}
+
+@theme {
+  --color-signal: var(--color-signal);
+  --color-signal-ink: var(--color-signal-ink);
+  --color-foundation: var(--color-foundation);
+  --color-gravity: var(--color-gravity);
+  --color-hairline: var(--color-hairline);
+  --color-soft: var(--color-soft);
+  --color-mist: var(--color-mist);
+
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-body: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-foundation);
+  color: var(--color-gravity);
+}
+
+/* Display face — used for the wordmark and editorial headings */
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
+}
+
+/* ----- Atmosphere: fine engineering grid + grain for depth ----- */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-gravity) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-gravity) 6%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.bg-grain {
+  position: relative;
+}
+.bg-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Hairline that reads as a precision rule */
+.rule-x {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in oklab, var(--color-gravity) 14%, transparent),
+    transparent
+  );
+}
+
+/* ----- Motion ----- */
+@keyframes xc-pop {
+  from { opacity: 0; transform: translateY(6px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-pop {
+  animation: xc-pop 0.18s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes xc-sheen {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* Drifting gradient blobs (atmosphere) */
+@keyframes xc-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(6%, 8%, 0) scale(1.08); }
+  66% { transform: translate3d(-5%, -4%, 0) scale(0.96); }
+}
+.animate-drift { animation: xc-drift 22s ease-in-out infinite; }
+.animate-drift-slow { animation: xc-drift 34s ease-in-out infinite; }
+
+/* Floating nodes */
+@keyframes xc-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: xc-float 7s ease-in-out infinite; }
+
+/* Pulsing data points */
+@keyframes xc-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* Animated constellation links (SVG stroke) */
+@keyframes xc-dash {
+  to { stroke-dashoffset: -1000; }
+}
+
+/* Staggered entrance reveal */
+@keyframes xc-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-rise { animation: xc-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+/* Marquee */
+@keyframes xc-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee { animation: xc-marquee 32s linear infinite; }
+
+/* Page transition (opacity-only — never leaves a lingering transform that would
+   break position:fixed descendants). Applied via [locale]/template.tsx. */
+@keyframes xc-page-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.page-enter { animation: xc-page-in 0.4s ease both; }
+
+/* Scroll-reveal — elements start hidden, .is-visible (set by IntersectionObserver) reveals. */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* Splash screen */
+@keyframes xc-splash-out {
+  0%, 62% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
+}
+.xc-splash { animation: xc-splash-out 1.5s ease 0.3s forwards; }
+
+@keyframes xc-ring {
+  0% { transform: scale(0.85); opacity: 0.7; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+.xc-splash-ring { animation: xc-ring 1.7s ease-out infinite; }
+
+@keyframes xc-bar {
+  0% { transform: scaleX(0); }
+  82%, 100% { transform: scaleX(1); }
+}
+.xc-splash-bar { transform-origin: left; animation: xc-bar 1.3s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+
+@keyframes xc-word-in {
+  from { opacity: 0; transform: translateY(8px); letter-spacing: 0.12em; }
+  to { opacity: 1; transform: translateY(0); letter-spacing: -0.01em; }
+}
+.xc-splash-word { animation: xc-word-in 0.8s ease 0.2s both; }
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-signal), color-mix(in oklab, var(--color-signal) 55%, #00d4ff));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------------------------------------------------------------------------
+   Stylish cards — signal-tinted corner wash + faded grid + lift/glow on hover.
+   Swap `border border-hairline rounded ... hover:border-signal` for `card-x`.
+   --------------------------------------------------------------------------- */
+.card-x {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid var(--color-hairline);
+  background-color: var(--color-foundation);
+  background-image: radial-gradient(
+    130% 120% at 100% 0%,
+    color-mix(in oklab, var(--color-signal) 8%, transparent),
+    transparent 55%
+  );
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.3s ease,
+    box-shadow 0.35s ease;
+}
+.card-x::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(var(--color-hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-hairline) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.4;
+  -webkit-mask-image: radial-gradient(115% 85% at 100% 0%, #000, transparent 62%);
+  mask-image: radial-gradient(115% 85% at 100% 0%, #000, transparent 62%);
+}
+.card-x > * {
+  position: relative;
+}
+.card-x:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in oklab, var(--color-signal) 50%, var(--color-hairline));
+  box-shadow: 0 22px 45px -26px color-mix(in oklab, var(--color-signal) 55%, transparent);
+}
+
+/* Dark-surface variant (for cards on dark/ink sections) */
+.card-x-dark {
+  background-color: color-mix(in oklab, var(--color-gravity) 4%, var(--color-foundation));
+  border-color: color-mix(in oklab, var(--color-gravity) 12%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

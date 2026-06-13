@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { BookText } from "lucide-react";
 import { api } from "@xc/api";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 interface GlossaryTerm {
   ID: string;

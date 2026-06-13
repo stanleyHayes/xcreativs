@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { Building2, Network } from "lucide-react";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 type LeadershipMember = string | { name?: string; role?: string };
 

@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { DollarSign, ArrowRight, Clock, Users, Shield, Gauge, CheckCircle } from "lucide-react";
 import Link from "next/link";
-import { useCurrency } from "@/components/CurrencyProvider";
+import { useCurrency } from "@xc/ui/CurrencyProvider";
 
 const complexityMultipliers = {
   standard: 1.0,

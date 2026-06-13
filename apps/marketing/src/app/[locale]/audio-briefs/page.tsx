@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { Clock, User, Play, Rss, Headphones } from "lucide-react";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 interface AudioBrief {
   Slug: string;

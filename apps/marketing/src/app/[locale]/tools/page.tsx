@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Grid3X3, FileSearch, BarChart3, Network, TrendingUp, DollarSign, Activity, Brain, Wrench } from "lucide-react";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 export const metadata: Metadata = {
   title: "Tools — XCreativs Technologies",

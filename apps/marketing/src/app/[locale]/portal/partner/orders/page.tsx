@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { ShoppingCart, Package, DollarSign, Calendar } from "lucide-react";
-import { useCurrency } from "@/components/CurrencyProvider";
+import { useCurrency } from "@xc/ui/CurrencyProvider";
 import type { OrdersResponse } from "@xc/api/types";
 
 interface PartnerOrder {

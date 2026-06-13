@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { api } from "@xc/api";
 import { FileText, Newspaper, Calculator, CheckCircle, Calendar, Mail } from "lucide-react";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 function errorMessage(err: unknown): string | undefined {
   if (err instanceof Error) return err.message;

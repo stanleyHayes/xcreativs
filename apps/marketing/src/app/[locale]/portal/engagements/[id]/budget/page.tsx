@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { Wallet } from "lucide-react";
-import { useCurrency } from "@/components/CurrencyProvider";
+import { useCurrency } from "@xc/ui/CurrencyProvider";
 
 interface BudgetLine {
   ID?: string;

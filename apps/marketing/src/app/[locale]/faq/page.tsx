@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { HelpCircle } from "lucide-react";
 import { api } from "@xc/api";
 import type { Entity } from "@xc/api/types";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 interface FAQItem extends Entity {
   ID: string;

@@ -15,6 +15,7 @@
   "dependencies": {
     "@xc/api": "*",
     "@xc/i18n": "*",
+    "@xc/ui": "*",
     "@hookform/resolvers": "^5.4.0",
     "lucide-react": "^1.18.0",
     "motion": "^12.40.0",

@@ -5,7 +5,7 @@ import { api } from "@xc/api";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Briefcase, FileText, Users, ShoppingCart, TrendingUp, ArrowRight, Globe, Percent } from "lucide-react";
-import { useCurrency } from "@/components/CurrencyProvider";
+import { useCurrency } from "@xc/ui/CurrencyProvider";
 import type { Entity } from "@xc/api/types";
 
 interface PartnerInfo {

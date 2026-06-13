@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { Receipt, CheckCircle, Clock, XCircle, Plus, X, Link2 } from "lucide-react";
-import { useCurrency } from "@/components/CurrencyProvider";
+import { useCurrency } from "@xc/ui/CurrencyProvider";
 
 interface Invoice {
   ID: string;

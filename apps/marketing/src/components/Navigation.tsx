@@ -28,8 +28,8 @@ import {
   Network,
 } from "lucide-react";
 import SearchOverlay from "./SearchOverlay";
-import { useTheme } from "./ThemeProvider";
-import { useCurrency, CurrencyCode } from "./CurrencyProvider";
+import { useTheme } from "@xc/ui/ThemeProvider";
+import { useCurrency, CurrencyCode } from "@xc/ui/CurrencyProvider";
 
 type MenuItem = { href: string; label: string; desc: string; icon: LucideIcon };
 type MenuGroup = { key: string; label: string; tagline: string; items: MenuItem[] };

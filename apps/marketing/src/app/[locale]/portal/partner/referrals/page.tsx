@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { Users, Plus, X, CheckCircle, Clock, XCircle, Calendar, DollarSign } from "lucide-react";
-import { useCurrency } from "@/components/CurrencyProvider";
+import { useCurrency } from "@xc/ui/CurrencyProvider";
 
 interface Referral {
   ID?: string | number;

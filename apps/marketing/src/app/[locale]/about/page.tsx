@@ -12,7 +12,7 @@ import {
   ArrowRight,
   Quote,
 } from "lucide-react";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 export const metadata: Metadata = {
   title: "About — XCreativs Technologies",

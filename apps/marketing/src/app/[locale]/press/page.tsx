@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Megaphone } from "lucide-react";
 import { api } from "@xc/api";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 interface PressItem {
   Slug: string;

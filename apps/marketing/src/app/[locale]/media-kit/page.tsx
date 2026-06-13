@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { Download, Image as ImageIcon, Images, FileText, Palette, Camera } from "lucide-react";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 const typeIcons: Record<string, React.ReactNode> = {
   logo: <Palette className="w-5 h-5" />,

@@ -15,7 +15,7 @@ import {
   Network,
   ArrowRight,
 } from "lucide-react";
-import PageBanner from "@/components/PageBanner";
+import PageBanner from "@xc/ui/PageBanner";
 
 const INPUT =
   "w-full rounded-lg border border-hairline bg-foundation px-3.5 py-2.5 text-sm transition-colors focus:border-signal focus:outline-none focus:ring-2 focus:ring-signal/15";

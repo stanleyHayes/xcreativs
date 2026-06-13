@@ -26,11 +26,11 @@ import {
   Webhook,
   Bell,
 } from "lucide-react";
-import ChatWidget from "@/components/concierge/ChatWidget";
-import ThemeProvider from "@/components/ThemeProvider";
-import { useTheme } from "@/components/ThemeProvider";
-import CurrencyProvider from "@/components/CurrencyProvider";
-import { useCurrency, CurrencyCode } from "@/components/CurrencyProvider";
+import ChatWidget from "@xc/ui/concierge/ChatWidget";
+import ThemeProvider from "@xc/ui/ThemeProvider";
+import { useTheme } from "@xc/ui/ThemeProvider";
+import CurrencyProvider from "@xc/ui/CurrencyProvider";
+import { useCurrency, CurrencyCode } from "@xc/ui/CurrencyProvider";
 import NotificationBell from "@/components/NotificationBell";
 import ClientThemeProvider, { useClientTheme } from "@/components/ClientThemeProvider";
 
