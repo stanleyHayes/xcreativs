@@ -1,6 +1,6 @@
 import createNextIntlPlugin from "next-intl/plugin";
 
-const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+const withNextIntl = createNextIntlPlugin("../../packages/i18n/src/request.ts");
 
 // Backend API origin used by the dev/preview proxy. In production the platform
 // is fronted by a reverse proxy, but this keeps `/api/*` working when the
@@ -20,6 +20,7 @@ const securityHeaders = [
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  transpilePackages: ["@xc/i18n"],
   async rewrites() {
     return [
       { source: "/api/:path*", destination: `${API_PROXY_URL}/api/:path*` },

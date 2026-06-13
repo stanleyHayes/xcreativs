@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@xc/i18n": "*",
     "@hookform/resolvers": "^5.4.0",
     "lucide-react": "^1.18.0",
     "motion": "^12.40.0",

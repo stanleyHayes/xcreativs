@@ -1,0 +1,15 @@
+{
+  "name": "@xc/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./config": "./src/config.ts",
+    "./request": "./src/request.ts",
+    "./navigation": "./src/navigation.ts",
+    "./messages/en": "./messages/en.json",
+    "./messages/fr": "./messages/fr.json"
+  },
+  "peerDependencies": {
+    "next-intl": "^4"
+  }
+}
