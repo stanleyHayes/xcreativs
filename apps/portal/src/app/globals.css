@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+/* Scan the shared @xc/ui package for class names so Tailwind v4 doesn't purge
+   utilities used only inside packages/ui components. */
+@source "../../../../packages/ui/src/**/*.{ts,tsx}";
+
+/* Shared design system (tokens, fonts contract, card-x, decorations, keyframes).
+   Imported via the package specifier so node resolution traces it. */
+@import "@xc/ui/styles.css";

@@ -82,8 +82,12 @@ jobs:
           migrate -path migrations -database "$DB_URL" down -all
 
   frontend:
-    name: Frontend (Next.js)
+    name: Frontend (${{ matrix.app }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [marketing, portal]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -93,11 +97,11 @@ jobs:
           cache-dependency-path: package-lock.json
       - run: npm ci
       - name: Lint
-        run: npm run lint --workspace=apps/marketing
+        run: npm run lint --workspace=apps/${{ matrix.app }}
       - name: Typecheck
-        run: npm run typecheck --workspace=apps/marketing
+        run: npm run typecheck --workspace=apps/${{ matrix.app }}
       - name: Build
-        run: npm run build --workspace=apps/marketing
+        run: npm run build --workspace=apps/${{ matrix.app }}
         env:
           NEXT_TELEMETRY_DISABLED: "1"
 
