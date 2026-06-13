@@ -1,10 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { ArrowRight, ArrowUpRight, Briefcase, FlaskConical, BookOpen, Building2, Landmark, Network } from "lucide-react";
+
+// Placeholder imagery — swap the files in /public/media to replace site-wide.
+const MEDIA = [
+  "/media/hero-network-1.png",
+  "/media/ai-systems-1.png",
+  "/media/hero-network-2.png",
+  "/media/ai-systems-2.png",
+];
+import { ArrowRight, ArrowUpRight, Briefcase, FlaskConical, Building2, Landmark, Network } from "lucide-react";
 import LiveEngagementCounter from "./LiveEngagementCounter";
 import HeroBackdrop from "./decor/HeroBackdrop";
 import type { HoldingTreeResponse } from "@/lib/types";
@@ -188,14 +197,21 @@ export default function HomePage() {
           </p>
           <h2 className="text-2xl lg:text-3xl font-bold mb-10">{t("dossiers_title")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.dossiers?.slice(0, 5).map((d) => (
+            {data.dossiers?.slice(0, 5).map((d, i) => (
               <Link
                 key={d.Slug}
                 href={`/work/${d.Slug}`}
                 className="group card-x overflow-hidden"
               >
-                <div className="bg-soft h-40 flex items-center justify-center">
-                  <BookOpen className="w-8 h-8 text-gravity/20" />
+                <div className="relative h-40 overflow-hidden">
+                  <Image
+                    src={MEDIA[i % MEDIA.length]}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foundation via-foundation/10 to-transparent" />
                 </div>
                 <div className="p-6">
                   <p className="text-xs font-medium uppercase tracking-wider text-signal mb-2">
