@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Grid3X3, ArrowRight, X, CheckCircle, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { Grid3X3, X, CheckCircle, ArrowUpRight } from "lucide-react";
 
 const sectors = [
   "Government & Public Sector",
@@ -176,12 +177,12 @@ export default function CapabilityLatticePage() {
                 </div>
               )}
               <div className="mt-6">
-                <a
+                <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 bg-signal text-white px-5 py-2.5 rounded text-sm font-medium hover:opacity-90 transition-opacity"
                 >
                   Discuss this intersection <ArrowUpRight className="w-4 h-4" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { Download, Image, FileText, Palette, Camera } from "lucide-react";
+import { Download, Image as ImageIcon, Images, FileText, Palette, Camera } from "lucide-react";
+import PageBanner from "@/components/PageBanner";
 
 const typeIcons: Record<string, React.ReactNode> = {
   logo: <Palette className="w-5 h-5" />,
   headshot: <Camera className="w-5 h-5" />,
   one_pager: <FileText className="w-5 h-5" />,
-  brand_guidelines: <Image className="w-5 h-5" />,
+  brand_guidelines: <ImageIcon className="w-5 h-5" />,
 };
 
 const typeLabels: Record<string, string> = {
@@ -18,21 +19,28 @@ const typeLabels: Record<string, string> = {
   brand_guidelines: "Brand Guidelines",
 };
 
+interface MediaKitAsset {
+  ID?: string;
+  Name?: string;
+  AssetType?: string;
+  DownloadURL?: string;
+}
+
 export default function MediaKitPage() {
-  const [assets, setAssets] = useState<any[]>([]);
+  const [assets, setAssets] = useState<MediaKitAsset[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     api.listMediaKit()
-      .then((d) => { setAssets(d.assets || []); setLoading(false); })
+      .then((d) => { setAssets((d.assets || []) as MediaKitAsset[]); setLoading(false); })
       .catch(() => setError("Failed to load media kit"));
   }, []);
 
   if (error) return <div className="p-12 text-center text-gravity/60">{error}</div>;
   if (loading) return <div className="p-12 text-center">Loading...</div>;
 
-  const grouped = assets.reduce((acc: Record<string, any[]>, asset: any) => {
+  const grouped = assets.reduce((acc: Record<string, MediaKitAsset[]>, asset: MediaKitAsset) => {
     const type = asset.AssetType || "other";
     if (!acc[type]) acc[type] = [];
     acc[type].push(asset);
@@ -40,13 +48,16 @@ export default function MediaKitPage() {
   }, {});
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <h1 className="text-3xl lg:text-5xl font-bold">Media Kit</h1>
-      <p className="mt-4 text-lg text-gravity/60 max-w-2xl">
-        Official brand assets for press, partners, and collaborators. Download and use in accordance with our brand guidelines.
-      </p>
-
-      <div className="mt-12 space-y-10">
+    <>
+      <PageBanner
+        icon={Images}
+        eyebrow="Brand & media"
+        title="Media Kit"
+        description="Official brand assets for press, partners, and collaborators. Download and use in accordance with our brand guidelines."
+        crumbs={[{ label: "Home", href: "/" }, { label: "Media Kit" }]}
+      />
+      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+        <div className="mt-12 space-y-10">
         {Object.entries(grouped).map(([type, items]) => (
           <section key={type}>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-gravity/40 mb-4 flex items-center gap-2">
@@ -54,7 +65,7 @@ export default function MediaKitPage() {
               {typeLabels[type] || type.replace("_", " ")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {(items as any[]).map((asset) => (
+              {(items as MediaKitAsset[]).map((asset) => (
                 <a
                   key={asset.ID}
                   href={asset.DownloadURL}
@@ -75,9 +86,10 @@ export default function MediaKitPage() {
         ))}
       </div>
 
-      {assets.length === 0 && (
-        <p className="text-center text-gravity/40 py-12">No media kit assets available.</p>
-      )}
-    </main>
+        {assets.length === 0 && (
+          <p className="text-center text-gravity/40 py-12">No media kit assets available.</p>
+        )}
+      </main>
+    </>
   );
 }

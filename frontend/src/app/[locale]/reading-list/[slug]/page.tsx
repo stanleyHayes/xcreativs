@@ -4,7 +4,21 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, ExternalLink, Star, Clock, Tag } from "lucide-react";
+import { ArrowLeft, ExternalLink, Star, Clock, Tag } from "lucide-react";
+
+interface ReadingListItem {
+  Category?: string;
+  Recommended?: boolean;
+  Title?: string;
+  Author?: string;
+  SourcePublication?: string;
+  PublishedYear?: string | number;
+  ReadTimeMinutes?: number;
+  Tags?: string[];
+  SourceURL?: string;
+  Annotation?: string;
+  KeyTakeaway?: string;
+}
 
 const categoryLabels: Record<string, string> = {
   strategy: "Strategy",
@@ -18,13 +32,13 @@ const categoryLabels: Record<string, string> = {
 export default function ReadingListDetailPage() {
   const params = useParams();
   const slug = params?.slug as string;
-  const [item, setItem] = useState<any>(null);
+  const [item, setItem] = useState<ReadingListItem | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!slug) return;
     api.getReadingListItem(slug)
-      .then((d) => { setItem(d); setLoading(false); })
+      .then((d) => { setItem(d as ReadingListItem); setLoading(false); })
       .catch(() => setLoading(false));
   }, [slug]);
 
@@ -40,7 +54,7 @@ export default function ReadingListDetailPage() {
       <article className="max-w-3xl">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-xs font-medium uppercase tracking-wider text-signal">
-            {categoryLabels[item.Category] || item.Category}
+            {(item.Category ? categoryLabels[item.Category] : undefined) || item.Category}
           </span>
           {item.Recommended && (
             <span className="inline-flex items-center gap-1 text-xs text-yellow-600">
@@ -62,7 +76,7 @@ export default function ReadingListDetailPage() {
               <Clock className="w-4 h-4" /> {item.ReadTimeMinutes} min read
             </span>
           )}
-          {item.Tags?.length > 0 && (
+          {item.Tags && item.Tags.length > 0 && (
             <span className="flex items-center gap-1">
               <Tag className="w-4 h-4" /> {item.Tags.join(", ")}
             </span>

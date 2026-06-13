@@ -6,18 +6,54 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Briefcase, FileText, Users, ShoppingCart, TrendingUp, ArrowRight, Globe, Percent } from "lucide-react";
 import { useCurrency } from "@/components/CurrencyProvider";
+import type { Entity } from "@/lib/types";
+
+interface PartnerInfo {
+  OrgName?: string;
+  Tier?: string;
+  PartnerType?: string;
+  Description?: string;
+  OrgWebsite?: string;
+  ContactName?: string;
+  RevenueSharePct?: number;
+}
+
+interface ReferralItem {
+  ID?: string;
+  Status?: string;
+  ReferredOrgName?: string;
+  ReferredContactName?: string;
+  OpportunityValue?: number;
+}
+
+interface OrderItem {
+  ID?: string;
+  Status?: string;
+  OrderRef?: string;
+  CustomerName?: string;
+  TotalValue?: number;
+  CommissionAmount?: number;
+}
+
+interface PartnerDashboardData {
+  partner?: PartnerInfo;
+  products?: Entity[];
+  agreements?: Entity[];
+  referrals?: ReferralItem[];
+  orders?: OrderItem[];
+}
 
 export default function PartnerDashboardPage() {
   const params = useParams();
   const locale = (params?.locale as string) || "en";
   const { format } = useCurrency();
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<PartnerDashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     api.getPartnerDashboard()
-      .then((d) => { setData(d); setLoading(false); })
+      .then((d) => { setData(d as PartnerDashboardData); setLoading(false); })
       .catch((e) => { setError(e.message || "Failed to load partner data"); setLoading(false); });
   }, []);
 
@@ -26,9 +62,9 @@ export default function PartnerDashboardPage() {
   if (!data?.partner) return <div className="text-white/60">No partner association found.</div>;
 
   const { partner, products, agreements, referrals, orders } = data;
-  const convertedReferrals = referrals?.filter((r: any) => r.Status === "converted") || [];
-  const totalCommission = orders?.reduce((sum: number, o: any) => sum + (o.CommissionAmount || 0), 0) || 0;
-  const totalOrderValue = orders?.reduce((sum: number, o: any) => sum + (o.TotalValue || 0), 0) || 0;
+  const convertedReferrals = referrals?.filter((r: ReferralItem) => r.Status === "converted") || [];
+  const totalCommission = orders?.reduce((sum: number, o: OrderItem) => sum + (o.CommissionAmount || 0), 0) || 0;
+  const totalOrderValue = orders?.reduce((sum: number, o: OrderItem) => sum + (o.TotalValue || 0), 0) || 0;
 
   const cards = [
     { label: "Products", value: products?.length || 0, icon: Briefcase, href: `/${locale}/portal/partner/products`, color: "text-signal" },
@@ -98,7 +134,7 @@ export default function PartnerDashboardPage() {
           </div>
           {orders?.length === 0 && <p className="text-sm text-white/40">No orders yet.</p>}
           <div className="space-y-3">
-            {orders?.slice(0, 3).map((order: any) => (
+            {orders?.slice(0, 3).map((order: OrderItem) => (
               <div key={order.ID} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                 <div>
                   <p className="text-sm font-medium">{order.OrderRef}</p>
@@ -121,7 +157,7 @@ export default function PartnerDashboardPage() {
           </div>
           {referrals?.length === 0 && <p className="text-sm text-white/40">No referrals yet.</p>}
           <div className="space-y-3">
-            {referrals?.slice(0, 3).map((ref: any) => (
+            {referrals?.slice(0, 3).map((ref: ReferralItem) => (
               <div key={ref.ID} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                 <div>
                   <p className="text-sm font-medium">{ref.ReferredOrgName}</p>

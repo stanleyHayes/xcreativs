@@ -1,28 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { api } from "@/lib/api";
-import { User, Mail, Save, CheckCircle } from "lucide-react";
+import { Mail, Save, CheckCircle } from "lucide-react";
+import type { AuthUser } from "@/lib/types";
+
+function getStoredUser(): AuthUser | null {
+  if (typeof window === "undefined") return null;
+  const stored = localStorage.getItem("user");
+  if (!stored) return null;
+  return JSON.parse(stored) as AuthUser;
+}
 
 export default function SettingsPage() {
-  const [user, setUser] = useState<any>(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [user, setUser] = useState<AuthUser | null>(() => getStoredUser());
+  const [firstName, setFirstName] = useState(() => getStoredUser()?.first_name || "");
+  const [lastName, setLastName] = useState(() => getStoredUser()?.last_name || "");
+  const [email, setEmail] = useState(() => getStoredUser()?.email || "");
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      const u = JSON.parse(stored);
-      setUser(u);
-      setFirstName(u.first_name || "");
-      setLastName(u.last_name || "");
-      setEmail(u.email || "");
-    }
-  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -30,13 +27,13 @@ export default function SettingsPage() {
     setError("");
     setSaved(false);
     try {
-      const updated = await api.updateProfile({ first_name: firstName, last_name: lastName, email });
+      const updated = (await api.updateProfile({ first_name: firstName, last_name: lastName, email })) as AuthUser;
       localStorage.setItem("user", JSON.stringify(updated));
       setUser(updated);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (err: any) {
-      setError(err.message || "Failed to update profile");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update profile");
     }
     setLoading(false);
   }

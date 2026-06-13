@@ -56,6 +56,21 @@ CREATE TABLE identity.audit_log (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- identity.api_keys (user-scoped, hashed; indexes created in 015_indexes)
+CREATE TABLE identity.api_keys (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES identity.users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    key_hash TEXT NOT NULL,
+    key_prefix TEXT NOT NULL,
+    scopes TEXT[] NOT NULL DEFAULT '{}',
+    expires_at TIMESTAMPTZ,
+    last_used_at TIMESTAMPTZ,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    revoked_at TIMESTAMPTZ
+);
+
 CREATE INDEX idx_audit_log_user ON identity.audit_log(user_id);
 CREATE INDEX idx_audit_log_created ON identity.audit_log(created_at);
 CREATE INDEX idx_sessions_user ON identity.sessions(user_id);

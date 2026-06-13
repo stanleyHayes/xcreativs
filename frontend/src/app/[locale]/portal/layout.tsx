@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import type { AuthUser } from "@/lib/types";
 import {
   LayoutDashboard,
   LogOut,
@@ -54,8 +55,12 @@ function PortalLayoutInner({
   const params = useParams();
   const router = useRouter();
   const locale = (params?.locale as string) || "en";
-  const [user, setUser] = useState<any>(null);
-  const [authChecked, setAuthChecked] = useState(false);
+  const storedUser =
+    typeof window !== "undefined" ? localStorage.getItem("user") : null;
+  const [user, setUser] = useState<AuthUser | null>(() =>
+    storedUser ? (JSON.parse(storedUser) as AuthUser) : null
+  );
+  const [authChecked, setAuthChecked] = useState(() => Boolean(storedUser));
   const { theme: clientTheme, setEngagementId } = useClientTheme();
 
   useEffect(() => {
@@ -65,14 +70,10 @@ function PortalLayoutInner({
       return;
     }
 
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      setUser(JSON.parse(stored));
-      setAuthChecked(true);
-    } else {
+    if (!localStorage.getItem("user")) {
       api.me()
         .then((u) => {
-          setUser(u);
+          setUser(u as AuthUser);
           localStorage.setItem("user", JSON.stringify(u));
           setAuthChecked(true);
         })

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter_Tight } from "next/font/google";
+import { Fraunces, Hanken_Grotesk } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -11,11 +11,19 @@ import CurrencyProvider from "@/components/CurrencyProvider";
 import AnalyticsScript from "@/components/AnalyticsScript";
 import OfflineIndicator from "@/components/OfflineIndicator";
 import PWAUpdatePrompt from "@/components/PWAUpdatePrompt";
+import SplashScreen from "@/components/SplashScreen";
+import ScrollToTop from "@/components/ScrollToTop";
 
-const interTight = Inter_Tight({
+const display = Fraunces({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter-tight",
+  variable: "--font-fraunces",
+});
+
+const body = Hanken_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-hanken",
 });
 
 export const metadata: Metadata = {
@@ -56,7 +64,7 @@ export default async function LocaleLayout({
   ];
 
   return (
-    <html lang={locale} className={interTight.variable}>
+    <html lang={locale} className={`${display.variable} ${body.variable}`}>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0066CC" />
@@ -67,6 +75,7 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="antialiased min-h-screen flex flex-col">
+        <SplashScreen />
         <ThemeProvider defaultTheme="light">
           <CurrencyProvider>
             <NextIntlClientProvider messages={messages}>
@@ -75,6 +84,7 @@ export default async function LocaleLayout({
               <div className="flex-1">{children}</div>
               <Footer />
               <ChatWidget />
+              <ScrollToTop />
               <AnalyticsScript />
               <PWAUpdatePrompt />
             </NextIntlClientProvider>

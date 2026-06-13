@@ -1,9 +1,9 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { Scale, CheckCircle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
+import { Scale, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import ThreadedComments from "@/components/portal/ThreadedComments";
 
 interface Decision {
@@ -14,6 +14,10 @@ interface Decision {
   AlternativesConsidered: string;
   Status: string;
   DecidedAt: string | null;
+}
+
+interface DecisionsListResult {
+  decisions?: Decision[];
 }
 
 const statusConfig: Record<string, { color: string; label: string }> = {
@@ -34,11 +38,10 @@ export default function DecisionsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (!id) return;
-    setLoading(true);
     try {
-      const d = await api.listDecisions(id as string);
+      const d = (await api.listDecisions(id as string)) as DecisionsListResult;
       setDecisions(d.decisions || []);
       setError("");
     } catch {
@@ -46,9 +49,29 @@ export default function DecisionsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    if (!id) return;
+    let active = true;
+    api
+      .listDecisions(id as string)
+      .then((d) => {
+        if (!active) return;
+        const result = d as DecisionsListResult;
+        setDecisions(result.decisions || []);
+        setError("");
+      })
+      .catch(() => {
+        if (active) setError("Failed to load decisions");
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [id]);
 
   const resetForm = () => {
     setForm({ title: "", description: "", rationale: "", alternatives_considered: "", status: "proposed" });

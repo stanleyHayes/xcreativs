@@ -6,14 +6,23 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { ArrowLeft } from "lucide-react";
 
+interface LabProduct {
+  Name?: string;
+  Tagline?: string;
+  ProblemStatement?: string;
+  PlatformDescription?: string;
+  TechnicalArchitectureOverview?: string;
+  Sectors?: string[];
+}
+
 export default function LabsDetailPage() {
   const { slug } = useParams();
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<LabProduct | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!slug) return;
-    api.getLabProduct(slug as string).then((d) => { setProduct(d); setLoading(false); });
+    api.getLabProduct(slug as string).then((d) => { setProduct(d as LabProduct); setLoading(false); });
   }, [slug]);
 
   if (loading) return <div className="p-12 text-center">Loading...</div>;

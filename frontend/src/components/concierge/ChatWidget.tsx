@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { api } from "@/lib/api";
 import { MessageCircle, X, Send, User, Bot, ExternalLink, Loader2 } from "lucide-react";
 
 interface Message {
@@ -12,24 +11,33 @@ interface Message {
   created_at?: string;
 }
 
+interface SessionResponse {
+  session_id?: string;
+  welcome?: string;
+}
+
+interface MessageResponse {
+  answer?: string;
+  related_pages?: string[];
+}
+
+function createVisitorId(): string {
+  let vid = localStorage.getItem("xc_visitor_id");
+  if (!vid) {
+    vid = "v-" + Math.random().toString(36).substring(2, 15);
+    localStorage.setItem("xc_visitor_id", vid);
+  }
+  return vid;
+}
+
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [visitorId, setVisitorId] = useState("");
+  const [visitorId] = useState(createVisitorId);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Generate or retrieve visitor ID
-    let vid = localStorage.getItem("xc_visitor_id");
-    if (!vid) {
-      vid = "v-" + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem("xc_visitor_id", vid);
-    }
-    setVisitorId(vid);
-  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -44,10 +52,10 @@ export default function ChatWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ visitor_id: visitorId, source: "public" }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as SessionResponse;
       if (data.session_id) {
         setSessionId(data.session_id);
-        setMessages([{ id: "welcome", role: "assistant", content: data.welcome }]);
+        setMessages([{ id: "welcome", role: "assistant", content: data.welcome ?? "" }]);
       }
     } catch {
       setMessages([{ id: "welcome", role: "assistant", content: "Hello, I'm XC Assistant. How can I help you today?" }]);
@@ -79,7 +87,7 @@ export default function ChatWidget() {
         `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/concierge/sessions/${sessionId}/messages`,
         { method: "POST", headers, body: JSON.stringify({ content: userMsg.content }) }
       );
-      const data = await res.json();
+      const data = (await res.json()) as MessageResponse;
       const assistantMsg: Message = {
         id: Date.now().toString() + "-a",
         role: "assistant",

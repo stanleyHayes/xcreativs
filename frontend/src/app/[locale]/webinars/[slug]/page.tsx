@@ -6,6 +6,18 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { ArrowLeft, Calendar, Clock, Users, Video, Radio, CheckCircle, CalendarPlus } from "lucide-react";
 
+interface Webinar {
+  Slug: string;
+  Title: string;
+  Description: string;
+  Status: string;
+  ScheduledAt: string;
+  DurationMinutes?: number;
+  SpeakerNames?: string[];
+  CoverImageURL?: string;
+  RecordingURL?: string;
+}
+
 const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
   upcoming: { label: "Upcoming", color: "text-signal", bg: "bg-signal/10" },
   live: { label: "Live Now", color: "text-red-500", bg: "bg-red-500/10" },
@@ -17,7 +29,7 @@ function toICSDate(d: Date): string {
   return d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 }
 
-function buildICS(w: any): string {
+function buildICS(w: Webinar): string {
   const start = new Date(w.ScheduledAt);
   const end = new Date(start.getTime() + (w.DurationMinutes || 60) * 60000);
   const esc = (s: string) => (s || "").replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n");
@@ -36,7 +48,7 @@ function buildICS(w: any): string {
   ].join("\r\n");
 }
 
-function googleCalUrl(w: any): string {
+function googleCalUrl(w: Webinar): string {
   const start = new Date(w.ScheduledAt);
   const end = new Date(start.getTime() + (w.DurationMinutes || 60) * 60000);
   const params = new URLSearchParams({
@@ -50,12 +62,12 @@ function googleCalUrl(w: any): string {
 
 export default function WebinarDetailPage() {
   const { slug } = useParams();
-  const [w, setW] = useState<any>(null);
+  const [w, setW] = useState<Webinar | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!slug) return;
-    api.getWebinar(slug as string).then((d) => setW(d)).catch(() => setW(null)).finally(() => setLoading(false));
+    api.getWebinar(slug as string).then((d) => setW(d as unknown as Webinar)).catch(() => setW(null)).finally(() => setLoading(false));
   }, [slug]);
 
   if (loading) return <div className="p-12 text-center">Loading...</div>;
@@ -65,6 +77,7 @@ export default function WebinarDetailPage() {
   const when = new Date(w.ScheduledAt);
 
   function downloadICS() {
+    if (!w) return;
     const blob = new Blob([buildICS(w)], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -96,7 +109,7 @@ export default function WebinarDetailPage() {
               <Clock className="w-4 h-4" />
               {when.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })} · {w.DurationMinutes} min
             </span>
-            {w.SpeakerNames?.length > 0 && (
+            {w.SpeakerNames && w.SpeakerNames.length > 0 && (
               <span className="flex items-center gap-1">
                 <Users className="w-4 h-4" /> {w.SpeakerNames.join(", ")}
               </span>

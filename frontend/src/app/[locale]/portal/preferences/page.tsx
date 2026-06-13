@@ -3,11 +3,35 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Bell, Save } from "lucide-react";
+import type { NotificationPreferences } from "@/lib/types";
 
 const segmentOptions = ["client", "partner", "candidate", "prospect"];
 
+function Row({
+  prefKey,
+  label,
+  hint,
+  active,
+  onToggle,
+}: {
+  prefKey: string;
+  label: string;
+  hint?: string;
+  active: boolean;
+  onToggle: (k: string) => void;
+}) {
+  return (
+    <label className="flex items-center justify-between py-3 border-b border-white/5 cursor-pointer">
+      <div><p className="text-sm font-medium">{label}</p>{hint && <p className="text-xs text-white/40">{hint}</p>}</div>
+      <button type="button" onClick={() => onToggle(prefKey)} className={`relative w-10 h-6 rounded-full transition-colors ${active ? "bg-signal" : "bg-white/15"}`}>
+        <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${active ? "translate-x-4" : ""}`} />
+      </button>
+    </label>
+  );
+}
+
 export default function NotificationPreferencesPage() {
-  const [prefs, setPrefs] = useState<any>(null);
+  const [prefs, setPrefs] = useState<NotificationPreferences | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -19,10 +43,11 @@ export default function NotificationPreferencesPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const toggle = (k: string) => setPrefs((p: any) => ({ ...p, [k]: !p[k] }));
-  const toggleSegment = (s: string) => setPrefs((p: any) => ({ ...p, segments: p.segments?.includes(s) ? p.segments.filter((x: string) => x !== s) : [...(p.segments || []), s] }));
+  const toggle = (k: string) => setPrefs((p) => (p ? { ...p, [k]: !p[k] } : p));
+  const toggleSegment = (s: string) => setPrefs((p) => (p ? { ...p, segments: p.segments?.includes(s) ? p.segments.filter((x) => x !== s) : [...(p.segments || []), s] } : p));
 
   async function save() {
+    if (!prefs) return;
     setSaving(true); setSaved(false);
     try { await api.updateNotificationPreferences(prefs); setSaved(true); }
     catch { alert("Failed to save preferences"); }
@@ -31,25 +56,16 @@ export default function NotificationPreferencesPage() {
 
   if (loading || !prefs) return <div className="text-white/60 p-8">Loading…</div>;
 
-  const Row = ({ k, label, hint }: { k: string; label: string; hint?: string }) => (
-    <label className="flex items-center justify-between py-3 border-b border-white/5 cursor-pointer">
-      <div><p className="text-sm font-medium">{label}</p>{hint && <p className="text-xs text-white/40">{hint}</p>}</div>
-      <button type="button" onClick={() => toggle(k)} className={`relative w-10 h-6 rounded-full transition-colors ${prefs[k] ? "bg-signal" : "bg-white/15"}`}>
-        <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${prefs[k] ? "translate-x-4" : ""}`} />
-      </button>
-    </label>
-  );
-
   return (
     <div className="p-6 lg:p-8 max-w-2xl mx-auto">
       <h1 className="text-xl font-semibold flex items-center gap-2 mb-6"><Bell className="w-5 h-5 text-signal" /> Notification Preferences</h1>
 
       <section className="mb-8">
         <h2 className="text-xs uppercase tracking-wider text-white/40 mb-1">Channels</h2>
-        <Row k="inapp_enabled" label="In-app" hint="Notifications inside the portal" />
-        <Row k="email_enabled" label="Email" />
-        <Row k="sms_enabled" label="SMS" hint="Requires a phone number" />
-        <Row k="whatsapp_enabled" label="WhatsApp" hint="Requires a phone number" />
+        <Row prefKey="inapp_enabled" label="In-app" hint="Notifications inside the portal" active={!!prefs.inapp_enabled} onToggle={toggle} />
+        <Row prefKey="email_enabled" label="Email" active={!!prefs.email_enabled} onToggle={toggle} />
+        <Row prefKey="sms_enabled" label="SMS" hint="Requires a phone number" active={!!prefs.sms_enabled} onToggle={toggle} />
+        <Row prefKey="whatsapp_enabled" label="WhatsApp" hint="Requires a phone number" active={!!prefs.whatsapp_enabled} onToggle={toggle} />
       </section>
 
       {(prefs.sms_enabled || prefs.whatsapp_enabled) && (

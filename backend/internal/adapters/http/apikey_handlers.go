@@ -15,9 +15,11 @@ import (
 	"xcreatives.com/backend/internal/domain"
 )
 
-func generateAPIKey() (full string, prefix string, hash string) {
+func generateAPIKey() (full string, prefix string, hash string, err error) {
 	b := make([]byte, 32)
-	rand.Read(b)
+	if _, err = rand.Read(b); err != nil {
+		return "", "", "", err
+	}
 	full = "xc_" + hex.EncodeToString(b)
 	prefix = full[:12]
 	h := sha256.Sum256([]byte(full))
@@ -42,7 +44,11 @@ func handleCreateAPIKey(pool *pgxpool.Pool) http.HandlerFunc {
 			req.Scopes = []string{"engagement_read"}
 		}
 
-		full, prefix, hash := generateAPIKey()
+		full, prefix, hash, err := generateAPIKey()
+		if err != nil {
+			respondError(w, http.StatusInternalServerError, "failed to generate key")
+			return
+		}
 		var expires *time.Time
 		if req.Expires != "" && req.Expires != "never" {
 			if t, err := time.Parse(time.RFC3339, req.Expires); err == nil {

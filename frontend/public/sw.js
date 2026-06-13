@@ -1,4 +1,9 @@
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
+
+// Disable the service worker on localhost. In development a caching SW serves
+// stale built chunks and fights Next.js HMR, causing infinite hard-reload loops.
+const IS_DEV =
+  self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
 const STATIC_CACHE = `xcreatives-static-${CACHE_VERSION}`;
 const PAGE_CACHE = `xcreatives-pages-${CACHE_VERSION}`;
 const API_CACHE = `xcreatives-api-${CACHE_VERSION}`;
@@ -23,6 +28,10 @@ const PRECACHE_ASSETS = [
 
 // Install: precache critical pages and assets
 self.addEventListener('install', (event) => {
+  if (IS_DEV) {
+    event.waitUntil(self.skipWaiting());
+    return;
+  }
   event.waitUntil(
     Promise.all([
       caches.open(PAGE_CACHE).then((cache) => cache.addAll(PRECACHE_PAGES)),
@@ -33,6 +42,18 @@ self.addEventListener('install', (event) => {
 
 // Activate: clean old caches
 self.addEventListener('activate', (event) => {
+  if (IS_DEV) {
+    event.waitUntil(
+      (async () => {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((k) => caches.delete(k)));
+        await self.registration.unregister();
+        const clients = await self.clients.matchAll({ type: 'window' });
+        clients.forEach((c) => c.navigate(c.url));
+      })()
+    );
+    return;
+  }
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -143,6 +164,7 @@ async function cacheFirst(request, cacheName) {
 
 // Fetch handler
 self.addEventListener('fetch', (event) => {
+  if (IS_DEV) return;
   const { request } = event;
 
   // Skip non-GET requests (except for background sync)

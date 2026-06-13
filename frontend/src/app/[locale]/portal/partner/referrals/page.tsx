@@ -5,6 +5,18 @@ import { api } from "@/lib/api";
 import { Users, Plus, X, CheckCircle, Clock, XCircle, Calendar, DollarSign } from "lucide-react";
 import { useCurrency } from "@/components/CurrencyProvider";
 
+interface Referral {
+  ID?: string | number;
+  Status?: string;
+  ReferredOrgName?: string;
+  ReferredContactName?: string;
+  ReferredContactEmail?: string;
+  OpportunityValue?: number;
+  CommissionAmount?: number;
+  Notes?: string;
+  ConvertedAt?: string;
+}
+
 const statusConfig: Record<string, { color: string; bg: string; icon: React.ReactNode }> = {
   submitted: { color: "text-white/60", bg: "bg-white/5", icon: <Clock className="w-3.5 h-3.5" /> },
   contacted: { color: "text-yellow-400", bg: "bg-yellow-400/10", icon: <Clock className="w-3.5 h-3.5" /> },
@@ -14,7 +26,7 @@ const statusConfig: Record<string, { color: string; bg: string; icon: React.Reac
 };
 
 export default function PartnerReferralsPage() {
-  const [referrals, setReferrals] = useState<any[]>([]);
+  const [referrals, setReferrals] = useState<Referral[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ referred_org_name: "", referred_contact_name: "", referred_contact_email: "", referred_contact_phone: "", opportunity_value: "", notes: "" });
@@ -23,7 +35,7 @@ export default function PartnerReferralsPage() {
 
   const load = () => {
     api.getPartnerReferrals()
-      .then((d) => { setReferrals(d.referrals || []); setLoading(false); })
+      .then((d) => { setReferrals((d.referrals as Referral[]) || []); setLoading(false); })
       .catch(() => setLoading(false));
   };
 
@@ -41,7 +53,7 @@ export default function PartnerReferralsPage() {
       setShowForm(false);
       setForm({ referred_org_name: "", referred_contact_name: "", referred_contact_email: "", referred_contact_phone: "", opportunity_value: "", notes: "" });
       load();
-    } catch (e) {
+    } catch {
       alert("Failed to submit referral");
     } finally {
       setSubmitting(false);
@@ -89,7 +101,7 @@ export default function PartnerReferralsPage() {
       {/* List */}
       <div className="space-y-3">
         {referrals.map((r) => {
-          const cfg = statusConfig[r.Status] || statusConfig.submitted;
+          const cfg = (r.Status ? statusConfig[r.Status] : undefined) || statusConfig.submitted;
           return (
             <div key={r.ID} className="border border-white/10 rounded-lg p-4">
               <div className="flex items-start justify-between">

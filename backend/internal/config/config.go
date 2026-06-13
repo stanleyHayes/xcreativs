@@ -113,15 +113,3 @@ func getEnvBool(key string, fallback bool) bool {
 	}
 	return b
 }
-
-func getEnvInt(key string, fallback int) int {
-	v := os.Getenv(key)
-	if v == "" {
-		return fallback
-	}
-	i, err := strconv.Atoi(v)
-	if err != nil {
-		return fallback
-	}
-	return i
-}

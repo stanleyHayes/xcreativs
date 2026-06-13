@@ -12,6 +12,8 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -58,12 +60,26 @@ func applyMigrations(t *testing.T, ctx context.Context, pool *pgxpool.Pool) {
 	}
 	require.NotEmpty(t, files, "no migration files found")
 	sort.Strings(files)
+	var maxVersion int
 	for _, f := range files {
 		sql, err := os.ReadFile(f)
 		require.NoError(t, err)
 		_, err = pool.Exec(ctx, string(sql))
 		require.NoErrorf(t, err, "migration %s", filepath.Base(f))
+		// Track the version from the NNN_ filename prefix.
+		base := filepath.Base(f)
+		if i := strings.IndexByte(base, '_'); i > 0 {
+			if v, convErr := strconv.Atoi(base[:i]); convErr == nil && v > maxVersion {
+				maxVersion = v
+			}
+		}
 	}
+	// Mirror golang-migrate's bookkeeping table so callers can assert the applied
+	// version (these tests apply the .up.sql files directly rather than via the CLI).
+	_, err = pool.Exec(ctx, `CREATE TABLE IF NOT EXISTS schema_migrations (version bigint NOT NULL PRIMARY KEY, dirty boolean NOT NULL DEFAULT false)`)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `INSERT INTO schema_migrations (version, dirty) VALUES ($1, false) ON CONFLICT (version) DO NOTHING`, maxVersion)
+	require.NoError(t, err)
 }
 
 func TestIntegration_MigrationsAndContentRepo(t *testing.T) {

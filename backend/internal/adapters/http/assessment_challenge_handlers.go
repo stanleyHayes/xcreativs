@@ -101,8 +101,8 @@ func handleAssignChallenge(pool *pgxpool.Pool, emailSender domain.EmailSender) h
 			return
 		}
 		var req struct {
-			ChallengeID  string `json:"challenge_id"`
-			DueInDays    int    `json:"due_in_days"`
+			ChallengeID string `json:"challenge_id"`
+			DueInDays   int    `json:"due_in_days"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			respondError(w, http.StatusBadRequest, "invalid request")
@@ -137,7 +137,9 @@ func handleAssignChallenge(pool *pgxpool.Pool, emailSender domain.EmailSender) h
 		if emailSender != nil && email != "" {
 			link := baseURL() + "/careers/assessment/" + token
 			body := fmt.Sprintf("Hi %s,\n\nYou've been invited to complete a technical assessment: %s.\n\nStart here: %s\n\n— XCreativs Talent", name, title, link)
-			go func() { _ = emailSender.Send(context.Background(), email, "Technical assessment: "+title, "<p>"+strings.ReplaceAll(body, "\n", "<br>")+"</p>", body) }()
+			go func() {
+				_ = emailSender.Send(context.Background(), email, "Technical assessment: "+title, "<p>"+strings.ReplaceAll(body, "\n", "<br>")+"</p>", body)
+			}()
 		}
 		respondJSON(w, http.StatusCreated, map[string]any{"id": id, "access_token": token})
 	}
@@ -162,17 +164,17 @@ func handleListAssignments(pool *pgxpool.Pool) http.HandlerFunc {
 		}
 		defer rows.Close()
 		type asg struct {
-			ID             string  `json:"id"`
-			ChallengeTitle string  `json:"challenge_title"`
-			Status         string  `json:"status"`
-			AccessURL      string  `json:"access_url"`
-			SubmissionURL  string  `json:"submission_url"`
-			SubmissionNotes string `json:"submission_notes"`
-			Score          *int    `json:"score"`
-			ReviewerNotes  string  `json:"reviewer_notes"`
-			DueAt          *string `json:"due_at"`
-			AssignedAt     string  `json:"assigned_at"`
-			SubmittedAt    *string `json:"submitted_at"`
+			ID              string  `json:"id"`
+			ChallengeTitle  string  `json:"challenge_title"`
+			Status          string  `json:"status"`
+			AccessURL       string  `json:"access_url"`
+			SubmissionURL   string  `json:"submission_url"`
+			SubmissionNotes string  `json:"submission_notes"`
+			Score           *int    `json:"score"`
+			ReviewerNotes   string  `json:"reviewer_notes"`
+			DueAt           *string `json:"due_at"`
+			AssignedAt      string  `json:"assigned_at"`
+			SubmittedAt     *string `json:"submitted_at"`
 		}
 		list := []asg{}
 		for rows.Next() {

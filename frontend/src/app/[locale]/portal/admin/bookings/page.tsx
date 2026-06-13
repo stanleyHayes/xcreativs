@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Calendar, CheckCircle, Clock, XCircle, Loader2 } from "lucide-react";
 
@@ -17,6 +17,10 @@ const statusLabels: Record<string, string> = {
   completed: "Completed",
   cancelled: "Cancelled",
 };
+
+interface ListBookingsResponse {
+  bookings?: Booking[];
+}
 
 interface Booking {
   id: string;
@@ -40,28 +44,32 @@ export default function AdminBookingsPage() {
   const [filter, setFilter] = useState("");
   const [updating, setUpdating] = useState<string | null>(null);
 
-  async function fetchBookings() {
+  const fetchBookings = useCallback(async () => {
     try {
-      const res = await api.listBookings(filter || undefined);
+      const res = (await api.listBookings(filter || undefined)) as ListBookingsResponse;
       setBookings(res.bookings || []);
     } catch {
       // ignore
     } finally {
       setLoading(false);
     }
-  }
+  }, [filter]);
 
   useEffect(() => {
-    fetchBookings();
-  }, [filter]);
+    async function loadBookings() {
+      await fetchBookings();
+    }
+    void loadBookings();
+  }, [fetchBookings]);
 
   async function handleUpdateStatus(id: string, status: string) {
     setUpdating(id);
     try {
       await api.updateBooking(id, { status });
       await fetchBookings();
-    } catch (err: any) {
-      alert(err?.message || "Failed to update");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to update";
+      alert(message);
     } finally {
       setUpdating(null);
     }

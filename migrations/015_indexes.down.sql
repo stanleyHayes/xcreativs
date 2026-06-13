@@ -54,22 +54,10 @@ DROP INDEX IF EXISTS lead_qual.idx_newsletter_subscribers_email;
 DROP INDEX IF EXISTS lead_qual.idx_signature_requests_status;
 DROP INDEX IF EXISTS lead_qual.idx_signature_requests_created_by;
 
--- Interactive
-DROP INDEX IF EXISTS interactive.idx_chat_sessions_user_id;
-DROP INDEX IF EXISTS interactive.idx_chat_messages_session_id;
-
 -- Talent
 DROP INDEX IF EXISTS talent.idx_job_roles_is_open;
 DROP INDEX IF EXISTS talent.idx_applications_applicant_email;
 DROP INDEX IF EXISTS talent.idx_talent_network_email;
-
--- Partner
-DROP INDEX IF EXISTS partner.idx_partners_status;
-DROP INDEX IF EXISTS partner.idx_partner_applications_email;
-DROP INDEX IF EXISTS partner.idx_partner_applications_status;
-DROP INDEX IF EXISTS partner.idx_referrals_partner_id;
-DROP INDEX IF EXISTS partner.idx_distribution_orders_partner_id;
-DROP INDEX IF EXISTS partner.idx_partner_users_partner_id;
 
 -- Portal config
 DROP INDEX IF EXISTS portal_config.idx_client_themes_engagement_id;

@@ -6,14 +6,27 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { ArrowLeft } from "lucide-react";
 
+interface Role {
+  Title?: string;
+  Department?: string;
+  Location?: string;
+  EmploymentType?: string;
+  Summary?: string;
+  Responsibilities?: string[];
+  Requirements?: string[];
+  CompensationPhilosophy?: string;
+  GrowthTrajectory?: string;
+  Slug?: string;
+}
+
 export default function RoleDetailPage() {
   const { slug } = useParams();
-  const [role, setRole] = useState<any>(null);
+  const [role, setRole] = useState<Role | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!slug) return;
-    api.getRole(slug as string).then((d) => { setRole(d); setLoading(false); });
+    api.getRole(slug as string).then((d) => { setRole(d as Role); setLoading(false); });
   }, [slug]);
 
   if (loading) return <div className="p-12 text-center">Loading...</div>;
@@ -35,7 +48,7 @@ export default function RoleDetailPage() {
             <h2 className="text-xl font-semibold mb-3">Summary</h2>
             <p className="text-gravity/70 leading-relaxed">{role.Summary}</p>
           </section>
-          {role.Responsibilities?.length > 0 && (
+          {role.Responsibilities && role.Responsibilities.length > 0 && (
             <section>
               <h2 className="text-xl font-semibold mb-3">Responsibilities</h2>
               <ul className="list-disc list-inside space-y-2 text-gravity/70">
@@ -45,7 +58,7 @@ export default function RoleDetailPage() {
               </ul>
             </section>
           )}
-          {role.Requirements?.length > 0 && (
+          {role.Requirements && role.Requirements.length > 0 && (
             <section>
               <h2 className="text-xl font-semibold mb-3">Requirements</h2>
               <ul className="list-disc list-inside space-y-2 text-gravity/70">

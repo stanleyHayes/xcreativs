@@ -4,13 +4,24 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Briefcase, Rocket, Calendar, Percent } from "lucide-react";
 
+interface PartnerProduct {
+  ID: string | number;
+  Name?: string;
+  Description?: string;
+  Status?: string;
+  DevelopmentStage?: string;
+  LaunchDate?: string;
+  RevenueSharePct?: number;
+  IPOwnershipSplit?: string;
+}
+
 export default function PartnerProductsPage() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<PartnerProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api.getPartnerProducts()
-      .then((d) => { setProducts(d.products || []); setLoading(false); })
+      .then((d) => { setProducts((d.products as PartnerProduct[] | undefined) || []); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 

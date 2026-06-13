@@ -6,6 +6,16 @@ import { api } from "@/lib/api";
 import Link from "next/link";
 import { ArrowLeft, Play, Pause, Clock, User, Download } from "lucide-react";
 
+interface AudioBrief {
+  Title: string;
+  Summary: string;
+  SpeakerName: string;
+  SpeakerTitle?: string;
+  DurationSeconds: number;
+  AudioURL: string;
+  Transcript?: string;
+}
+
 function formatDuration(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -15,7 +25,7 @@ function formatDuration(seconds: number): string {
 export default function AudioBriefDetailPage() {
   const params = useParams();
   const slug = params?.slug as string;
-  const [brief, setBrief] = useState<any>(null);
+  const [brief, setBrief] = useState<AudioBrief | null>(null);
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -24,7 +34,7 @@ export default function AudioBriefDetailPage() {
   useEffect(() => {
     if (!slug) return;
     api.getAudioBrief(slug)
-      .then((d) => { setBrief(d); setLoading(false); })
+      .then((d) => { setBrief(d as unknown as AudioBrief); setLoading(false); })
       .catch(() => setLoading(false));
   }, [slug]);
 
@@ -59,8 +69,6 @@ export default function AudioBriefDetailPage() {
 
   if (loading) return <div className="p-12 text-center">Loading...</div>;
   if (!brief) return <div className="p-12 text-center">Audio brief not found.</div>;
-
-  const progressPercent = brief.DurationSeconds > 0 ? (currentTime / brief.DurationSeconds) * 100 : 0;
 
   return (
     <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">

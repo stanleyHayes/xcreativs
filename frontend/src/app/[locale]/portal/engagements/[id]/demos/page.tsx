@@ -25,11 +25,18 @@ export default function DemosPage() {
 
   const load = async () => {
     if (!id) return;
-    setLoading(true);
-    try { const d = await api.listDemos(id as string); setItems(d.demos || []); setError(""); }
+    try { const d = await api.listDemos(id as string); setItems((d.demos as Demo[] | undefined) || []); setError(""); }
     catch { setError("Failed to load demos"); } finally { setLoading(false); }
   };
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    if (!id) return;
+    let active = true;
+    api.listDemos(id as string)
+      .then((d) => { if (active) { setItems((d.demos as Demo[] | undefined) || []); setError(""); } })
+      .catch(() => { if (active) setError("Failed to load demos"); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [id]);
 
   const create = async () => {
     if (!id || !form.label.trim() || !form.target_url.startsWith("http")) return;

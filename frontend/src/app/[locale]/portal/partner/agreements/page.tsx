@@ -4,13 +4,22 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { FileText, Download, Calendar, Shield } from "lucide-react";
 
+interface Agreement {
+  ID?: string | number;
+  Title?: string;
+  SignedAt?: string;
+  ExpiresAt?: string;
+  DocumentURL?: string;
+  Terms?: Record<string, unknown>;
+}
+
 export default function PartnerAgreementsPage() {
-  const [agreements, setAgreements] = useState<any[]>([]);
+  const [agreements, setAgreements] = useState<Agreement[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api.getPartnerAgreements()
-      .then((d) => { setAgreements(d.agreements || []); setLoading(false); })
+      .then((d) => { setAgreements((d.agreements as Agreement[]) || []); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
@@ -40,7 +49,7 @@ export default function PartnerAgreementsPage() {
               <div className="mt-4 pt-4 border-t border-white/5">
                 <p className="text-xs font-medium text-white/60 mb-2 flex items-center gap-1"><Shield className="w-3 h-3" /> Key Terms</p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-                  {Object.entries(a.Terms).map(([key, value]: [string, any]) => (
+                  {Object.entries(a.Terms).map(([key, value]: [string, unknown]) => (
                     <div key={key} className="bg-white/5 rounded p-2">
                       <p className="text-xs text-white/40 uppercase">{key.replace(/_/g, " ")}</p>
                       <p className="text-white/80 truncate">{Array.isArray(value) ? value.join(", ") : String(value)}</p>

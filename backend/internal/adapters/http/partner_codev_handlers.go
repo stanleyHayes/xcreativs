@@ -291,10 +291,10 @@ func handlePartnerPerformance(pool *pgxpool.Pool) http.HandlerFunc {
 			markets = []string{}
 		}
 		respondJSON(w, http.StatusOK, map[string]any{
-			"referrals":          map[string]any{"total": refTotal, "converted": refConverted, "commission_usd": refCommission},
-			"distribution":       map[string]any{"orders": orders, "commission_usd": orderCommission, "revenue_usd": orderRevenue},
+			"referrals":            map[string]any{"total": refTotal, "converted": refConverted, "commission_usd": refCommission},
+			"distribution":         map[string]any{"orders": orders, "commission_usd": orderCommission, "revenue_usd": orderRevenue},
 			"total_commission_usd": refCommission + orderCommission,
-			"regional_markets":   markets,
+			"regional_markets":     markets,
 		})
 	}
 }

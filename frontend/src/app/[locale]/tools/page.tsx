@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Grid3X3, Calculator, FileSearch, BarChart3, Network, Cog, TrendingUp, DollarSign, Activity, Brain } from "lucide-react";
+import { Grid3X3, FileSearch, BarChart3, Network, TrendingUp, DollarSign, Activity, Brain, Wrench } from "lucide-react";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Tools — XCreativs Technologies",
@@ -85,25 +86,20 @@ const tools = [
 
 export default function ToolsPage() {
   return (
-    <main>
-      <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20 lg:py-28">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">§ 07 · Interactive Tools & Public Utilities</p>
-          <h1 className="max-w-3xl text-3xl lg:text-5xl font-bold leading-tight tracking-tight">
-            Tools that demonstrate capability
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-gravity/70 leading-relaxed">
-            Public-facing utilities built from XCreativs domain expertise. None depend on client data.
-            Each tool is itself a signal of how we think about systems.
-          </p>
-        </div>
-      </section>
-
-      <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+    <>
+      <PageBanner
+        icon={Wrench}
+        eyebrow="Interactive tools"
+        title="Tools that demonstrate capability"
+        description="Public-facing utilities built from XCreativs domain expertise. None depend on client data. Each tool is itself a signal of how we think about systems."
+        crumbs={[{ label: "Home", href: "/" }, { label: "Tools that demonstrate capability" }]}
+      />
+      <main>
+        <section className="border-b border-hairline bg-soft">
+          <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {tools.map((tool) => (
-              <div key={tool.slug} className={`group bg-foundation border border-hairline rounded-lg p-6 ${tool.available ? "hover:border-signal cursor-pointer transition-colors" : "opacity-60"}`}>
+              <div key={tool.slug} className={`group card-x p-6 ${tool.available ? "cursor-pointer" : "opacity-60"}`}>
                 {tool.available ? (
                   <Link href={`/tools/${tool.slug}`} className="block">
                     <div className={`w-10 h-10 rounded-lg ${tool.bg} flex items-center justify-center mb-4`}>
@@ -127,7 +123,8 @@ export default function ToolsPage() {
             ))}
           </div>
         </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </>
   );
 }

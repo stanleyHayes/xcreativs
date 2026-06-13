@@ -118,12 +118,12 @@ func captureToolLead(pool *pgxpool.Pool, eventType, visitor, email string, meta 
 func handleTechDebtEstimate(pool *pgxpool.Pool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
-			SystemAgeYears  float64 `json:"system_age_years"`
-			TechCount       int     `json:"tech_count"`
-			IntegrationCount int    `json:"integration_count"`
-			ChangeFrequency string  `json:"change_frequency"` // low | medium | high
-			Email           string  `json:"email"`
-			VisitorID       string  `json:"visitor_id"`
+			SystemAgeYears   float64 `json:"system_age_years"`
+			TechCount        int     `json:"tech_count"`
+			IntegrationCount int     `json:"integration_count"`
+			ChangeFrequency  string  `json:"change_frequency"` // low | medium | high
+			Email            string  `json:"email"`
+			VisitorID        string  `json:"visitor_id"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			respondError(w, http.StatusBadRequest, "invalid request")
@@ -166,8 +166,8 @@ func handleTechDebtEstimate(pool *pgxpool.Pool) http.HandlerFunc {
 func handleCostEstimate(pool *pgxpool.Pool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
-			Complexity  string `json:"complexity"`  // low | medium | high
-			Urgency     string `json:"urgency"`     // standard | expedited
+			Complexity  string `json:"complexity"` // low | medium | high
+			Urgency     string `json:"urgency"`    // standard | expedited
 			TeamSize    int    `json:"team_size"`
 			Sovereignty bool   `json:"sovereignty"`
 			Email       string `json:"email"`

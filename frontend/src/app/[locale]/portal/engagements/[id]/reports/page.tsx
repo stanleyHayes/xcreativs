@@ -5,6 +5,14 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { FileBarChart, Download, ClipboardCheck, TrendingUp, Shield } from "lucide-react";
 
+interface Report {
+  ID?: string;
+  Title?: string;
+  ReportType?: string;
+  RoleScope?: string;
+  FileURL?: string;
+}
+
 const reportTypeConfig: Record<string, { icon: React.ReactNode; color: string; label: string }> = {
   quarterly_review: { icon: <TrendingUp className="w-4 h-4" />, color: "text-signal", label: "Quarterly Review" },
   handover: { icon: <ClipboardCheck className="w-4 h-4" />, color: "text-white/60", label: "Handover" },
@@ -15,13 +23,13 @@ const reportTypeConfig: Record<string, { icon: React.ReactNode; color: string; l
 
 export default function ReportsPage() {
   const { id } = useParams();
-  const [reports, setReports] = useState<any[]>([]);
+  const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!id) return;
-    api.listReports(id as string).then((d) => { setReports(d.reports || []); setLoading(false); }).catch(() => setError("Failed to load data"));
+    api.listReports(id as string).then((d) => { setReports((d.reports || []) as Report[]); setLoading(false); }).catch(() => setError("Failed to load data"));
   }, [id]);
 
   if (error) return <div className="text-white/60">{error}</div>;
@@ -34,7 +42,7 @@ export default function ReportsPage() {
 
       <div className="space-y-3">
         {reports.map((r) => {
-          const config = reportTypeConfig[r.ReportType] || { icon: <FileBarChart className="w-4 h-4" />, color: "text-white/40", label: r.ReportType };
+          const config = (r.ReportType ? reportTypeConfig[r.ReportType] : undefined) || { icon: <FileBarChart className="w-4 h-4" />, color: "text-white/40", label: r.ReportType };
           return (
             <div key={r.ID} className="flex items-center gap-4 border border-white/10 rounded-lg p-4 hover:border-signal/50 transition-colors">
               <div className={`p-2 bg-white/5 rounded ${config.color}`}>

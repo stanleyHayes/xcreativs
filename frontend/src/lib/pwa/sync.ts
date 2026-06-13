@@ -5,8 +5,17 @@ interface QueuedSubmission {
   url: string;
   method: string;
   headers: Record<string, string>;
-  body: any;
+  body: BodyInit | null;
   timestamp: number;
+}
+
+interface SyncManager {
+  register(tag: string): Promise<void>;
+  getTags(): Promise<string[]>;
+}
+
+interface ServiceWorkerRegistrationWithSync extends ServiceWorkerRegistration {
+  sync: SyncManager;
 }
 
 function openSyncDB(): Promise<IDBDatabase> {
@@ -35,8 +44,9 @@ export async function queueFormSubmission(submission: Omit<QueuedSubmission, "ti
 
   // Request background sync
   if ("serviceWorker" in navigator && "SyncManager" in window) {
-    const registration = await navigator.serviceWorker.ready;
-    await (registration as any).sync.register("form-submissions");
+    const registration = (await navigator.serviceWorker
+      .ready) as ServiceWorkerRegistrationWithSync;
+    await registration.sync.register("form-submissions");
   }
 }
 

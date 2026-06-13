@@ -3,31 +3,53 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { CheckCircle, Clock, XCircle, MessageSquare, Send } from "lucide-react";
+import { CheckCircle, Clock, XCircle, MessageSquare } from "lucide-react";
+
+interface ApprovalWorkflow {
+  ID: string;
+  Title: string;
+  Status: string;
+  RequestedAt: string;
+  RespondedAt?: string;
+  Comments?: string;
+  RejectedReason?: string;
+}
 
 export default function ApprovalsPage() {
   const { id } = useParams();
-  const [workflows, setWorkflows] = useState<any[]>([]);
+  const [workflows, setWorkflows] = useState<ApprovalWorkflow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [actionId, setActionId] = useState<string | null>(null);
   const [comment, setComment] = useState("");
 
+  const [reloadToken, setReloadToken] = useState(0);
+
   useEffect(() => {
     if (!id) return;
-    loadWorkflows();
-  }, [id]);
+    let cancelled = false;
+    api
+      .listApprovalWorkflows(id as string)
+      .then((res) => {
+        if (cancelled) return;
+        setWorkflows((res.workflows as unknown as ApprovalWorkflow[]) || []);
+        setError("");
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setError("Failed to load approval workflows");
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [id, reloadToken]);
 
-  async function loadWorkflows() {
-    setLoading(true);
-    setError("");
-    try {
-      const res = await api.listApprovalWorkflows(id as string);
-      setWorkflows(res.workflows || []);
-    } catch {
-      setError("Failed to load approval workflows");
-    }
-    setLoading(false);
+  function reloadWorkflows() {
+    setReloadToken((t) => t + 1);
   }
 
   async function handleAction(workflowID: string, status: string) {
@@ -39,7 +61,7 @@ export default function ApprovalsPage() {
       });
       setActionId(null);
       setComment("");
-      loadWorkflows();
+      reloadWorkflows();
     } catch {
       // ignore
     }

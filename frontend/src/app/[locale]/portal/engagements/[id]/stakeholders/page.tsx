@@ -16,6 +16,10 @@ interface Stakeholder {
   notes: string;
 }
 
+interface StakeholdersResponse {
+  stakeholders?: Stakeholder[];
+}
+
 const sentimentColor: Record<string, string> = {
   supporter: "border-green-400/40 bg-green-400/10",
   neutral: "border-white/15 bg-white/[0.04]",
@@ -49,7 +53,7 @@ export default function StakeholdersPage() {
     if (!id) return;
     setLoading(true);
     try {
-      const d = await api.listStakeholders(id as string);
+      const d = (await api.listStakeholders(id as string)) as StakeholdersResponse;
       setItems(d.stakeholders || []);
       setError("");
     } catch {
@@ -58,7 +62,23 @@ export default function StakeholdersPage() {
       setLoading(false);
     }
   };
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    if (!id) return;
+    let active = true;
+    (async () => {
+      try {
+        const d = (await api.listStakeholders(id as string)) as StakeholdersResponse;
+        if (!active) return;
+        setItems(d.stakeholders || []);
+        setError("");
+      } catch {
+        if (active) setError("Failed to load stakeholders");
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, [id]);
 
   const resetForm = () => { setForm({ ...emptyForm }); setShowForm(false); setEditingId(null); };
 

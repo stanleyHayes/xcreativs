@@ -54,22 +54,14 @@ CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_email ON lead_qual.newslet
 CREATE INDEX IF NOT EXISTS idx_signature_requests_status ON lead_qual.signature_requests(status);
 CREATE INDEX IF NOT EXISTS idx_signature_requests_created_by ON lead_qual.signature_requests(created_by);
 
--- Interactive tables
-CREATE INDEX IF NOT EXISTS idx_chat_sessions_user_id ON interactive.chat_sessions(user_id);
-CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON interactive.chat_messages(session_id);
+-- Interactive chat indexes live in 012 (with the chat tables).
 
 -- Talent tables
 CREATE INDEX IF NOT EXISTS idx_job_roles_is_open ON talent.job_roles(is_open);
 CREATE INDEX IF NOT EXISTS idx_applications_applicant_email ON talent.applications(applicant_email);
 CREATE INDEX IF NOT EXISTS idx_talent_network_email ON talent.talent_network(email);
 
--- Partner tables
-CREATE INDEX IF NOT EXISTS idx_partners_status ON partner.partners(status);
-CREATE INDEX IF NOT EXISTS idx_partner_applications_email ON partner.applications(contact_email);
-CREATE INDEX IF NOT EXISTS idx_partner_applications_status ON partner.applications(status);
-CREATE INDEX IF NOT EXISTS idx_referrals_partner_id ON partner.referrals(partner_id);
-CREATE INDEX IF NOT EXISTS idx_distribution_orders_partner_id ON partner.distribution_orders(partner_id);
-CREATE INDEX IF NOT EXISTS idx_partner_users_partner_id ON partner.partner_users(partner_id);
+-- Partner indexes live in 019 (with the partner tables).
 
 -- Portal config
 CREATE INDEX IF NOT EXISTS idx_client_themes_engagement_id ON portal_config.client_themes(engagement_id);

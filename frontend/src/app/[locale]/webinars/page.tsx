@@ -4,6 +4,18 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Calendar, Clock, Users, Video, Radio, CheckCircle } from "lucide-react";
+import PageBanner from "@/components/PageBanner";
+
+interface Webinar {
+  Slug: string;
+  Title?: string;
+  Description?: string;
+  Status?: string;
+  ScheduledAt: string;
+  DurationMinutes?: number;
+  SpeakerNames?: string[];
+  RecordingURL?: string;
+}
 
 const statusConfig: Record<string, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
   upcoming: { label: "Upcoming", color: "text-signal", bg: "bg-signal/10", icon: <Calendar className="w-3.5 h-3.5" /> },
@@ -21,21 +33,14 @@ function formatDate(dateStr: string): string {
   });
 }
 
-function formatTime(dateStr: string): string {
-  return new Date(dateStr).toLocaleTimeString(undefined, {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
-
 export default function WebinarsPage() {
-  const [webinars, setWebinars] = useState<any[]>([]);
+  const [webinars, setWebinars] = useState<Webinar[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("");
 
   useEffect(() => {
     api.listWebinars(statusFilter).then((d) => {
-      setWebinars(d.webinars || []);
+      setWebinars((d.webinars as Webinar[] | undefined) || []);
       setLoading(false);
     });
   }, [statusFilter]);
@@ -43,13 +48,16 @@ export default function WebinarsPage() {
   if (loading) return <div className="p-12 text-center">Loading...</div>;
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <h1 className="text-3xl lg:text-5xl font-bold">Webinars</h1>
-      <p className="mt-4 text-lg text-gravity/60 max-w-2xl">
-        Live sessions and recorded briefings on platform economics, government digital readiness, and intelligent systems architecture.
-      </p>
-
-      {/* Status filters */}
+    <>
+      <PageBanner
+        icon={Video}
+        eyebrow="Live & recorded"
+        title="Webinars"
+        description="Live sessions and recorded briefings on platform economics, government digital readiness, and intelligent systems architecture."
+        crumbs={[{ label: "Home", href: "/" }, { label: "Webinars" }]}
+      />
+      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+        {/* Status filters */}
       <div className="mt-8 flex flex-wrap gap-2">
         {["", "upcoming", "recorded"].map((s) => {
           const cfg = s ? statusConfig[s] : { label: "All", color: "", bg: "" };
@@ -69,11 +77,11 @@ export default function WebinarsPage() {
 
       <div className="mt-12 space-y-6">
         {webinars.map((w) => {
-          const cfg = statusConfig[w.Status] || statusConfig.upcoming;
+          const cfg = (w.Status ? statusConfig[w.Status] : undefined) || statusConfig.upcoming;
           return (
             <div
               key={w.Slug}
-              className="border border-hairline rounded-lg p-6 hover:border-signal transition-colors"
+              className="card-x p-6"
             >
               <div className="flex flex-col md:flex-row md:items-start gap-4">
                 <div className="flex-1">
@@ -122,7 +130,8 @@ export default function WebinarsPage() {
       {webinars.length === 0 && (
         <p className="text-center text-gravity/40 py-12">No webinars found.</p>
       )}
-    </main>
+      </main>
+    </>
   );
 }
 

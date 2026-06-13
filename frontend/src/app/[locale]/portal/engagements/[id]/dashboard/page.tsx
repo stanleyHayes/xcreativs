@@ -3,11 +3,27 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import type { DashboardResponse, Entity } from "@/lib/types";
 import { CheckCircle, Clock, AlertCircle } from "lucide-react";
+
+interface Milestone {
+  ID?: string;
+  Status?: string;
+  Title?: string;
+  Description?: string;
+}
+
+interface Activity {
+  ID?: string;
+  ActorName?: string;
+  Action?: string;
+  ResourceType?: string;
+  CreatedAt?: string;
+}
 
 export default function DashboardPage() {
   const { id } = useParams();
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<DashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -25,7 +41,9 @@ export default function DashboardPage() {
       <section>
         <h2 className="text-lg font-semibold mb-4">Milestones</h2>
         <div className="space-y-3">
-          {data.milestones?.map((m: any) => (
+          {data?.milestones?.map((entity: Entity) => {
+            const m = entity as Milestone;
+            return (
             <div
               key={m.ID}
               className="flex items-center gap-4 border border-white/10 rounded p-4"
@@ -43,7 +61,8 @@ export default function DashboardPage() {
               </div>
               <span className="text-xs text-white/40 capitalize">{m.Status}</span>
             </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -51,7 +70,9 @@ export default function DashboardPage() {
       <section>
         <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
         <div className="space-y-3">
-          {data.recent_activity?.map((a: any) => (
+          {data?.recent_activity?.map((entity: Entity) => {
+            const a = entity as Activity;
+            return (
             <div key={a.ID} className="flex items-start gap-3 text-sm">
               <div className="w-2 h-2 rounded-full bg-signal mt-1.5 shrink-0" />
               <div>
@@ -59,11 +80,12 @@ export default function DashboardPage() {
                 <span className="text-white/50">{a.Action}</span>{" "}
                 <span className="text-white/70">{a.ResourceType}</span>
                 <p className="text-xs text-white/30 mt-0.5">
-                  {new Date(a.CreatedAt).toLocaleString()}
+                  {new Date(a.CreatedAt ?? "").toLocaleString()}
                 </p>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>

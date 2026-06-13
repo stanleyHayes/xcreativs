@@ -7,9 +7,17 @@ import { api } from "@/lib/api";
 import { FileUpload } from "@/components/FileUpload";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 
+interface Role {
+  Title?: string;
+  Slug?: string;
+  Department?: string;
+  Location?: string;
+  EmploymentType?: string;
+}
+
 export default function ApplyRolePage() {
   const { slug } = useParams();
-  const [role, setRole] = useState<any>(null);
+  const [role, setRole] = useState<Role | null>(null);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
     applicant_name: "",
@@ -28,7 +36,7 @@ export default function ApplyRolePage() {
     if (!slug) return;
     api
       .getRole(slug as string)
-      .then((d) => setRole(d))
+      .then((d) => setRole(d as Role))
       .catch(() => setRole(null))
       .finally(() => setLoading(false));
   }, [slug]);

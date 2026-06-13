@@ -25,7 +25,6 @@ function AnimatedNumber({ value, duration = 1500 }: { value: number; duration?: 
   const [display, setDisplay] = useState(0);
 
   useEffect(() => {
-    let start = 0;
     const startTime = performance.now();
     const animate = (now: number) => {
       const elapsed = now - startTime;

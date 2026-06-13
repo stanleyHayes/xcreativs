@@ -145,7 +145,7 @@ func handleListWork(pool *pgxpool.Pool) http.HandlerFunc {
 	deps := NewHandlerDependencies(pool)
 	return func(w http.ResponseWriter, r *http.Request) {
 		filters := map[string]string{
-			"industry":    r.URL.Query().Get("industry"),
+			"industry":     r.URL.Query().Get("industry"),
 			"service_line": r.URL.Query().Get("service_line"),
 		}
 		dossiers, err := deps.Content.ListCaseDossiers(r.Context(), filters)
@@ -309,9 +309,15 @@ func handleTrackEvent(pool *pgxpool.Pool) http.HandlerFunc {
 		}
 
 		meta := req.Metadata
-		if meta == nil { meta = map[string]any{} }
-		if req.SessionID != "" { meta["session_id"] = req.SessionID }
-		if req.Referrer != "" { meta["referrer"] = req.Referrer }
+		if meta == nil {
+			meta = map[string]any{}
+		}
+		if req.SessionID != "" {
+			meta["session_id"] = req.SessionID
+		}
+		if req.Referrer != "" {
+			meta["referrer"] = req.Referrer
+		}
 		meta["user_agent"] = r.UserAgent()
 		meta["ip_address"] = r.RemoteAddr
 
@@ -427,7 +433,9 @@ func handleStartDiagnostic(pool *pgxpool.Pool, emailSender domain.EmailSender, b
 		if emailSender != nil {
 			go func() {
 				name := req.ProspectName
-				if name == "" { name = req.Email }
+				if name == "" {
+					name = req.Email
+				}
 				subject, htmlBody, textBody := email.DiagnosticConfirmationEmail(email.DiagnosticConfirmationData{
 					Name:         name,
 					Email:        req.Email,
@@ -521,10 +529,10 @@ func handleCreateEstimate(pool *pgxpool.Pool) http.HandlerFunc {
 func computeEstimate(serviceLine string, params map[string]any) (normalizedLine, weeks, priceUSD, priceGHS string, components []any, architecture string) {
 	// Base ranges by service line (USD min, USD max, weeks min, weeks max)
 	bases := map[string][4]int{
-		"digital_systems_audit":        {15000, 35000, 2, 6},
-		"strategy_advisory":            {25000, 90000, 4, 12},
-		"strategic_web_platforms":      {45000, 150000, 8, 20},
-		"ai_automation":                {60000, 220000, 12, 28},
+		"digital_systems_audit":         {15000, 35000, 2, 6},
+		"strategy_advisory":             {25000, 90000, 4, 12},
+		"strategic_web_platforms":       {45000, 150000, 8, 20},
+		"ai_automation":                 {60000, 220000, 12, 28},
 		"enterprise_government_systems": {80000, 350000, 16, 40},
 	}
 	normalizedLine = serviceLine
@@ -705,9 +713,9 @@ func handleCreateRFP(pool *pgxpool.Pool, emailSender domain.EmailSender, baseURL
 			return
 		}
 		go dispatchEvent(r.Context(), pool, "rfp_submit", "New RFP Submitted", fmt.Sprintf("RFP from %s — %s", req.Organization, req.ScopeSummary[:min(len(req.ScopeSummary), 100)]), map[string]any{
-			"organization":   req.Organization,
-			"scope_summary":  req.ScopeSummary,
-			"contact_email":  req.ContactEmail,
+			"organization":  req.Organization,
+			"scope_summary": req.ScopeSummary,
+			"contact_email": req.ContactEmail,
 		})
 		// Send confirmation email
 		if emailSender != nil {
@@ -819,11 +827,17 @@ func handleCreateBooking(pool *pgxpool.Pool, emailSender domain.EmailSender, bas
 		if emailSender != nil {
 			go func() {
 				name := req.FirstName
-				if name == "" { name = req.Email }
+				if name == "" {
+					name = req.Email
+				}
 				dateStr := "Not specified"
-				if prefDate != nil { dateStr = prefDate.Format("Monday, Jan 2, 2006") }
+				if prefDate != nil {
+					dateStr = prefDate.Format("Monday, Jan 2, 2006")
+				}
 				timeStr := req.PreferredTime
-				if timeStr == "" { timeStr = "Not specified" }
+				if timeStr == "" {
+					timeStr = "Not specified"
+				}
 				subject, htmlBody, textBody := email.BookingConfirmationEmail(email.BookingConfirmationData{
 					Name:   name,
 					Email:  req.Email,
@@ -883,7 +897,9 @@ func handleUpdateBooking(pool *pgxpool.Pool, emailSender domain.EmailSender, bas
 				for _, b := range bookings {
 					if b.ID.String() == id {
 						name := b.FirstName
-						if name == "" { name = b.Email }
+						if name == "" {
+							name = b.Email
+						}
 						dateStr := "Not specified"
 						if scheduledAt != nil {
 							dateStr = scheduledAt.Format("Monday, Jan 2, 2006 at 3:04 PM")
@@ -891,7 +907,9 @@ func handleUpdateBooking(pool *pgxpool.Pool, emailSender domain.EmailSender, bas
 							dateStr = b.PreferredDate.Format("Monday, Jan 2, 2006")
 						}
 						timeStr := b.PreferredTime
-						if timeStr == "" { timeStr = "Not specified" }
+						if timeStr == "" {
+							timeStr = "Not specified"
+						}
 						subject, htmlBody, textBody := email.BookingConfirmationEmail(email.BookingConfirmationData{
 							Name:         name,
 							Email:        b.Email,
@@ -1091,12 +1109,12 @@ func handleHoldingTree(pool *pgxpool.Pool) http.HandlerFunc {
 func handleLiveEngagementCounter(pool *pgxpool.Pool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var counts struct {
-			ActiveEngagements   int `json:"active_engagements"`
+			ActiveEngagements    int `json:"active_engagements"`
 			DeliverablesInFlight int `json:"deliverables_in_flight"`
-			SectorsCovered      int `json:"sectors_covered"`
+			SectorsCovered       int `json:"sectors_covered"`
 			CapabilitiesDeployed int `json:"capabilities_deployed"`
-			TeamMembers         int `json:"team_members"`
-			DecisionsLogged     int `json:"decisions_logged"`
+			TeamMembers          int `json:"team_members"`
+			DecisionsLogged      int `json:"decisions_logged"`
 		}
 		_ = pool.QueryRow(r.Context(), `SELECT COUNT(*) FROM engagement.engagements WHERE stage IN ('active', 'proposal')`).Scan(&counts.ActiveEngagements)
 		_ = pool.QueryRow(r.Context(), `SELECT COUNT(*) FROM engagement.deliverables WHERE status IN ('in_progress', 'pending_review', 'published')`).Scan(&counts.DeliverablesInFlight)
@@ -1111,16 +1129,16 @@ func handleLiveEngagementCounter(pool *pgxpool.Pool) http.HandlerFunc {
 func handleAnalyticsDashboard(pool *pgxpool.Pool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var metrics struct {
-			Visitors30d          int `json:"visitors_30d"`
-			PageViews30d         int `json:"page_views_30d"`
+			Visitors30d           int `json:"visitors_30d"`
+			PageViews30d          int `json:"page_views_30d"`
 			DiagnosticsStarted30d int `json:"diagnostics_started_30d"`
-			RFPsSubmitted30d     int `json:"rfps_submitted_30d"`
-			PortalLogins30d      int `json:"portal_logins_30d"`
-			PortalActions30d     int `json:"portal_actions_30d"`
-			NewApplications30d   int `json:"new_applications_30d"`
-			NewPartnerships30d   int `json:"new_partnerships_30d"`
-			ActiveEngagements    int `json:"active_engagements"`
-			ActiveUsers          int `json:"active_users"`
+			RFPsSubmitted30d      int `json:"rfps_submitted_30d"`
+			PortalLogins30d       int `json:"portal_logins_30d"`
+			PortalActions30d      int `json:"portal_actions_30d"`
+			NewApplications30d    int `json:"new_applications_30d"`
+			NewPartnerships30d    int `json:"new_partnerships_30d"`
+			ActiveEngagements     int `json:"active_engagements"`
+			ActiveUsers           int `json:"active_users"`
 		}
 
 		_ = pool.QueryRow(r.Context(), `SELECT COUNT(DISTINCT visitor_id) FROM identity.analytics_events WHERE event_type = 'page_view' AND created_at > NOW() - INTERVAL '30 days'`).Scan(&metrics.Visitors30d)
@@ -1171,10 +1189,10 @@ func handleAnalyticsDashboard(pool *pgxpool.Pool) http.HandlerFunc {
 
 		// Conversion funnel
 		var funnel struct {
-			Visitors     int `json:"visitors"`
-			Diagnostics  int `json:"diagnostics"`
-			RFPs         int `json:"rfps"`
-			PortalUsers  int `json:"portal_users"`
+			Visitors    int `json:"visitors"`
+			Diagnostics int `json:"diagnostics"`
+			RFPs        int `json:"rfps"`
+			PortalUsers int `json:"portal_users"`
 		}
 		_ = pool.QueryRow(r.Context(), `SELECT COUNT(DISTINCT visitor_id) FROM identity.analytics_events WHERE event_type = 'page_view' AND created_at > NOW() - INTERVAL '30 days'`).Scan(&funnel.Visitors)
 		_ = pool.QueryRow(r.Context(), `SELECT COUNT(*) FROM identity.analytics_events WHERE event_type = 'diagnostic_start' AND created_at > NOW() - INTERVAL '30 days'`).Scan(&funnel.Diagnostics)
@@ -1182,14 +1200,13 @@ func handleAnalyticsDashboard(pool *pgxpool.Pool) http.HandlerFunc {
 		_ = pool.QueryRow(r.Context(), `SELECT COUNT(DISTINCT user_id) FROM identity.analytics_events WHERE event_type = 'portal_login' AND created_at > NOW() - INTERVAL '30 days'`).Scan(&funnel.PortalUsers)
 
 		respondJSON(w, http.StatusOK, map[string]any{
-			"metrics":      metrics,
-			"daily_views":  dailyViews,
-			"top_pages":    topPages,
-			"funnel":       funnel,
+			"metrics":     metrics,
+			"daily_views": dailyViews,
+			"top_pages":   topPages,
+			"funnel":      funnel,
 		})
 	}
 }
-
 
 // Layer 06: Annotated Bibliography handlers
 
@@ -1318,7 +1335,6 @@ func handleRegisterForWebinar(pool *pgxpool.Pool) http.HandlerFunc {
 		respondJSON(w, http.StatusOK, map[string]string{"status": "registered"})
 	}
 }
-
 
 // --- Assessment handlers ---
 
@@ -1472,8 +1488,6 @@ func handleSubmitAssessmentAnswers(pool *pgxpool.Pool) http.HandlerFunc {
 	}
 }
 
-
-
 // --- Notification helpers ---
 
 func dispatchEvent(ctx context.Context, pool *pgxpool.Pool, event string, title, body string, payload map[string]any) {
@@ -1520,7 +1534,6 @@ func dispatchEvent(ctx context.Context, pool *pgxpool.Pool, event string, title,
 		}
 	}()
 }
-
 
 // --- Admin RFP handlers ---
 
@@ -1569,7 +1582,6 @@ func handleUpdateRFPSubmission(pool *pgxpool.Pool) http.HandlerFunc {
 		respondJSON(w, http.StatusOK, map[string]string{"status": "updated"})
 	}
 }
-
 
 func strPtr(s string) *string {
 	if s == "" {

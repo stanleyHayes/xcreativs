@@ -36,3 +36,30 @@ CREATE TABLE interactive.assessment_sessions (
 CREATE INDEX idx_assessment_sessions_email ON interactive.assessment_sessions(email);
 CREATE INDEX idx_assessment_sessions_status ON interactive.assessment_sessions(status);
 CREATE INDEX idx_assessment_questions_template ON interactive.assessment_questions(template_id);
+
+-- AI Concierge chat (sessions + messages)
+CREATE TABLE interactive.chat_sessions (
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id      UUID REFERENCES identity.users(id) ON DELETE SET NULL,
+    visitor_id   TEXT NOT NULL DEFAULT '',
+    source       TEXT NOT NULL DEFAULT '',
+    status       TEXT NOT NULL DEFAULT 'open',
+    subject      TEXT NOT NULL DEFAULT '',
+    escalated_to UUID REFERENCES identity.users(id) ON DELETE SET NULL,
+    escalated_at TIMESTAMPTZ,
+    closed_at    TIMESTAMPTZ,
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE interactive.chat_messages (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id  UUID NOT NULL REFERENCES interactive.chat_sessions(id) ON DELETE CASCADE,
+    sender_type TEXT NOT NULL,
+    content     TEXT NOT NULL,
+    metadata    JSONB NOT NULL DEFAULT '{}',
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_chat_sessions_user_id ON interactive.chat_sessions(user_id);
+CREATE INDEX idx_chat_messages_session_id ON interactive.chat_messages(session_id);

@@ -3,9 +3,22 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Building2, Network } from "lucide-react";
+import PageBanner from "@/components/PageBanner";
+
+type LeadershipMember = string | { name?: string; role?: string };
+
+type Subsidiary = {
+  ID?: string | number;
+  Slug?: string;
+  Name?: string;
+  Status?: string;
+  RelationshipToParent?: string;
+  Description?: string;
+  Leadership?: LeadershipMember[];
+};
 
 export default function SubsidiariesPage() {
-  const [subs, setSubs] = useState<any[]>([]);
+  const [subs, setSubs] = useState<Subsidiary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -20,17 +33,18 @@ export default function SubsidiariesPage() {
   if (loading) return <div className="p-12 text-center">Loading...</div>;
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">§ 01 · Holding Company</p>
-      <h1 className="text-3xl lg:text-5xl font-bold">Subsidiaries</h1>
-      <p className="mt-4 text-lg text-gravity/60 max-w-2xl">
-        The companies under the XCreativs holding structure. Each is operationally distinct, with its own leadership,
-        but shares the firm&apos;s standards for security, sovereignty, and engineering rigour.
-      </p>
-
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <>
+      <PageBanner
+        icon={Network}
+        eyebrow="Group companies"
+        title="Subsidiaries"
+        description="The companies under the XCreativs holding structure. Each is operationally distinct, with its own leadership, but shares the firm's standards for security, sovereignty, and engineering rigour."
+        crumbs={[{ label: "Home", href: "/" }, { label: "Subsidiaries" }]}
+      />
+      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {subs.map((s) => (
-          <div key={s.ID || s.Slug} className="border border-hairline rounded-lg p-6 hover:border-signal transition-colors">
+          <div key={s.ID || s.Slug} className="card-x p-6">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-lg bg-signal/10 flex items-center justify-center shrink-0">
                 <Building2 className="w-5 h-5 text-signal" />
@@ -52,7 +66,7 @@ export default function SubsidiariesPage() {
                   <div className="mt-4 border-t border-hairline pt-3">
                     <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-1">Leadership</p>
                     <ul className="space-y-0.5 text-sm text-gravity/60">
-                      {s.Leadership.map((l: any, i: number) => (
+                      {s.Leadership.map((l: LeadershipMember, i: number) => (
                         <li key={i}>
                           {typeof l === "string"
                             ? l
@@ -71,6 +85,7 @@ export default function SubsidiariesPage() {
       {subs.length === 0 && (
         <p className="text-center text-gravity/40 py-12">No subsidiaries listed.</p>
       )}
-    </main>
+      </main>
+    </>
   );
 }

@@ -6,14 +6,30 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { ArrowLeft } from "lucide-react";
 
+interface Dossier {
+  Industry?: string;
+  ServiceLine?: string;
+  Scale?: string;
+  Title?: string;
+  ClientName?: string;
+  Anonymized?: boolean;
+  Brief: string;
+  ConstraintSet?: string;
+  ArchitectureChosen?: string;
+  WhatShipped: string;
+  IPRetained?: string;
+  Learnings?: string;
+  Stage?: string;
+}
+
 export default function WorkDetailPage() {
   const { slug } = useParams();
-  const [dossier, setDossier] = useState<any>(null);
+  const [dossier, setDossier] = useState<Dossier | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!slug) return;
-    api.getWork(slug as string).then((d) => { setDossier(d); setLoading(false); });
+    api.getWork(slug as string).then((d) => { setDossier(d as unknown as Dossier); setLoading(false); });
   }, [slug]);
 
   if (loading) return <div className="p-12 text-center">Loading...</div>;

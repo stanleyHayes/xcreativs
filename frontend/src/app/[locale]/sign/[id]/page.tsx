@@ -143,8 +143,8 @@ export default function SignPage() {
         throw new Error(err.error);
       }
       setCompleted(true);
-    } catch (err: any) {
-      setError(err?.message || "Failed to submit signature");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to submit signature");
     } finally {
       setSubmitting(false);
     }

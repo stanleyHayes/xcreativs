@@ -4,15 +4,33 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { ShoppingCart, Package, DollarSign, Calendar } from "lucide-react";
 import { useCurrency } from "@/components/CurrencyProvider";
+import type { OrdersResponse } from "@/lib/types";
+
+interface PartnerOrder {
+  ID?: string | number;
+  OrderRef?: string;
+  CustomerName?: string;
+  CustomerEmail?: string;
+  Status?: string;
+  TotalValue?: number;
+  CommissionAmount?: number;
+  Quantity?: number;
+  UnitPrice?: number;
+  CreatedAt?: string;
+}
 
 export default function PartnerOrdersPage() {
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<PartnerOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const { format } = useCurrency();
 
   useEffect(() => {
     api.getPartnerOrders()
-      .then((d) => { setOrders(d.orders || []); setLoading(false); })
+      .then((d) => {
+        const data = d as OrdersResponse;
+        setOrders((data.orders as PartnerOrder[]) || []);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, []);
 
@@ -54,7 +72,7 @@ export default function PartnerOrdersPage() {
               <span className="flex items-center gap-1"><Package className="w-3 h-3" /> Qty: {o.Quantity}</span>
               <span className="flex items-center gap-1"><DollarSign className="w-3 h-3" /> Unit: {format(o.UnitPrice || 0)}</span>
               <span className="flex items-center gap-1 text-green-400"><DollarSign className="w-3 h-3" /> Commission: {format(o.CommissionAmount || 0)}</span>
-              <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {new Date(o.CreatedAt).toLocaleDateString()}</span>
+              <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {o.CreatedAt ? new Date(o.CreatedAt).toLocaleDateString() : "—"}</span>
             </div>
           </div>
         ))}

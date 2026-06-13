@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Briefcase } from "lucide-react";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Services — XCreativs Technologies",
@@ -8,13 +9,25 @@ export const metadata: Metadata = {
     "Five service lines: Strategy & Advisory, Platform Engineering, AI & Data Systems, Digital Operations, and Sovereign Infrastructure. Each engineered beyond brochure.",
 };
 
-async function getServices() {
+interface Service {
+  Slug: string;
+  Title: string;
+  Summary: string;
+  IndicativeTimeline: string;
+  IndicativePriceBand: string;
+}
+
+interface ServicesResponse {
+  services?: Service[];
+}
+
+async function getServices(): Promise<ServicesResponse> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/services`,
     { next: { revalidate: 60 } }
   );
   if (!res.ok) return { services: [] };
-  return res.json();
+  return (await res.json()) as ServicesResponse;
 }
 
 export default async function ServicesPage() {
@@ -22,20 +35,24 @@ export default async function ServicesPage() {
   const services = data.services || [];
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <h1 className="text-3xl lg:text-5xl font-bold">Services</h1>
-      <p className="mt-4 text-lg text-gravity/60 max-w-2xl">
-        Five service lines, each engineered beyond brochure. Every page includes methodology, deliverables, indicative timeline, and sample dossiers.
-      </p>
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <>
+      <PageBanner
+        icon={Briefcase}
+        eyebrow="What we build"
+        title="Services"
+        description="Five service lines, each engineered beyond brochure. Every page includes methodology, deliverables, indicative timeline, and sample dossiers."
+        crumbs={[{ label: "Home", href: "/" }, { label: "Services" }]}
+      />
+      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {services.length === 0 && (
           <p className="text-center text-gravity/40 py-12 col-span-full">No services published yet.</p>
         )}
-        {services.map((s: any) => (
+        {services.map((s: Service) => (
           <Link
             key={s.Slug}
             href={`/services/${s.Slug}`}
-            className="group border border-hairline rounded p-8 hover:border-signal transition-colors"
+            className="group card-x p-8"
           >
             <Briefcase className="w-5 h-5 text-signal mb-4" />
             <h2 className="text-xl font-semibold group-hover:text-signal transition-colors">
@@ -49,6 +66,7 @@ export default async function ServicesPage() {
           </Link>
         ))}
       </div>
-    </main>
+      </main>
+    </>
   );
 }

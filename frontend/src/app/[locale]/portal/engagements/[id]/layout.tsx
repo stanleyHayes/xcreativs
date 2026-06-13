@@ -10,7 +10,6 @@ import {
   Scale,
   AlertTriangle,
   Network,
-  Activity,
   Users,
   Ticket,
   Wallet,
@@ -23,6 +22,13 @@ import {
   Flag,
 } from "lucide-react";
 
+interface Engagement {
+  Sector?: string;
+  ServiceLine?: string;
+  Title?: string;
+  ClientName?: string;
+}
+
 export default function EngagementLayout({
   children,
 }: {
@@ -30,11 +36,11 @@ export default function EngagementLayout({
 }) {
   const { id, locale } = useParams();
   const pathname = usePathname();
-  const [engagement, setEngagement] = useState<any>(null);
+  const [engagement, setEngagement] = useState<Engagement | null>(null);
 
   useEffect(() => {
     if (!id) return;
-    api.getEngagement(id as string).then((d) => setEngagement(d));
+    api.getEngagement(id as string).then((d) => setEngagement(d as Engagement));
   }, [id]);
 
   const tabs = [

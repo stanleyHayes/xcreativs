@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "@/lib/api";
 import { useRouter, useParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
@@ -12,24 +12,23 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [mfaCode, setMfaCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(() => {
+    if (typeof window === "undefined") return "";
+    const err = new URLSearchParams(window.location.search).get("sso_error");
+    return err ? `Single sign-on failed: ${err}` : "";
+  });
   const [loading, setLoading] = useState(false);
   const [mfaRequired, setMfaRequired] = useState(false);
   const router = useRouter();
   const params = useParams();
   const locale = (params?.locale as string) || "en";
 
-  useEffect(() => {
-    const err = new URLSearchParams(window.location.search).get("sso_error");
-    if (err) setError(`Single sign-on failed: ${err}`);
-  }, []);
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const payload: any = { email, password };
+    const payload: Record<string, unknown> = { email, password };
     if (mfaRequired && mfaCode) {
       payload.mfa_code = mfaCode;
     }
@@ -40,8 +39,8 @@ export default function LoginPage() {
       localStorage.setItem("refresh_token", res.refresh_token);
       localStorage.setItem("user", JSON.stringify(res.user));
       router.push(`/${locale}/portal`);
-    } catch (err: any) {
-      const msg = err.message || "Login failed";
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Login failed";
       if (msg === "mfa_required") {
         setMfaRequired(true);
         setError("Enter the 6-digit code from your authenticator app.");

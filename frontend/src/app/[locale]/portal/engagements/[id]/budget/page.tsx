@@ -3,19 +3,27 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { Wallet, TrendingUp, TrendingDown } from "lucide-react";
+import { Wallet } from "lucide-react";
 import { useCurrency } from "@/components/CurrencyProvider";
+
+interface BudgetLine {
+  ID?: string;
+  Item?: string;
+  Category?: string;
+  AllocatedUSD?: number;
+  SpentUSD?: number;
+}
 
 export default function BudgetPage() {
   const { id } = useParams();
-  const [lines, setLines] = useState<any[]>([]);
+  const [lines, setLines] = useState<BudgetLine[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { format } = useCurrency();
 
   useEffect(() => {
     if (!id) return;
-    api.listBudgetLines(id as string).then((d) => { setLines(d.budget_lines || []); setLoading(false); }).catch(() => setError("Failed to load data"));
+    api.listBudgetLines(id as string).then((d) => { setLines((d.budget_lines as BudgetLine[]) || []); setLoading(false); }).catch(() => setError("Failed to load data"));
   }, [id]);
 
   if (error) return <div className="text-white/60">{error}</div>;

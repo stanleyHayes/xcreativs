@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { FileSignature, Send, CheckCircle, Clock, XCircle, Eye, Loader2, X, Download } from "lucide-react";
 
@@ -37,6 +37,10 @@ interface SignatureRequest {
   expires_at: string;
 }
 
+interface SignatureRequestsResponse {
+  requests?: SignatureRequest[];
+}
+
 export default function AdminSignaturesPage() {
   const [requests, setRequests] = useState<SignatureRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,19 +58,36 @@ export default function AdminSignaturesPage() {
     document_body: "",
   });
 
-  async function fetchRequests() {
+  const fetchRequests = useCallback(async () => {
     try {
-      const res = await api.listSignatureRequests(filter || undefined);
+      const res = (await api.listSignatureRequests(
+        filter || undefined,
+      )) as SignatureRequestsResponse;
       setRequests(res.requests || []);
     } catch {
       // ignore
     } finally {
       setLoading(false);
     }
-  }
+  }, [filter]);
 
   useEffect(() => {
-    fetchRequests();
+    let active = true;
+    void api
+      .listSignatureRequests(filter || undefined)
+      .then((res) => {
+        if (!active) return;
+        setRequests((res as SignatureRequestsResponse).requests || []);
+      })
+      .catch(() => {
+        // ignore
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, [filter]);
 
   async function handleCreate(e: React.FormEvent) {
@@ -76,8 +97,8 @@ export default function AdminSignaturesPage() {
       setShowForm(false);
       setForm({ document_type: "nda", recipient_email: "", recipient_name: "", recipient_org: "", document_title: "", document_body: "" });
       await fetchRequests();
-    } catch (err: any) {
-      alert(err?.message || "Failed to create signature request");
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Failed to create signature request");
     }
   }
 
@@ -86,8 +107,8 @@ export default function AdminSignaturesPage() {
     try {
       await api.sendSignatureRequest(id);
       await fetchRequests();
-    } catch (err: any) {
-      alert(err?.message || "Failed to send");
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Failed to send");
     } finally {
       setSending(null);
     }

@@ -224,7 +224,6 @@ func (r *ContentRepo) ListCaseDossiers(ctx context.Context, filters map[string]s
 	if serviceLine, ok := filters["service_line"]; ok && serviceLine != "" {
 		query += fmt.Sprintf(" AND service_line = $%d", argIdx)
 		args = append(args, serviceLine)
-		argIdx++
 	}
 	query += " ORDER BY sort_order, title"
 	rows, err := r.pool.Query(ctx, query, args...)
@@ -294,7 +293,6 @@ func (r *ContentRepo) ListInsights(ctx context.Context, contentType, lang string
 	if contentType != "" {
 		query += fmt.Sprintf(" AND content_type = $%d", argIdx)
 		args = append(args, contentType)
-		argIdx++
 	}
 	query += " ORDER BY published_at DESC"
 	rows, err := r.pool.Query(ctx, query, args...)

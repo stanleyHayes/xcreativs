@@ -23,13 +23,21 @@ export function useClientTheme() {
   return useContext(ThemeContext);
 }
 
+interface ThemeResponse {
+  theme?: ClientTheme;
+  default?: ClientTheme;
+}
+
 export default function ClientThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<ClientTheme | null>(null);
+  const [fetchedTheme, setFetchedTheme] = useState<ClientTheme | null>(null);
   const [engagementId, setEngagementId] = useState<string | null>(null);
+
+  // Derive the active theme during render: when there is no engagement, the
+  // theme is null without needing a synchronous setState inside the effect.
+  const theme = engagementId ? fetchedTheme : null;
 
   useEffect(() => {
     if (!engagementId) {
-      setTheme(null);
       return;
     }
     const token = localStorage.getItem("access_token");
@@ -39,14 +47,15 @@ export default function ClientThemeProvider({ children }: { children: React.Reac
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => r.json())
-      .then((data) => {
+      .then((raw) => {
+        const data = raw as ThemeResponse;
         if (data.theme) {
-          setTheme(data.theme);
+          setFetchedTheme(data.theme);
         } else if (data.default) {
-          setTheme(data.default);
+          setFetchedTheme(data.default);
         }
       })
-      .catch(() => setTheme(null));
+      .catch(() => setFetchedTheme(null));
   }, [engagementId]);
 
   useEffect(() => {

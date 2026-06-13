@@ -22,7 +22,10 @@ func NewRouter(cfg *config.Config, log Logger, pool *pgxpool.Pool, identity doma
 
 	// Global middleware
 	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
+	// RealIP is deprecated upstream over X-Forwarded-For spoofing concerns, but this
+	// service runs behind a trusted reverse proxy (Render) that sets XFF, and per-client
+	// rate limiting depends on the real client IP. Retained deliberately.
+	r.Use(middleware.RealIP) //nolint:staticcheck // SA1019: trusted proxy, see comment above
 	r.Use(LoggerMiddleware(log))
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(30 * time.Second))
@@ -100,9 +103,9 @@ func NewRouter(cfg *config.Config, log Logger, pool *pgxpool.Pool, identity doma
 			auth.Get("/portal/engagements/{id}", handleGetEngagement(pool))
 			auth.Get("/portal/engagements/{id}/dashboard", handleEngagementDashboard(pool))
 			auth.Get("/portal/engagements/{id}/milestones", handleListMilestones(pool))
-		auth.Post("/portal/engagements/{id}/milestones", handleCreateMilestone(pool))
-		auth.Patch("/portal/engagements/{id}/milestones/{milestoneID}", handleUpdateMilestone(pool))
-		auth.Delete("/portal/engagements/{id}/milestones/{milestoneID}", handleDeleteMilestone(pool))
+			auth.Post("/portal/engagements/{id}/milestones", handleCreateMilestone(pool))
+			auth.Patch("/portal/engagements/{id}/milestones/{milestoneID}", handleUpdateMilestone(pool))
+			auth.Delete("/portal/engagements/{id}/milestones/{milestoneID}", handleDeleteMilestone(pool))
 			auth.Get("/notifications", handleListNotifications(pool))
 			auth.Get("/notifications/unread-count", handleGetUnreadNotificationCount(pool))
 			auth.Put("/notifications/{id}/read", handleMarkNotificationRead(pool))

@@ -71,7 +71,7 @@ export default function TechDebtEstimatorPage() {
             Tech Debt Estimator
           </h1>
           <p className="mt-4 max-w-2xl text-gravity/70">
-            A quick diagnostic of your system's technical debt profile. Based on six dimensions 
+            A quick diagnostic of your system&apos;s technical debt profile. Based on six dimensions
             used in XCreativs digital systems audits. Not a substitute for a full assessment.
           </p>
         </div>

@@ -15,22 +15,24 @@ export function useApi<T>(
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(() => {
+  const load = useCallback(async () => {
     setLoading(true);
     setError(null);
-    fetcher()
-      .then((d) => {
-        setData(d);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message || "Failed to load data");
-        setLoading(false);
-      });
+    try {
+      const d = await fetcher();
+      setData(d);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load data");
+    } finally {
+      setLoading(false);
+    }
   }, [fetcher]);
 
   useEffect(() => {
-    load();
+    const id = setTimeout(() => {
+      void load();
+    }, 0);
+    return () => clearTimeout(id);
   }, deps);
 
   return { data, loading, error, refetch: load };

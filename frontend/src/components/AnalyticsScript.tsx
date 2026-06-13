@@ -17,7 +17,7 @@ export default function AnalyticsScript() {
       sessionStorage.setItem("xc_session_id", sid);
     }
 
-    function track(ev: string, path?: string, meta?: Record<string, any>) {
+    function track(ev: string, path?: string, meta?: Record<string, unknown>) {
       fetch("/api/v1/track", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -55,11 +55,22 @@ export default function AnalyticsScript() {
     };
     document.addEventListener("click", clickHandler);
 
-    // Register service worker
+    // Service worker: register only in production. In development a caching SW
+    // serves stale chunks and causes hard-reload loops with HMR, so proactively
+    // unregister any existing worker and clear its caches.
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/sw.js").catch(() => {});
-      });
+      if (process.env.NODE_ENV === "production") {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/sw.js").catch(() => {});
+        });
+      } else {
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          regs.forEach((r) => r.unregister());
+        });
+        if ("caches" in window) {
+          caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+        }
+      }
     }
 
     return () => {

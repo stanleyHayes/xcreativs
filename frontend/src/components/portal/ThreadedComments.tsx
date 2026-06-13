@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { MessageCircle, Send, User } from "lucide-react";
+import type { AuthUser, ThreadsResponse, CommentsResponse } from "@/lib/types";
 
 interface ThreadedCommentsProps {
   engagementID: string;
@@ -10,28 +11,51 @@ interface ThreadedCommentsProps {
   parentID: string;
 }
 
+interface Comment {
+  ID: string;
+  AuthorName: string;
+  CreatedAt: string;
+  Body: string;
+}
+
+interface Thread {
+  ID: string;
+  Title: string;
+  CreatedAt: string;
+  comments?: Comment[];
+}
+
+function readStoredUser(): AuthUser | null {
+  if (typeof window === "undefined") return null;
+  const stored = window.localStorage.getItem("user");
+  if (!stored) return null;
+  try {
+    return JSON.parse(stored) as AuthUser;
+  } catch {
+    return null;
+  }
+}
+
 export default function ThreadedComments({ engagementID, parentType, parentID }: ThreadedCommentsProps) {
-  const [threads, setThreads] = useState<any[]>([]);
+  const [threads, setThreads] = useState<Thread[]>([]);
   const [loading, setLoading] = useState(true);
   const [newThreadTitle, setNewThreadTitle] = useState("");
   const [commentBodies, setCommentBodies] = useState<Record<string, string>>({});
-  const [user, setUser] = useState<any>(null);
+  const [user] = useState<AuthUser | null>(() => readStoredUser());
 
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) setUser(JSON.parse(stored));
     loadThreads();
   }, [engagementID, parentType, parentID]);
 
   async function loadThreads() {
     setLoading(true);
     try {
-      const res = await api.listThreads(engagementID, parentType, parentID);
-      const t = res.threads || [];
+      const res = (await api.listThreads(engagementID, parentType, parentID)) as ThreadsResponse;
+      const t = (res.threads || []) as unknown as Thread[];
       // Load comments for each thread
       for (const thread of t) {
-        const c = await api.listComments(thread.ID);
-        thread.comments = c.comments || [];
+        const c = (await api.listComments(thread.ID)) as CommentsResponse;
+        thread.comments = (c.comments || []) as unknown as Comment[];
       }
       setThreads(t);
     } catch {
@@ -109,7 +133,7 @@ export default function ThreadedComments({ engagementID, parentType, parentID }:
             </p>
 
             <div className="mt-3 space-y-3">
-              {thread.comments?.map((comment: any) => (
+              {thread.comments?.map((comment) => (
                 <div key={comment.ID} className="flex gap-3">
                   <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center shrink-0">
                     <User className="w-3.5 h-3.5 text-white/50" />

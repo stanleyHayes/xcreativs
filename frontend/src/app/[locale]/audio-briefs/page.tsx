@@ -3,7 +3,20 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { Clock, User, Play, Rss } from "lucide-react";
+import { Clock, User, Play, Rss, Headphones } from "lucide-react";
+import PageBanner from "@/components/PageBanner";
+
+interface AudioBrief {
+  Slug: string;
+  Title: string;
+  Summary: string;
+  SpeakerName: string;
+  DurationSeconds: number;
+}
+
+interface AudioBriefsResult {
+  audio_briefs?: AudioBrief[];
+}
 
 function formatDuration(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -12,13 +25,17 @@ function formatDuration(seconds: number): string {
 }
 
 export default function AudioBriefsPage() {
-  const [briefs, setBriefs] = useState<any[]>([]);
+  const [briefs, setBriefs] = useState<AudioBrief[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     api.listAudioBriefs()
-      .then((d) => { setBriefs(d.audio_briefs || []); setLoading(false); })
+      .then((d) => {
+        const result = d as AudioBriefsResult;
+        setBriefs(result.audio_briefs || []);
+        setLoading(false);
+      })
       .catch(() => setError("Failed to load audio briefs"));
   }, []);
 
@@ -26,14 +43,16 @@ export default function AudioBriefsPage() {
   if (loading) return <div className="p-12 text-center">Loading...</div>;
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl lg:text-5xl font-bold">Audio Briefs</h1>
-          <p className="mt-4 text-lg text-gravity/60 max-w-2xl">
-            Short-form audio from the XCreativs team. Twelve minutes or less on architecture, policy, and platform economics.
-          </p>
-        </div>
+    <>
+      <PageBanner
+        icon={Headphones}
+        eyebrow="Listen"
+        title="Audio Briefs"
+        description="Short-form audio from the XCreativs team. Twelve minutes or less on architecture, policy, and platform economics."
+        crumbs={[{ label: "Home", href: "/" }, { label: "Audio Briefs" }]}
+      />
+      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <div className="flex justify-end">
         <a
           href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/feed/audio`}
           target="_blank"
@@ -44,12 +63,12 @@ export default function AudioBriefsPage() {
         </a>
       </div>
 
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {briefs.map((brief) => (
           <Link
             key={brief.Slug}
             href={`/audio-briefs/${brief.Slug}`}
-            className="group block border border-hairline rounded-lg overflow-hidden hover:border-signal transition-colors"
+            className="group block card-x overflow-hidden"
           >
             <div className="aspect-video bg-gravity flex items-center justify-center relative">
               <div className="w-16 h-16 rounded-full bg-signal/20 flex items-center justify-center group-hover:bg-signal/30 transition-colors">
@@ -81,5 +100,6 @@ export default function AudioBriefsPage() {
         <p className="text-center text-gravity/40 py-12">No audio briefs available.</p>
       )}
     </main>
+    </>
   );
 }

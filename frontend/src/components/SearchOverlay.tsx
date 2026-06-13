@@ -1,14 +1,16 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { api } from "@/lib/api";
+import type { SearchResultItem, SearchResponse } from "@/lib/types";
 import { Search, X, FileText, Briefcase, BookOpen, Globe, AlertTriangle, CheckSquare, MessageSquare, Loader2 } from "lucide-react";
 
-interface SearchResult {
-  type: string;
-  slug: string;
-  title: string;
-  excerpt: string;
+type SearchResult = SearchResultItem;
+
+interface PortalSearchResponse {
+  public?: SearchResult[];
+  portal?: SearchResult[];
 }
 
 const typeIcons: Record<string, React.ReactNode> = {
@@ -35,12 +37,10 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<{ public: SearchResult[]; portal: SearchResult[] }>({ public: [], portal: [] });
   const [loading, setLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated] = useState(() =>
+    typeof window !== "undefined" && !!localStorage.getItem("access_token")
+  );
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setIsAuthenticated(!!localStorage.getItem("access_token"));
-  }, []);
 
   useEffect(() => {
     if (open && inputRef.current) {
@@ -50,8 +50,8 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
 
   useEffect(() => {
     if (!query.trim()) {
-      setResults({ public: [], portal: [] });
-      return;
+      const timer = setTimeout(() => setResults({ public: [], portal: [] }), 0);
+      return () => clearTimeout(timer);
     }
     const timer = setTimeout(() => {
       setLoading(true);
@@ -59,12 +59,12 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
         fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/portal/search?q=${encodeURIComponent(query)}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
         })
-          .then((r) => r.json())
+          .then((r) => r.json() as Promise<PortalSearchResponse>)
           .then((d) => { setResults({ public: d.public || [], portal: d.portal || [] }); setLoading(false); })
           .catch(() => setLoading(false));
       } else {
         api.search(query)
-          .then((d) => { setResults({ public: d.results || [], portal: [] }); setLoading(false); })
+          .then((d: SearchResponse) => { setResults({ public: d.results || [], portal: [] }); setLoading(false); })
           .catch(() => setLoading(false));
       }
     }, 300);
@@ -112,7 +112,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
 
         <div className="max-h-[50vh] overflow-y-auto">
           {allResults.length === 0 && query.trim() && !loading && (
-            <div className="px-4 py-8 text-center text-gravity/40 text-sm">No results found for "{query}"</div>
+            <div className="px-4 py-8 text-center text-gravity/40 text-sm">No results found for &quot;{query}&quot;</div>
           )}
 
           {Object.entries(grouped).map(([type, items]) => (
@@ -120,19 +120,31 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
               <div className="px-4 py-2 bg-soft text-xs font-medium uppercase tracking-wider text-gravity/40">
                 {typeLabels[type] || type} ({items.length})
               </div>
-              {items.map((r) => (
-                <a
-                  key={r.slug + r.type}
-                  href={r.type === "insight" ? `/insights/${r.slug}` : r.type === "case_dossier" ? `/work/${r.slug}` : r.type === "service" ? `/services/${r.slug}` : `#`}
-                  className="flex items-start gap-3 px-4 py-3 hover:bg-soft transition-colors border-b border-hairline/50 last:border-0"
-                >
-                  <span className="text-signal mt-0.5">{typeIcons[type] || <FileText className="w-4 h-4" />}</span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">{r.title}</p>
-                    <p className="text-xs text-gravity/50 line-clamp-2">{r.excerpt}</p>
-                  </div>
-                </a>
-              ))}
+              {items.map((r) => {
+                const href = r.type === "insight" ? `/insights/${r.slug}` : r.type === "case_dossier" ? `/work/${r.slug}` : r.type === "service" ? `/services/${r.slug}` : `#`;
+                const linkClassName = "flex items-start gap-3 px-4 py-3 hover:bg-soft transition-colors border-b border-hairline/50 last:border-0";
+                const linkContent = (
+                  <>
+                    <span className="text-signal mt-0.5">{typeIcons[type] || <FileText className="w-4 h-4" />}</span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium truncate">{r.title}</p>
+                      <p className="text-xs text-gravity/50 line-clamp-2">{r.excerpt}</p>
+                    </div>
+                  </>
+                );
+                if (href === "#") {
+                  return (
+                    <a key={r.slug + r.type} href={href} className={linkClassName}>
+                      {linkContent}
+                    </a>
+                  );
+                }
+                return (
+                  <Link key={r.slug + r.type} href={href} className={linkClassName}>
+                    {linkContent}
+                  </Link>
+                );
+              })}
             </div>
           ))}
         </div>

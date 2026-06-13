@@ -27,19 +27,19 @@ func handleCreateEngagement(pool *pgxpool.Pool) http.HandlerFunc {
 	deps := NewHandlerDependencies(pool)
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
-			Slug               string  `json:"slug"`
-			ClientName         string  `json:"client_name"`
-			Title              string  `json:"title"`
-			Description        string  `json:"description"`
-			Sector             string  `json:"sector"`
-			ServiceLine        string  `json:"service_line"`
-			Stage              string  `json:"stage"`
-			StartDate          *string `json:"start_date"`
-			TargetEndDate      *string `json:"target_end_date"`
+			Slug               string   `json:"slug"`
+			ClientName         string   `json:"client_name"`
+			Title              string   `json:"title"`
+			Description        string   `json:"description"`
+			Sector             string   `json:"sector"`
+			ServiceLine        string   `json:"service_line"`
+			Stage              string   `json:"stage"`
+			StartDate          *string  `json:"start_date"`
+			TargetEndDate      *string  `json:"target_end_date"`
 			BudgetTotalUSD     *float64 `json:"budget_total_usd"`
-			CurrencyPreference string  `json:"currency_preference"`
-			IsWhiteLabel       bool    `json:"is_white_label"`
-			WhiteLabelDomain   string  `json:"white_label_domain"`
+			CurrencyPreference string   `json:"currency_preference"`
+			IsWhiteLabel       bool     `json:"is_white_label"`
+			WhiteLabelDomain   string   `json:"white_label_domain"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			respondError(w, http.StatusBadRequest, "invalid request body")

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 export type CurrencyCode = "USD" | "GHS" | "EUR";
 
@@ -35,16 +35,13 @@ export function useCurrency() {
 }
 
 export default function CurrencyProvider({ children }: { children: React.ReactNode }) {
-  const [currency, setCurrencyState] = useState<CurrencyCode>("USD");
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const stored = localStorage.getItem("xc-currency") as CurrencyCode | null;
-    if (stored && rates[stored]) {
-      setCurrencyState(stored);
+  const [currency, setCurrencyState] = useState<CurrencyCode>(() => {
+    if (typeof window === "undefined") {
+      return "USD";
     }
-  }, []);
+    const stored = localStorage.getItem("xc-currency") as CurrencyCode | null;
+    return stored && rates[stored] ? stored : "USD";
+  });
 
   const setCurrency = (c: CurrencyCode) => {
     setCurrencyState(c);

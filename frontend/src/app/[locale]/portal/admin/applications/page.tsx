@@ -26,6 +26,13 @@ interface Interview {
   id: string; interview_type: string; scheduled_at: string; duration_minutes: number;
   location: string; interviewer_names: string[]; status: string; feedback: string;
 }
+interface Challenge {
+  id: string; title: string;
+}
+interface Assessment {
+  id: string; challenge_title: string; status: string; submission_url?: string;
+  score?: number | null; due_at?: string | null;
+}
 
 export default function AdminApplicationsPage() {
   const [apps, setApps] = useState<Application[]>([]);
@@ -36,20 +43,34 @@ export default function AdminApplicationsPage() {
   const [interviews, setInterviews] = useState<Record<string, Interview[]>>({});
   const [showSchedule, setShowSchedule] = useState<string | null>(null);
   const [iv, setIv] = useState({ interview_type: "phone", scheduled_at: "", duration_minutes: 45, location: "", interviewer_names: "" });
-  const [assessments, setAssessments] = useState<Record<string, any[]>>({});
-  const [challenges, setChallenges] = useState<any[]>([]);
+  const [assessments, setAssessments] = useState<Record<string, Assessment[]>>({});
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [assignChoice, setAssignChoice] = useState<Record<string, string>>({});
 
-  const fetchApps = useCallback(async () => {
-    try { const res = await api.listApplicationsAdmin(filter || undefined); setApps(res.applications || []); }
-    catch { /* ignore */ } finally { setLoading(false); }
+  const loadApps = useCallback(async (): Promise<Application[]> => {
+    try { const res = await api.listApplicationsAdmin(filter || undefined); return (res.applications || []) as unknown as Application[]; }
+    catch { return []; }
   }, [filter]);
 
-  useEffect(() => { fetchApps(); }, [fetchApps]);
-  useEffect(() => { api.listChallenges().then((d) => setChallenges(d.challenges || [])).catch(() => {}); }, []);
+  const fetchApps = useCallback(async () => {
+    const next = await loadApps();
+    setApps(next);
+    setLoading(false);
+  }, [loadApps]);
+
+  useEffect(() => {
+    let active = true;
+    loadApps().then((next) => {
+      if (!active) return;
+      setApps(next);
+      setLoading(false);
+    });
+    return () => { active = false; };
+  }, [loadApps]);
+  useEffect(() => { api.listChallenges().then((d) => setChallenges((d.challenges || []) as unknown as Challenge[])).catch(() => {}); }, []);
 
   async function loadAssessments(id: string) {
-    try { const res = await api.listAssignments(id); setAssessments((m) => ({ ...m, [id]: res.assignments || [] })); } catch { /* ignore */ }
+    try { const res = await api.listAssignments(id); setAssessments((m) => ({ ...m, [id]: (res.assignments || []) as unknown as Assessment[] })); } catch { /* ignore */ }
   }
   async function assign(id: string) {
     const cid = assignChoice[id];
@@ -66,7 +87,7 @@ export default function AdminApplicationsPage() {
   }
 
   async function loadInterviews(id: string) {
-    try { const res = await api.listInterviews(id); setInterviews((m) => ({ ...m, [id]: res.interviews || [] })); } catch { /* ignore */ }
+    try { const res = await api.listInterviews(id); setInterviews((m) => ({ ...m, [id]: (res.interviews || []) as unknown as Interview[] })); } catch { /* ignore */ }
   }
 
   function toggle(id: string) {

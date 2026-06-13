@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { FileText, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
+import { FileText, Clock, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 
 const statusColors: Record<string, string> = {
   received: "text-yellow-400 bg-yellow-400/10",
@@ -38,6 +38,10 @@ interface RFP {
   created_at: string;
 }
 
+interface RFPListResponse {
+  rfps?: RFP[];
+}
+
 export default function AdminRFPsPage() {
   const [rfps, setRfps] = useState<RFP[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,20 +49,22 @@ export default function AdminRFPsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [updating, setUpdating] = useState<string | null>(null);
 
-  async function fetchRFPs() {
+  const fetchRFPs = useCallback(async () => {
     try {
-      const res = await api.listRFPSubmissionsAdmin(filter || undefined);
+      const res = (await api.listRFPSubmissionsAdmin(filter || undefined)) as RFPListResponse;
       setRfps(res.rfps || []);
     } catch {
       // ignore
     } finally {
       setLoading(false);
     }
-  }
+  }, [filter]);
 
   useEffect(() => {
-    fetchRFPs();
-  }, [filter]);
+    void (async () => {
+      await fetchRFPs();
+    })();
+  }, [fetchRFPs]);
 
   async function updateStatus(id: string, status: string) {
     setUpdating(id);

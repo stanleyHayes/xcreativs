@@ -26,7 +26,7 @@ export default function DocumentIntelligencePage() {
     setLoading(true);
     setError("");
     try {
-      const res = await api.extractDocument(text);
+      const res = (await api.extractDocument(text)) as ExtractedResult;
       setResult(res);
     } catch {
       setError("Extraction failed. Please try again with clearer text.");

@@ -44,3 +44,6 @@ logs/
 # Local data
 postgres_data/
 redis_data/
+
+# Stray archives (e.g. brand exports) — keep out of the repo
+*.zip

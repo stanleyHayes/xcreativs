@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Ticket, Clock, AlertCircle, CheckCircle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 
@@ -13,6 +13,10 @@ interface SupportTicket {
   Priority: string;
   SLATargetHours: number | null;
   ResolvedAt: string | null;
+}
+
+interface SupportTicketsResponse {
+  tickets?: SupportTicket[];
 }
 
 const priorityColor = (p: string) => {
@@ -45,11 +49,11 @@ export default function TicketsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (!id) return;
-    setLoading(true);
     try {
-      const d = await api.listSupportTickets(id as string);
+      setLoading(true);
+      const d = (await api.listSupportTickets(id as string)) as SupportTicketsResponse;
       setTickets(d.tickets || []);
       setError("");
     } catch {
@@ -57,9 +61,19 @@ export default function TicketsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    if (!id) return;
+    api.listSupportTickets(id as string)
+      .then((d) => {
+        const data = d as SupportTicketsResponse;
+        setTickets(data.tickets || []);
+        setError("");
+      })
+      .catch(() => setError("Failed to load tickets"))
+      .finally(() => setLoading(false));
+  }, [id]);
 
   const resetForm = () => {
     setForm({ title: "", description: "", priority: "medium", sla_target_hours: 48, status: "open" });

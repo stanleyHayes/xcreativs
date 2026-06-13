@@ -91,7 +91,7 @@ func handleSubmitSignature(pool *pgxpool.Pool) http.HandlerFunc {
 		}
 
 		respondJSON(w, http.StatusOK, map[string]any{
-			"status": "signed",
+			"status":  "signed",
 			"message": "Thank you. Your signature has been recorded.",
 		})
 	}

@@ -6,17 +6,64 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { ArrowRight, ArrowUpRight, Briefcase, FlaskConical, BookOpen, Building2, Landmark, Network } from "lucide-react";
 import LiveEngagementCounter from "./LiveEngagementCounter";
+import HeroBackdrop from "./decor/HeroBackdrop";
+import type { HoldingTreeResponse } from "@/lib/types";
+
+interface ServiceItem {
+  Slug: string;
+  Title: string;
+  Summary: string;
+}
+
+interface LabItem {
+  Slug: string;
+  Name: string;
+  Tagline: string;
+  ProblemStatement: string;
+}
+
+interface DossierItem {
+  Slug: string;
+  Industry: string;
+  ServiceLine: string;
+  Title: string;
+  Brief: string;
+}
+
+interface HomeData {
+  services?: ServiceItem[];
+  labs?: LabItem[];
+  dossiers?: DossierItem[];
+}
+
+interface HoldingItem {
+  Title?: string;
+  Name?: string;
+  Slug?: string;
+}
+
+interface HoldingDivision {
+  name: string;
+  items?: HoldingItem[];
+}
+
+interface TickerData {
+  ActiveEngagements?: number;
+  SectorsCovered?: number;
+  CapabilitiesDeployed?: number;
+  TotalDeliverables?: number;
+}
 
 export default function HomePage() {
   const t = useTranslations("home");
   const tc = useTranslations("common");
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<HomeData | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     api
       .getHome()
-      .then((d) => setData(d))
+      .then((d) => setData(d as HomeData))
       .catch(() => setError(true));
   }, []);
 
@@ -26,25 +73,44 @@ export default function HomePage() {
   return (
     <main>
       {/* Hero */}
-      <section className="relative border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-24 lg:py-40">
-          <h1 className="max-w-4xl text-4xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
+      <section className="relative isolate overflow-hidden border-b border-hairline">
+        <HeroBackdrop />
+        <div className="relative mx-auto max-w-[1440px] px-6 lg:px-12 py-28 lg:py-44">
+          <div
+            className="animate-rise inline-flex items-center gap-2 rounded-full border border-hairline bg-foundation/60 px-3.5 py-1.5 text-xs font-medium text-gravity/70 backdrop-blur"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
+            </span>
+            Sovereign-by-design · National-scale systems
+          </div>
+          <h1
+            className="animate-rise font-display mt-6 max-w-4xl text-[2.7rem] font-semibold leading-[1.02] tracking-tight lg:text-7xl"
+            style={{ animationDelay: "0.08s" }}
+          >
             {t("hero")}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg lg:text-xl text-gravity/70 leading-relaxed">
+          <p
+            className="animate-rise mt-7 max-w-2xl text-lg leading-relaxed text-gravity/65 lg:text-xl"
+            style={{ animationDelay: "0.16s" }}
+          >
             {t("hero_sub")}
           </p>
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div
+            className="animate-rise mt-10 flex flex-wrap items-center gap-4"
+            style={{ animationDelay: "0.24s" }}
+          >
             <Link
               href="/work"
-              className="inline-flex items-center gap-2 bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity"
+              className="group inline-flex items-center gap-2 rounded-full bg-signal px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-signal/25 transition-transform hover:-translate-y-0.5"
             >
               {t("cta_work")}
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 border border-gravity text-gravity px-6 py-3 rounded text-sm font-medium hover:bg-gravity hover:text-foundation transition-colors"
+              className="inline-flex items-center gap-2 rounded-full border border-gravity/20 px-6 py-3.5 text-sm font-semibold text-gravity transition-colors hover:border-gravity hover:bg-gravity hover:text-foundation"
             >
               {t("cta_engage")}
             </Link>
@@ -66,11 +132,11 @@ export default function HomePage() {
           </p>
           <h2 className="text-2xl lg:text-3xl font-bold mb-10">{t("services_title")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.services?.map((s: any) => (
+            {data.services?.map((s) => (
               <Link
                 key={s.Slug}
                 href={`/services/${s.Slug}`}
-                className="group border border-hairline rounded p-6 hover:border-signal transition-colors"
+                className="group card-x p-6"
               >
                 <Briefcase className="w-5 h-5 text-signal mb-4" />
                 <h3 className="text-lg font-semibold group-hover:text-signal transition-colors">
@@ -94,11 +160,11 @@ export default function HomePage() {
           <h2 className="text-2xl lg:text-3xl font-bold mb-4">{t("labs_title")}</h2>
           <p className="text-gravity/60 mb-10 max-w-xl">{t("labs_sub")}</p>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {data.labs?.map((p: any) => (
+            {data.labs?.map((p) => (
               <Link
                 key={p.Slug}
                 href={`/labs/${p.Slug}`}
-                className="group bg-foundation border border-hairline rounded p-8 hover:border-signal transition-colors"
+                className="group card-x p-8"
               >
                 <FlaskConical className="w-5 h-5 text-signal mb-4" />
                 <h3 className="text-xl font-semibold group-hover:text-signal transition-colors">
@@ -122,11 +188,11 @@ export default function HomePage() {
           </p>
           <h2 className="text-2xl lg:text-3xl font-bold mb-10">{t("dossiers_title")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.dossiers?.slice(0, 5).map((d: any) => (
+            {data.dossiers?.slice(0, 5).map((d) => (
               <Link
                 key={d.Slug}
                 href={`/work/${d.Slug}`}
-                className="group border border-hairline rounded overflow-hidden hover:border-signal transition-colors"
+                className="group card-x overflow-hidden"
               >
                 <div className="bg-soft h-40 flex items-center justify-center">
                   <BookOpen className="w-8 h-8 text-gravity/20" />
@@ -180,7 +246,7 @@ export default function HomePage() {
 }
 
 function HoldingTree() {
-  const [tree, setTree] = useState<any>(null);
+  const [tree, setTree] = useState<HoldingTreeResponse | null>(null);
 
   useEffect(() => {
     api.getHoldingTree().then((d) => setTree(d)).catch(() => {});
@@ -193,7 +259,8 @@ function HoldingTree() {
     Labs: { href: "/labs", icon: <FlaskConical className="w-5 h-5" />, blurb: "Product arm" },
     Subsidiaries: { href: "/subsidiaries", icon: <Landmark className="w-5 h-5" />, blurb: "Spun-out companies" },
   };
-  const itemName = (it: any) => it?.Title || it?.Name || it?.Slug || "";
+  const itemName = (it: HoldingItem) => it?.Title || it?.Name || it?.Slug || "";
+  const divisions = tree.children as unknown as HoldingDivision[];
 
   return (
     <section className="border-b border-hairline bg-soft">
@@ -216,14 +283,14 @@ function HoldingTree() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {tree.children.map((div: any) => {
+          {divisions.map((div) => {
             const m = meta[div.name] || { href: "#", icon: <Network className="w-5 h-5" />, blurb: "" };
-            const items: any[] = div.items || [];
+            const items: HoldingItem[] = div.items || [];
             return (
               <Link
                 key={div.name}
                 href={m.href}
-                className="group border border-hairline rounded-lg p-6 bg-foundation hover:border-signal transition-colors"
+                className="group card-x p-6"
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2 text-signal">
@@ -262,12 +329,12 @@ function HoldingTree() {
 
 function LiveTicker() {
   const tt = useTranslations("ticker");
-  const [ticker, setTicker] = useState<any>(null);
+  const [ticker, setTicker] = useState<TickerData | null>(null);
 
   useEffect(() => {
-    api.getTicker().then((d) => setTicker(d));
+    api.getTicker().then((d) => setTicker(d as TickerData));
     const interval = setInterval(() => {
-      api.getTicker().then((d) => setTicker(d));
+      api.getTicker().then((d) => setTicker(d as TickerData));
     }, 30000);
     return () => clearInterval(interval);
   }, []);

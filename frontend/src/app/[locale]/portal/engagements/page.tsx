@@ -4,17 +4,25 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
-import { Briefcase, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+
+interface Engagement {
+  ID?: string;
+  Title?: string;
+  Sector?: string;
+  ServiceLine?: string;
+  ClientName?: string;
+}
 
 export default function EngagementsPage() {
-  const [engagements, setEngagements] = useState<any[]>([]);
+  const [engagements, setEngagements] = useState<Engagement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const params = useParams();
   const locale = (params?.locale as string) || "en";
 
   useEffect(() => {
-    api.listEngagements().then((d) => { setEngagements(d.engagements || []); setLoading(false); }).catch(() => setError("Failed to load engagements"));
+    api.listEngagements().then((d) => { setEngagements((d.engagements as Engagement[] | undefined) || []); setLoading(false); }).catch(() => setError("Failed to load engagements"));
   }, []);
 
   if (error) return <div className="p-8 text-white/60">{error}</div>;

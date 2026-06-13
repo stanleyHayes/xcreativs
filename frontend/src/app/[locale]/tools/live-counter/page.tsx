@@ -41,7 +41,7 @@ export default function LiveCounterPage() {
 
   async function fetchData() {
     try {
-      const res = await api.getLiveCounter();
+      const res = (await api.getLiveCounter()) as unknown as CounterData;
       setData(res);
       setLastUpdated(new Date());
     } catch {
@@ -52,8 +52,10 @@ export default function LiveCounterPage() {
   }
 
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 30000);
+    Promise.resolve().then(() => fetchData());
+    const interval = setInterval(() => {
+      void fetchData();
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 

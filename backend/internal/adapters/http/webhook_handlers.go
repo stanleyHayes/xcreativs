@@ -180,7 +180,7 @@ func deliverWebhook(pool *pgxpool.Pool, subscriptionID uuid.UUID, event string, 
 	} else {
 		status = resp.StatusCode
 		buf := new(bytes.Buffer)
-		buf.ReadFrom(resp.Body)
+		_, _ = buf.ReadFrom(resp.Body)
 		respBody = buf.String()
 		resp.Body.Close()
 	}

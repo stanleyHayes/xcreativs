@@ -6,9 +6,19 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { ArrowLeft, Lock, Download } from "lucide-react";
 
+interface Insight {
+  ContentType?: string;
+  Title?: string;
+  AuthorName?: string;
+  AuthorTitle?: string;
+  PublishedAt?: string;
+  IsGated?: boolean;
+  Body?: string;
+}
+
 export default function InsightDetailPage() {
   const { slug } = useParams();
-  const [insight, setInsight] = useState<any>(null);
+  const [insight, setInsight] = useState<Insight | null>(null);
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -18,7 +28,7 @@ export default function InsightDetailPage() {
 
   useEffect(() => {
     if (!slug) return;
-    api.getInsight(slug as string).then((d) => { setInsight(d); setLoading(false); });
+    api.getInsight(slug as string).then((d) => { setInsight(d as Insight); setLoading(false); });
   }, [slug]);
 
   async function handleRequest(e: React.FormEvent) {

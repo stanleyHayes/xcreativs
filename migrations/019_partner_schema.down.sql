@@ -5,3 +5,4 @@ DROP TABLE IF EXISTS partner.agreements CASCADE;
 DROP TABLE IF EXISTS partner.products CASCADE;
 DROP TABLE IF EXISTS partner.partner_users CASCADE;
 DROP TABLE IF EXISTS partner.partners CASCADE;
+DROP TABLE IF EXISTS partner.applications CASCADE;

@@ -15,6 +15,10 @@ interface Milestone {
   SortOrder: number;
 }
 
+interface MilestonesResponse {
+  milestones?: Milestone[];
+}
+
 const statusConfig: Record<string, { icon: React.ReactNode; color: string; label: string }> = {
   completed: { icon: <CheckCircle className="w-5 h-5" />, color: "text-green-400 bg-green-400/10 border-green-400/30", label: "Completed" },
   in_progress: { icon: <Clock className="w-5 h-5" />, color: "text-signal bg-signal/10 border-signal/30", label: "In Progress" },
@@ -36,7 +40,7 @@ export default function MilestonesPage() {
     if (!id) return;
     setLoading(true);
     try {
-      const d = await api.listMilestones(id as string);
+      const d = (await api.listMilestones(id as string)) as MilestonesResponse;
       setMilestones(d.milestones || []);
       setError("");
     } catch {
@@ -46,7 +50,27 @@ export default function MilestonesPage() {
     }
   };
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const d = (await api.listMilestones(id as string)) as MilestonesResponse;
+        if (cancelled) return;
+        setMilestones(d.milestones || []);
+        setError("");
+      } catch {
+        if (!cancelled) setError("Failed to load milestones");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
 
   const resetForm = () => {
     setForm({ title: "", description: "", dueDate: "", status: "upcoming", sortOrder: 0 });

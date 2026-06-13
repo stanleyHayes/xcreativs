@@ -1,21 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { api } from "@/lib/api";
 import { Shield, CheckCircle, Copy } from "lucide-react";
+import type { AuthUser, MFAEnrollmentResponse } from "@/lib/types";
+
+function readStoredUser(): AuthUser | null {
+  if (typeof window === "undefined") return null;
+  const stored = localStorage.getItem("user");
+  if (!stored) return null;
+  return JSON.parse(stored) as AuthUser;
+}
 
 export default function MFAPage() {
-  const [user, setUser] = useState<any>(null);
-  const [enrollment, setEnrollment] = useState<any>(null);
+  const [user, setUser] = useState<AuthUser | null>(() => readStoredUser());
+  const [enrollment, setEnrollment] = useState<MFAEnrollmentResponse | null>(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) setUser(JSON.parse(stored));
-  }, []);
 
   async function handleEnroll() {
     setLoading(true);
@@ -24,8 +27,8 @@ export default function MFAPage() {
     try {
       const res = await api.enrollMFA();
       setEnrollment(res);
-    } catch (err: any) {
-      setError(err.message || "Failed to enroll MFA");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to enroll MFA");
     }
     setLoading(false);
   }
@@ -42,13 +45,13 @@ export default function MFAPage() {
       setCode("");
       const stored = localStorage.getItem("user");
       if (stored) {
-        const u = JSON.parse(stored);
+        const u = JSON.parse(stored) as AuthUser;
         u.mfa_enabled = true;
         localStorage.setItem("user", JSON.stringify(u));
         setUser(u);
       }
-    } catch (err: any) {
-      setError(err.message || "Invalid code");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Invalid code");
     }
     setLoading(false);
   }
@@ -91,7 +94,7 @@ export default function MFAPage() {
                 <div className="flex justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(enrollment.qr_url)}`}
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(enrollment.qr_url ?? "")}`}
                     alt="MFA QR Code"
                     className="w-48 h-48"
                   />
@@ -103,7 +106,7 @@ export default function MFAPage() {
                 <div className="flex items-center gap-2 bg-black/30 rounded px-3 py-2">
                   <code className="text-sm font-mono text-signal flex-1">{enrollment.secret}</code>
                   <button
-                    onClick={() => navigator.clipboard.writeText(enrollment.secret)}
+                    onClick={() => navigator.clipboard.writeText(enrollment.secret ?? "")}
                     className="p-1 hover:text-signal transition-colors"
                     title="Copy"
                   >

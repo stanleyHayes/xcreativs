@@ -17,6 +17,10 @@ interface Risk {
   Status: string;
 }
 
+interface RisksResponse {
+  risks?: Risk[];
+}
+
 const severityColor = (s: string) => {
   if (s === "critical") return "text-red-500";
   if (s === "high") return "text-red-400";
@@ -46,7 +50,7 @@ export default function RisksPage() {
     if (!id) return;
     setLoading(true);
     try {
-      const d = await api.listRisks(id as string);
+      const d = (await api.listRisks(id as string)) as RisksResponse;
       setRisks(d.risks || []);
       setError("");
     } catch {
@@ -56,7 +60,15 @@ export default function RisksPage() {
     }
   };
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    let active = true;
+    Promise.resolve().then(() => {
+      if (active) void load();
+    });
+    return () => {
+      active = false;
+    };
+  }, [id]);
 
   const resetForm = () => {
     setForm({ title: "", description: "", mitigation_plan: "", residual_rating: "", severity: "medium", escalation_status: "none", status: "open", linked_decision_id: null });

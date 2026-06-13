@@ -507,6 +507,12 @@ This is the execution sequence. Each item is a commit-sized unit of work.
 - **API docs:** OpenAPI 3 generated from the live router (`cmd/genopenapi` → embedded `internal/apispec/openapi.yaml`),
   **Swagger UI at `/docs`**, **Postman collection** (`docs/postman_collection.json`); all keys catalogued in `docs/API_KEYS.md`.
 
+- **Current pass — Phase D hardening + UI/UX redesign (in progress, as of 13 Jun 2026):**
+  - **CI repair (backend — DONE, verified):** the migrations never reproduced a fresh DB — added the four tables that had been created outside the migration history (`identity.api_keys`, `partner.applications`, `interactive.chat_sessions`, `interactive.chat_messages`) and fixed `015_indexes` ordering, so a clean DB now builds all **81 tables** and `up` + `down -all` round-trips cleanly. Aligned the toolchain to **Go 1.25** (`go.mod` / CI / Dockerfile), migrated **golangci-lint to v2**, and fixed all 20 findings. Backend `lint / vet / test / build / integration (testcontainers) / OpenAPI-sync` all green; fixed a latent integration-test bug (it queried `schema_migrations` without creating it).
+  - **Frontend lint cleanup (in progress):** clearing ~134 pre-existing lint errors (no-explicit-any, html-link-for-pages, set-state-in-effect) → 0, then one production `next build`, then first commit/push.
+  - **UI/UX redesign (supersedes the original 3-token + Inter Tight system):** type system now **Fraunces (display) + Hanken Grotesk (body)**; refined cool palette on the signal-blue accent; reusable decoration system (animated constellation hero backdrop, drifting glows, grid + grain, `card-x` cards, gradient text); **navbar mega-dropdowns** (14 flat links → Services/Insights/Company + Work + Contact CTA); **dark editorial footer** with iconned columns; **`PageBanner`** (decorative icon + breadcrumbs + title + description) on 18 pages; branded **404** + CSS **splash screen**; cards restyled site-wide; **About** + **Partners** pages rebuilt; generated hero imagery in `public/media`. Fixed a **dev service-worker reload loop**.
+  - **Decisions superseded since v1.0:** File storage = **Cloudinary** (not Cloudflare R2); Hosting = **Render** (backend Docker Blueprint) + **Vercel** (frontend); Frontend = **Next.js 16**.
+
 ---
 
 ## 11. Phase D — Testing, Quality & Deployment

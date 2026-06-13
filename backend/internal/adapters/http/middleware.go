@@ -295,19 +295,8 @@ func (rw *responseWriter) Unwrap() http.ResponseWriter {
 	return rw.ResponseWriter
 }
 
-func slugFromURL(r *http.Request, key string) string {
-	parts := strings.Split(r.URL.Path, "/")
-	for i, p := range parts {
-		if p == key && i+1 < len(parts) {
-			return parts[i+1]
-		}
-	}
-	return ""
-}
-
-
 func generateRequestID() string {
 	b := make([]byte, 8)
-	rand.Read(b)
+	_, _ = rand.Read(b)
 	return hex.EncodeToString(b)
 }

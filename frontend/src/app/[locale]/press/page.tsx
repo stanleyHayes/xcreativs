@@ -1,26 +1,47 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Megaphone } from "lucide-react";
 import { api } from "@/lib/api";
+import PageBanner from "@/components/PageBanner";
+
+interface PressItem {
+  Slug: string;
+  Title: string;
+  Body: string;
+  IsCoverage?: boolean;
+  PublishedAt?: string;
+  SourceURL?: string;
+}
 
 export default function PressPage() {
-  const [press, setPress] = useState<any[]>([]);
+  const [press, setPress] = useState<PressItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    api.listPress().then((d) => { setPress(d.press || []); setLoading(false); }).catch(() => setError("Failed to load data"));
+    api
+      .listPress()
+      .then((d) => {
+        setPress(((d.press || []) as unknown as PressItem[]));
+        setLoading(false);
+      })
+      .catch(() => setError("Failed to load data"));
   }, []);
 
   if (error) return <div className="p-12 text-center text-gravity/60">{error}</div>;
   if (loading) return <div className="p-12 text-center">Loading...</div>;
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <h1 className="text-3xl lg:text-5xl font-bold">Press & Newsroom</h1>
-      <p className="mt-4 text-lg text-gravity/60 max-w-2xl">
-        Press releases, media coverage, and brand assets.
-      </p>
+    <>
+      <PageBanner
+        icon={Megaphone}
+        eyebrow="Newsroom"
+        title="Press & Newsroom"
+        description="Press releases, media coverage, and brand assets."
+        crumbs={[{ label: "Home", href: "/" }, { label: "Press & Newsroom" }]}
+      />
+      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
       <div className="mt-12 space-y-8">
         {press.map((p) => (
           <article key={p.Slug} className="border-b border-hairline pb-8">
@@ -38,6 +59,7 @@ export default function PressPage() {
           </article>
         ))}
       </div>
-    </main>
+      </main>
+    </>
   );
 }

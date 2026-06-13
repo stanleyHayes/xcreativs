@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { WifiOff, Wifi } from "lucide-react";
+import { WifiOff } from "lucide-react";
 
 export default function OfflineIndicator() {
-  const [online, setOnline] = useState(true);
+  const [online, setOnline] = useState<boolean>(() =>
+    typeof navigator === "undefined" ? true : navigator.onLine
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    setOnline(navigator.onLine);
+
+    // Re-sync after mount in case connectivity changed before listeners attached.
+    Promise.resolve().then(() => setOnline(navigator.onLine));
 
     const handleOnline = () => setOnline(true);
     const handleOffline = () => setOnline(false);

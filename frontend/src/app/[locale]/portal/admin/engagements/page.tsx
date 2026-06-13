@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Briefcase, Plus, Loader2, Save, X, Building2, Globe } from "lucide-react";
 
@@ -53,19 +53,33 @@ export default function AdminEngagementsPage() {
     white_label_domain: "",
   });
 
-  async function fetchEngagements() {
+  const fetchEngagements = useCallback(async () => {
     try {
       const res = await api.listAllEngagements();
-      setEngagements(res.engagements || []);
+      setEngagements((res.engagements as unknown as Engagement[]) ?? []);
     } catch {
       // ignore
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
-    fetchEngagements();
+    let active = true;
+    void (async () => {
+      try {
+        const res = await api.listAllEngagements();
+        if (!active) return;
+        setEngagements((res.engagements as unknown as Engagement[]) ?? []);
+      } catch {
+        // ignore
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
   }, []);
 
   async function handleSave() {
@@ -85,8 +99,9 @@ export default function AdminEngagementsPage() {
         currency_preference: "USD", is_white_label: false, white_label_domain: "",
       });
       await fetchEngagements();
-    } catch (err: any) {
-      alert(err?.message || "Failed to create engagement");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to create engagement";
+      alert(message);
     } finally {
       setSaving(false);
     }

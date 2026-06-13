@@ -26,7 +26,7 @@ func handleExportBookings(pool *pgxpool.Pool) http.HandlerFunc {
 		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=bookings_%s.csv", time.Now().Format("2006-01-02")))
 
 		writer := csv.NewWriter(w)
-		writer.Write([]string{"ID", "Email", "Topic", "First Name", "Last Name", "Organization", "Preferred Date", "Status", "Created At"})
+		_ = writer.Write([]string{"ID", "Email", "Topic", "First Name", "Last Name", "Organization", "Preferred Date", "Status", "Created At"})
 
 		for rows.Next() {
 			var id, email, topic, firstName, lastName, org, status string
@@ -37,7 +37,7 @@ func handleExportBookings(pool *pgxpool.Pool) http.HandlerFunc {
 				if preferredDate != nil {
 					prefDate = fmt.Sprintf("%v", preferredDate)
 				}
-				writer.Write([]string{id, email, topic, firstName, lastName, org, prefDate, status, createdAt.Format(time.RFC3339)})
+				_ = writer.Write([]string{id, email, topic, firstName, lastName, org, prefDate, status, createdAt.Format(time.RFC3339)})
 			}
 		}
 		writer.Flush()
@@ -61,13 +61,13 @@ func handleExportRFPs(pool *pgxpool.Pool) http.HandlerFunc {
 		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=rfps_%s.csv", time.Now().Format("2006-01-02")))
 
 		writer := csv.NewWriter(w)
-		writer.Write([]string{"ID", "Organization", "Contact Name", "Contact Email", "Scope Summary", "Status", "Created At"})
+		_ = writer.Write([]string{"ID", "Organization", "Contact Name", "Contact Email", "Scope Summary", "Status", "Created At"})
 
 		for rows.Next() {
 			var id, org, contactName, contactEmail, scope, status string
 			var createdAt time.Time
 			if err := rows.Scan(&id, &org, &contactName, &contactEmail, &scope, &status, &createdAt); err == nil {
-				writer.Write([]string{id, org, contactName, contactEmail, scope, status, createdAt.Format(time.RFC3339)})
+				_ = writer.Write([]string{id, org, contactName, contactEmail, scope, status, createdAt.Format(time.RFC3339)})
 			}
 		}
 		writer.Flush()
@@ -91,13 +91,13 @@ func handleExportDiagnostics(pool *pgxpool.Pool) http.HandlerFunc {
 		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=diagnostics_%s.csv", time.Now().Format("2006-01-02")))
 
 		writer := csv.NewWriter(w)
-		writer.Write([]string{"ID", "Email", "Prospect Name", "Organization", "Sector", "Status", "Created At"})
+		_ = writer.Write([]string{"ID", "Email", "Prospect Name", "Organization", "Sector", "Status", "Created At"})
 
 		for rows.Next() {
 			var id, email, prospectName, org, sector, status string
 			var createdAt time.Time
 			if err := rows.Scan(&id, &email, &prospectName, &org, &sector, &status, &createdAt); err == nil {
-				writer.Write([]string{id, email, prospectName, org, sector, status, createdAt.Format(time.RFC3339)})
+				_ = writer.Write([]string{id, email, prospectName, org, sector, status, createdAt.Format(time.RFC3339)})
 			}
 		}
 		writer.Flush()

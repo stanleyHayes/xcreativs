@@ -1,8 +1,42 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { api } from "@/lib/api";
+import type { AssessmentTemplateResponse, AssessmentSessionResponse } from "@/lib/types";
 import { BarChart3, ArrowRight, CheckCircle, RotateCcw, TrendingUp, Shield, Database, Server, Cog, Target } from "lucide-react";
+
+interface AssessmentTemplate {
+  id: string;
+  title?: string;
+  description?: string;
+}
+
+interface AssessmentOption {
+  value: number;
+  label: string;
+}
+
+interface AssessmentQuestion {
+  id: string;
+  dimension: string;
+  question_text: string;
+  options: AssessmentOption[];
+}
+
+interface AssessmentResults {
+  scores?: Record<string, number>;
+  overall_score: number;
+  max_possible: number;
+  percentage: number;
+  recommendation_summary: string;
+}
+
+interface DimensionScore {
+  score: number;
+  max: number;
+  pct: number;
+}
 
 const dimensionIcons: Record<string, React.ElementType> = {
   strategy: Target,
@@ -21,8 +55,8 @@ const dimensionLabels: Record<string, string> = {
 };
 
 export default function ReadinessAssessmentPage() {
-  const [template, setTemplate] = useState<any>(null);
-  const [questions, setQuestions] = useState<any[]>([]);
+  const [template, setTemplate] = useState<AssessmentTemplate | null>(null);
+  const [questions, setQuestions] = useState<AssessmentQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -33,14 +67,14 @@ export default function ReadinessAssessmentPage() {
   const [organization, setOrganization] = useState("");
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<AssessmentResults | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     api.getAssessmentTemplate("digital-readiness")
-      .then((res) => {
-        setTemplate(res.template);
-        setQuestions(res.questions || []);
+      .then((res: AssessmentTemplateResponse) => {
+        setTemplate((res.template as AssessmentTemplate | undefined) || null);
+        setQuestions((res.questions as AssessmentQuestion[] | undefined) || []);
         setLoading(false);
       })
       .catch(() => {
@@ -50,13 +84,13 @@ export default function ReadinessAssessmentPage() {
   }, []);
 
   async function startAssessment() {
-    if (!email) return;
+    if (!email || !template) return;
     try {
-      const res = await api.createAssessmentSession({
+      const res = (await api.createAssessmentSession({
         template_id: template.id,
         email,
         organization,
-      });
+      })) as AssessmentSessionResponse;
       setSessionId(res.session_id);
       setStep("questions");
     } catch {
@@ -84,7 +118,7 @@ export default function ReadinessAssessmentPage() {
       value,
     }));
     try {
-      const res = await api.submitAssessmentAnswers(sessionId, { answers: answerEntries });
+      const res = (await api.submitAssessmentAnswers(sessionId, { answers: answerEntries })) as AssessmentResults;
       setResults(res);
       setStep("results");
     } catch {
@@ -221,7 +255,7 @@ function QuestionStep({
   onNext,
   submitting,
 }: {
-  questions: any[];
+  questions: AssessmentQuestion[];
   currentQIndex: number;
   answers: Record<string, number>;
   onSelect: (value: number) => void;
@@ -245,7 +279,7 @@ function QuestionStep({
       <div className="border border-hairline rounded-lg p-6 bg-foundation">
         <h2 className="text-lg font-semibold leading-relaxed">{q.question_text}</h2>
         <div className="mt-6 space-y-3">
-          {q.options.map((opt: any) => (
+          {q.options.map((opt: AssessmentOption) => (
             <button
               key={opt.value}
               onClick={() => onSelect(opt.value)}
@@ -273,12 +307,12 @@ function QuestionStep({
   );
 }
 
-function ResultsStep({ results, questions, onReset }: { results: any; questions: any[]; onReset: () => void }) {
+function ResultsStep({ results, questions, onReset }: { results: AssessmentResults; questions: AssessmentQuestion[]; onReset: () => void }) {
   const { scores, overall_score, max_possible, percentage, recommendation_summary } = results;
 
   // Group scores by dimension
-  const dimensionScores: Record<string, { score: number; max: number; pct: number }> = {};
-  questions.forEach((q: any) => {
+  const dimensionScores: Record<string, DimensionScore> = {};
+  questions.forEach((q: AssessmentQuestion) => {
     if (!dimensionScores[q.dimension]) {
       dimensionScores[q.dimension] = { score: 0, max: 0, pct: 0 };
     }
@@ -316,7 +350,7 @@ function ResultsStep({ results, questions, onReset }: { results: any; questions:
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Object.entries(dimensionScores).map(([dim, data]: [string, any]) => {
+        {Object.entries(dimensionScores).map(([dim, data]: [string, DimensionScore]) => {
           const Icon = dimensionIcons[dim] || Target;
           const grade = getGrade(data.pct);
           return (
@@ -347,12 +381,12 @@ function ResultsStep({ results, questions, onReset }: { results: any; questions:
         >
           <RotateCcw className="w-4 h-4" /> Retake assessment
         </button>
-        <a
+        <Link
           href="/contact"
           className="flex items-center gap-2 bg-signal text-white px-5 py-2.5 rounded text-sm font-medium hover:opacity-90 transition-opacity"
         >
           <TrendingUp className="w-4 h-4" /> Book a discovery call
-        </a>
+        </Link>
       </div>
     </div>
   );

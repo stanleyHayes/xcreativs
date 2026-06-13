@@ -63,7 +63,7 @@ func handleStartChat(pool *pgxpool.Pool) http.HandlerFunc {
 			Subject   string `json:"subject"`
 			Source    string `json:"source"`
 		}
-		json.NewDecoder(r.Body).Decode(&req)
+		_ = json.NewDecoder(r.Body).Decode(&req) // body optional; fields default below
 		if req.Source == "" {
 			req.Source = "public"
 		}

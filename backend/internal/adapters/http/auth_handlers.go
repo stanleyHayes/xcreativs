@@ -21,10 +21,10 @@ import (
 
 // AuthHandlerDependencies holds auth-specific dependencies.
 type AuthHandlerDependencies struct {
-	Identity    domain.IdentityRepository
-	JWT         *jwt.Generator
-	Email       domain.EmailSender
-	BaseURL     string
+	Identity     domain.IdentityRepository
+	JWT          *jwt.Generator
+	Email        domain.EmailSender
+	BaseURL      string
 	AccessExpiry time.Duration
 }
 
@@ -45,20 +45,20 @@ type LoginRequest struct {
 
 // TokenResponse represents the token pair response.
 type TokenResponse struct {
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
-	ExpiresIn    int64  `json:"expires_in"`
+	AccessToken  string  `json:"access_token"`
+	RefreshToken string  `json:"refresh_token"`
+	ExpiresIn    int64   `json:"expires_in"`
 	User         UserDTO `json:"user"`
 }
 
 // UserDTO represents a safe user response.
 type UserDTO struct {
-	ID        string `json:"id"`
-	Email     string `json:"email"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Role      string `json:"role"`
-	MFAEnabled bool  `json:"mfa_enabled"`
+	ID         string `json:"id"`
+	Email      string `json:"email"`
+	FirstName  string `json:"first_name"`
+	LastName   string `json:"last_name"`
+	Role       string `json:"role"`
+	MFAEnabled bool   `json:"mfa_enabled"`
 }
 
 func toUserDTO(u *domain.User) UserDTO {
@@ -427,7 +427,7 @@ func handleForgotPassword(deps *AuthHandlerDependencies) http.HandlerFunc {
 				ResetURL:    resetURL,
 				ExpireHours: 1,
 			})
-			go deps.Email.Send(r.Context(), u.Email, subject, htmlBody, textBody)
+			go func() { _ = deps.Email.Send(r.Context(), u.Email, subject, htmlBody, textBody) }()
 		}
 
 		respondJSON(w, http.StatusOK, map[string]string{"message": "If an account exists, a reset link has been sent"})
@@ -507,7 +507,7 @@ func handleResendVerification(deps *AuthHandlerDependencies) http.HandlerFunc {
 				VerificationURL: verifyURL,
 				ExpireHours:     24,
 			})
-			go deps.Email.Send(r.Context(), u.Email, subject, htmlBody, textBody)
+			go func() { _ = deps.Email.Send(r.Context(), u.Email, subject, htmlBody, textBody) }()
 		}
 
 		respondJSON(w, http.StatusOK, map[string]string{"message": "verification email sent"})

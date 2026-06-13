@@ -2,20 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { Bell, Check, CheckCheck, Loader2, Inbox, Filter } from "lucide-react";
-
-interface Notification {
-  id: string;
-  title: string;
-  body: string;
-  notification_type: string;
-  channel: string;
-  is_read: boolean;
-  created_at: string;
-}
+import { Bell, Check, CheckCheck, Loader2, Inbox } from "lucide-react";
+import type { NotificationItem } from "@/lib/types";
 
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "unread">("all");
   const [markingAll, setMarkingAll] = useState(false);
@@ -33,7 +24,9 @@ export default function NotificationsPage() {
   }
 
   useEffect(() => {
-    fetchNotifications();
+    void (async () => {
+      await fetchNotifications();
+    })();
   }, []);
 
   async function markRead(id: string) {

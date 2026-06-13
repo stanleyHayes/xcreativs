@@ -1,8 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { ClipboardList, CheckCircle, XCircle, Clock, Mail, Globe, ArrowRight, Filter, Search } from "lucide-react";
+import { ClipboardList, CheckCircle, XCircle, Clock, Search } from "lucide-react";
+
+interface PartnerApplication {
+  ID: string;
+  Status: string;
+  OrgName?: string;
+  OrgWebsite?: string;
+  ContactName?: string;
+  ContactEmail?: string;
+  ContactPhone?: string;
+  PartnerType?: string;
+  TargetMarkets?: string[];
+  ExistingProduct?: string;
+  DomainExpertise?: string;
+  TractionMetrics?: string;
+  WhatTheyNeed?: string;
+  WhatTheyBring?: string;
+  Notes?: string;
+  CreatedAt: string;
+}
 
 const statusConfig: Record<string, { color: string; bg: string; icon: React.ReactNode; label: string }> = {
   applied: { color: "text-white/60", bg: "bg-white/5", icon: <Clock className="w-3.5 h-3.5" />, label: "Applied" },
@@ -13,21 +32,24 @@ const statusConfig: Record<string, { color: string; bg: string; icon: React.Reac
 };
 
 export default function AdminPartnerApplicationsPage() {
-  const [applications, setApplications] = useState<any[]>([]);
+  const [applications, setApplications] = useState<PartnerApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [selected, setSelected] = useState<any | null>(null);
+  const [selected, setSelected] = useState<PartnerApplication | null>(null);
   const [notes, setNotes] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
 
-  const load = () => {
+  const load = useCallback(() => {
     api.listPartnerApplications(statusFilter)
-      .then((d) => { setApplications(d.applications || []); setLoading(false); })
+      .then((d) => {
+        setApplications((d.applications as unknown as PartnerApplication[]) || []);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
-  };
+  }, [statusFilter]);
 
-  useEffect(() => { load(); }, [statusFilter]);
+  useEffect(() => { load(); }, [load]);
 
   const handleAction = async (id: string, status: string) => {
     setActionLoading(true);

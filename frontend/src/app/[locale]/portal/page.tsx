@@ -6,8 +6,22 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Briefcase, ArrowRight } from "lucide-react";
 
+interface Engagement {
+  ID: string;
+  Sector?: string;
+  ServiceLine?: string;
+  Title?: string;
+  ClientName?: string;
+  Stage?: string;
+  CurrencyPreference?: string;
+}
+
+interface PortalHome {
+  engagements?: Engagement[];
+}
+
 export default function PortalHomePage() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<PortalHome | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const params = useParams();
@@ -16,7 +30,7 @@ export default function PortalHomePage() {
   useEffect(() => {
     api
       .getPortalHome()
-      .then((d) => { setData(d); setLoading(false); })
+      .then((d) => { setData(d as PortalHome); setLoading(false); })
       .catch(() => setError(true));
   }, []);
 
@@ -31,7 +45,7 @@ export default function PortalHomePage() {
       </p>
 
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {data.engagements?.map((eng: any) => (
+        {data?.engagements?.map((eng) => (
           <Link
             key={eng.ID}
             href={`/${locale}/portal/engagements/${eng.ID}/dashboard`}

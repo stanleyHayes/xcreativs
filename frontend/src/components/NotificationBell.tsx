@@ -1,40 +1,49 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { api } from "@/lib/api";
+import type { NotificationItem, NotificationsResponse } from "@/lib/types";
 import { Bell, Check, Loader2 } from "lucide-react";
-
-interface Notification {
-  id: string;
-  title: string;
-  body: string;
-  notification_type: string;
-  is_read: boolean;
-  created_at: string;
-}
 
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  async function fetchNotifications() {
+  const fetchNotifications = useCallback(async () => {
     try {
-      const res = await api.listNotifications(20);
+      const res = (await api.listNotifications(20)) as NotificationsResponse;
       const list = res.notifications || [];
       setNotifications(list);
-      setUnreadCount(list.filter((n: Notification) => !n.is_read).length);
+      setUnreadCount(list.filter((n) => !n.is_read).length);
     } catch {
       // ignore
     }
-  }
+  }, []);
 
   useEffect(() => {
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000); // poll every 30s
-    return () => clearInterval(interval);
+    let active = true;
+    async function load() {
+      try {
+        const res = (await api.listNotifications(20)) as NotificationsResponse;
+        if (!active) return;
+        const list = res.notifications || [];
+        setNotifications(list);
+        setUnreadCount(list.filter((n) => !n.is_read).length);
+      } catch {
+        // ignore
+      }
+    }
+    void load();
+    const interval = setInterval(() => {
+      void load();
+    }, 30000); // poll every 30s
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {

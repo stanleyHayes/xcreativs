@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { FileText, Plus, Pencil, Trash2, Loader2, Save, X } from "lucide-react";
 
@@ -11,7 +11,7 @@ interface PageItem {
   title_fr: string;
   meta_description: string;
   meta_description_fr: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   status: string;
   created_at: string;
   updated_at: string;
@@ -21,6 +21,15 @@ const statusColors: Record<string, string> = {
   published: "text-green-400 bg-green-400/10",
   draft: "text-yellow-400 bg-yellow-400/10",
 };
+
+function getErrorMessage(err: unknown, fallback: string): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "object" && err !== null && "message" in err) {
+    const message = (err as { message: unknown }).message;
+    if (typeof message === "string") return message;
+  }
+  return fallback;
+}
 
 export default function AdminPagesPage() {
   const [pages, setPages] = useState<PageItem[]>([]);
@@ -43,19 +52,32 @@ export default function AdminPagesPage() {
 
   const [form, setForm] = useState(emptyForm);
 
-  async function fetchPages() {
+  const fetchPages = useCallback(async () => {
     try {
-      const res = await api.listPages(filter || undefined);
+      const res = (await api.listPages(filter || undefined)) as unknown as PageItem[] | null;
       setPages(res || []);
     } catch {
       // ignore
     } finally {
       setLoading(false);
     }
-  }
+  }, [filter]);
 
   useEffect(() => {
-    fetchPages();
+    let active = true;
+    void (async () => {
+      try {
+        const res = (await api.listPages(filter || undefined)) as unknown as PageItem[] | null;
+        if (active) setPages(res || []);
+      } catch {
+        // ignore
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
   }, [filter]);
 
   function startEdit(page: PageItem) {
@@ -94,8 +116,8 @@ export default function AdminPagesPage() {
       }
       cancelEdit();
       await fetchPages();
-    } catch (err: any) {
-      alert(err?.message || "Failed to save");
+    } catch (err: unknown) {
+      alert(getErrorMessage(err, "Failed to save"));
     } finally {
       setSaving(false);
     }
@@ -107,8 +129,8 @@ export default function AdminPagesPage() {
     try {
       await api.deletePage(id);
       await fetchPages();
-    } catch (err: any) {
-      alert(err?.message || "Failed to delete");
+    } catch (err: unknown) {
+      alert(getErrorMessage(err, "Failed to delete"));
     } finally {
       setDeleting(null);
     }

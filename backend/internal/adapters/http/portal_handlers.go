@@ -66,8 +66,8 @@ func handleEngagementDashboard(pool *pgxpool.Pool) http.HandlerFunc {
 		milestones, _ := deps.Engagement.ListMilestones(r.Context(), id)
 		activity, _ := deps.Engagement.ListActivityFeed(r.Context(), id, 10)
 		respondJSON(w, http.StatusOK, map[string]any{
-			"engagement":     eng,
-			"milestones":     milestones,
+			"engagement":      eng,
+			"milestones":      milestones,
 			"recent_activity": activity,
 		})
 	}
@@ -217,15 +217,15 @@ func handleCreateDeliverable(pool *pgxpool.Pool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := chi.URLParam(r, "id")
 		var req struct {
-			Title          string  `json:"title"`
-			Description    string  `json:"description"`
-			Version        int     `json:"version"`
-			FileURL        string  `json:"file_url"`
-			FileName       string  `json:"file_name"`
-			FileSizeBytes  *int64  `json:"file_size_bytes"`
-			MimeType       string  `json:"mime_type"`
-			VisibilityRole string  `json:"visibility_role"`
-			Status         string  `json:"status"`
+			Title          string `json:"title"`
+			Description    string `json:"description"`
+			Version        int    `json:"version"`
+			FileURL        string `json:"file_url"`
+			FileName       string `json:"file_name"`
+			FileSizeBytes  *int64 `json:"file_size_bytes"`
+			MimeType       string `json:"mime_type"`
+			VisibilityRole string `json:"visibility_role"`
+			Status         string `json:"status"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			respondError(w, http.StatusBadRequest, "invalid request")
@@ -245,19 +245,19 @@ func handleCreateDeliverable(pool *pgxpool.Pool) http.HandlerFunc {
 		uidUUID, _ := uuid.Parse(uid)
 		eid, _ := uuid.Parse(id)
 		d := &domain.Deliverable{
-			ID:             uuid.New(),
-			EngagementID:   eid,
-			Title:          req.Title,
-			Description:    req.Description,
-			Version:        req.Version,
-			FileURL:        req.FileURL,
-			FileName:       req.FileName,
-			FileSizeBytes:  req.FileSizeBytes,
-			MimeType:       req.MimeType,
+			ID:              uuid.New(),
+			EngagementID:    eid,
+			Title:           req.Title,
+			Description:     req.Description,
+			Version:         req.Version,
+			FileURL:         req.FileURL,
+			FileName:        req.FileName,
+			FileSizeBytes:   req.FileSizeBytes,
+			MimeType:        req.MimeType,
 			SignatureStatus: "unsigned",
-			VisibilityRole: req.VisibilityRole,
-			Status:         req.Status,
-			CreatedBy:      &uidUUID,
+			VisibilityRole:  req.VisibilityRole,
+			Status:          req.Status,
+			CreatedBy:       &uidUUID,
 		}
 		if err := deps.Engagement.CreateDeliverable(r.Context(), d); err != nil {
 			respondError(w, http.StatusInternalServerError, "failed to create deliverable")
@@ -272,15 +272,15 @@ func handleUpdateDeliverable(pool *pgxpool.Pool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		did := chi.URLParam(r, "deliverableID")
 		var req struct {
-			Title          string  `json:"title"`
-			Description    string  `json:"description"`
-			Version        int     `json:"version"`
-			FileURL        string  `json:"file_url"`
-			FileName       string  `json:"file_name"`
-			FileSizeBytes  *int64  `json:"file_size_bytes"`
-			MimeType       string  `json:"mime_type"`
-			VisibilityRole string  `json:"visibility_role"`
-			Status         string  `json:"status"`
+			Title          string `json:"title"`
+			Description    string `json:"description"`
+			Version        int    `json:"version"`
+			FileURL        string `json:"file_url"`
+			FileName       string `json:"file_name"`
+			FileSizeBytes  *int64 `json:"file_size_bytes"`
+			MimeType       string `json:"mime_type"`
+			VisibilityRole string `json:"visibility_role"`
+			Status         string `json:"status"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			respondError(w, http.StatusBadRequest, "invalid request")
@@ -347,12 +347,12 @@ func handleCreateDecision(pool *pgxpool.Pool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := chi.URLParam(r, "id")
 		var req struct {
-			Title                  string   `json:"title"`
-			Description            string   `json:"description"`
-			Rationale              string   `json:"rationale"`
-			AlternativesConsidered string   `json:"alternatives_considered"`
-			Status                 string   `json:"status"`
-			LinkedArtefacts        []any    `json:"linked_artefacts"`
+			Title                  string `json:"title"`
+			Description            string `json:"description"`
+			Rationale              string `json:"rationale"`
+			AlternativesConsidered string `json:"alternatives_considered"`
+			Status                 string `json:"status"`
+			LinkedArtefacts        []any  `json:"linked_artefacts"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			respondError(w, http.StatusBadRequest, "invalid request")
@@ -395,12 +395,12 @@ func handleUpdateDecision(pool *pgxpool.Pool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		did := chi.URLParam(r, "decisionID")
 		var req struct {
-			Title                  string   `json:"title"`
-			Description            string   `json:"description"`
-			Rationale              string   `json:"rationale"`
-			AlternativesConsidered string   `json:"alternatives_considered"`
-			Status                 string   `json:"status"`
-			LinkedArtefacts        []any    `json:"linked_artefacts"`
+			Title                  string `json:"title"`
+			Description            string `json:"description"`
+			Rationale              string `json:"rationale"`
+			AlternativesConsidered string `json:"alternatives_considered"`
+			Status                 string `json:"status"`
+			LinkedArtefacts        []any  `json:"linked_artefacts"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			respondError(w, http.StatusBadRequest, "invalid request")
@@ -868,10 +868,10 @@ func handleCreateThread(pool *pgxpool.Pool) http.HandlerFunc {
 	deps := NewHandlerDependencies(pool)
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
-			EngagementID string    `json:"engagement_id"`
-			ParentType   string    `json:"parent_type"`
-			ParentID     string    `json:"parent_id"`
-			Title        string    `json:"title"`
+			EngagementID string `json:"engagement_id"`
+			ParentType   string `json:"parent_type"`
+			ParentID     string `json:"parent_id"`
+			Title        string `json:"title"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			respondError(w, http.StatusBadRequest, "invalid request body")

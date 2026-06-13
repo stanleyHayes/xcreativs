@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { Key, Plus, X, Copy, Check, Trash2, Shield, Clock, Eye, EyeOff } from "lucide-react";
+import { Key, Plus, X, Copy, Check, Trash2, Shield, Clock } from "lucide-react";
 
 const scopeLabels: Record<string, string> = {
   engagement_read: "Read Engagements",
@@ -13,8 +13,36 @@ const scopeLabels: Record<string, string> = {
   admin: "Admin",
 };
 
+interface APIKey {
+  id: string;
+  name: string;
+  prefix: string;
+  scopes?: string[];
+  is_active: boolean;
+  created_at: string;
+  last_used_at?: string | null;
+  expires_at?: string | null;
+}
+
+const asString = (v: unknown): string => (typeof v === "string" ? v : "");
+const asOptionalString = (v: unknown): string | null =>
+  typeof v === "string" ? v : null;
+
+const toAPIKey = (entity: Record<string, unknown>): APIKey => ({
+  id: asString(entity.id),
+  name: asString(entity.name),
+  prefix: asString(entity.prefix),
+  scopes: Array.isArray(entity.scopes)
+    ? entity.scopes.filter((s): s is string => typeof s === "string")
+    : undefined,
+  is_active: entity.is_active === true,
+  created_at: asString(entity.created_at),
+  last_used_at: asOptionalString(entity.last_used_at),
+  expires_at: asOptionalString(entity.expires_at),
+});
+
 export default function APIKeysPage() {
-  const [keys, setKeys] = useState<any[]>([]);
+  const [keys, setKeys] = useState<APIKey[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: "", scopes: ["engagement_read"], expires: "never" });
@@ -24,7 +52,7 @@ export default function APIKeysPage() {
 
   const load = () => {
     api.listAPIKeys()
-      .then((d) => { setKeys(d.keys || []); setLoading(false); })
+      .then((d) => { setKeys((d.keys || []).map(toAPIKey)); setLoading(false); })
       .catch(() => setLoading(false));
   };
 
@@ -87,7 +115,7 @@ export default function APIKeysPage() {
       {/* New key reveal */}
       {newKey && (
         <div className="border border-green-400/30 bg-green-400/5 rounded-lg p-4">
-          <p className="text-sm font-medium text-green-400 mb-2 flex items-center gap-1"><Shield className="w-4 h-4" /> Copy this key now — you won't see it again</p>
+          <p className="text-sm font-medium text-green-400 mb-2 flex items-center gap-1"><Shield className="w-4 h-4" /> Copy this key now — you won&apos;t see it again</p>
           <div className="flex gap-2">
             <code className="flex-1 bg-black/30 rounded px-3 py-2 text-sm font-mono text-white/90 break-all">{newKey}</code>
             <button onClick={copyKey} className="px-3 py-2 bg-green-400/20 text-green-400 rounded hover:bg-green-400/30 transition-colors">

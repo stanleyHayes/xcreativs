@@ -65,9 +65,9 @@ func handleCreateDemoLink(pool *pgxpool.Pool) http.HandlerFunc {
 			return
 		}
 		var req struct {
-			Label         string `json:"label"`
-			TargetURL     string `json:"target_url"`
-			ExpiresInHours int   `json:"expires_in_hours"`
+			Label          string `json:"label"`
+			TargetURL      string `json:"target_url"`
+			ExpiresInHours int    `json:"expires_in_hours"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			respondError(w, http.StatusBadRequest, "invalid request")

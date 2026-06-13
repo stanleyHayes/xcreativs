@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { BookOpen, ExternalLink, Star, Clock, Tag } from "lucide-react";
+import PageBanner from "@/components/PageBanner";
 
 const categoryLabels: Record<string, string> = {
   strategy: "Strategy",
@@ -14,14 +15,28 @@ const categoryLabels: Record<string, string> = {
   general: "General",
 };
 
+interface ReadingListItem {
+  Slug: string;
+  Title: string;
+  Author: string;
+  Category: string;
+  Annotation: string;
+  Recommended?: boolean;
+  SourcePublication?: string;
+  PublishedYear?: number;
+  ReadTimeMinutes?: number;
+  Tags?: string[];
+  SourceURL?: string;
+}
+
 export default function ReadingListPage() {
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<ReadingListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState("");
 
   useEffect(() => {
     api.listReadingList(categoryFilter).then((d) => {
-      setItems(d.items || []);
+      setItems((d.items as ReadingListItem[] | undefined) || []);
       setLoading(false);
     });
   }, [categoryFilter]);
@@ -31,13 +46,16 @@ export default function ReadingListPage() {
   const categories = Array.from(new Set(items.map((i) => i.Category)));
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <h1 className="text-3xl lg:text-5xl font-bold">Annotated Bibliography</h1>
-      <p className="mt-4 text-lg text-gravity/60 max-w-2xl">
-        Curated readings from the edges of digital systems, governance, and platform economics — annotated by the XCreativs team.
-      </p>
-
-      {/* Category filters */}
+    <>
+      <PageBanner
+        icon={BookOpen}
+        eyebrow="Curated bibliography"
+        title="Annotated Bibliography"
+        description="Curated readings from the edges of digital systems, governance, and platform economics — annotated by the XCreativs team."
+        crumbs={[{ label: "Home", href: "/" }, { label: "Annotated Bibliography" }]}
+      />
+      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+        {/* Category filters */}
       <div className="mt-8 flex flex-wrap gap-2">
         <button
           onClick={() => setCategoryFilter("")}
@@ -94,7 +112,7 @@ export default function ReadingListPage() {
                       <Clock className="w-3 h-3" /> {item.ReadTimeMinutes} min read
                     </span>
                   )}
-                  {item.Tags?.length > 0 && (
+                  {item.Tags && item.Tags.length > 0 && (
                     <span className="flex items-center gap-1">
                       <Tag className="w-3 h-3" /> {item.Tags.join(", ")}
                     </span>
@@ -114,6 +132,7 @@ export default function ReadingListPage() {
       {items.length === 0 && (
         <p className="text-center text-gravity/40 py-12">No reading list items found.</p>
       )}
-    </main>
+      </main>
+    </>
   );
 }

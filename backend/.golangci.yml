@@ -1,34 +1,53 @@
+version: "2"
 run:
-  timeout: 5m
   tests: true
-
 linters:
   enable:
-    - govet
-    - staticcheck
-    - errcheck
-    - ineffassign
-    - unused
-    - revive
+    - bodyclose
     - gosec
     - misspell
-    - bodyclose
-
-linters-settings:
-  gosec:
-    excludes:
-      - G104  # audited best-effort error handling (fire-and-forget writes)
-  revive:
+    - revive
+  settings:
+    gosec:
+      excludes:
+        - G104
+    revive:
+      rules:
+        - name: unused-parameter
+          disabled: true
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
     rules:
-      - name: unused-parameter
-        disabled: true
-
+      - linters:
+          - errcheck
+          - gosec
+        path: _test\.go
+      # Cloudinary's request-signing algorithm mandates SHA-1; not a security weakness here.
+      - linters:
+          - gosec
+        path: pkg/storage/cloudinary\.go
+        text: 'G401|G505'
+      # contextKey constant whose value contains "key"; not a hardcoded credential.
+      - linters:
+          - gosec
+        path: internal/adapters/http/apikey_middleware\.go
+        text: G101
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
-  exclude-rules:
-    # Test files may use dot-imports / long funcs.
-    - path: _test\.go
-      linters:
-        - gosec
-        - errcheck
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

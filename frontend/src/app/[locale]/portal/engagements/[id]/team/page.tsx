@@ -3,7 +3,8 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { Users, Mail, CheckCircle, Clock, Plus, X, Loader2, Trash2 } from "lucide-react";
+import { Mail, CheckCircle, Clock, Plus, X, Loader2, Trash2 } from "lucide-react";
+import type { TeamMembersResponse } from "@/lib/types";
 
 interface TeamMember {
   ID: string;
@@ -33,8 +34,8 @@ export default function TeamPage() {
 
   async function fetchMembers() {
     try {
-      const res = await api.listTeamMembers(id as string);
-      setMembers(res.team_members || []);
+      const res = (await api.listTeamMembers(id as string)) as TeamMembersResponse;
+      setMembers((res.team_members as TeamMember[] | undefined) || []);
     } catch {
       setError("Failed to load data");
     } finally {
@@ -44,7 +45,9 @@ export default function TeamPage() {
 
   useEffect(() => {
     if (!id) return;
-    fetchMembers();
+    void (async () => {
+      await fetchMembers();
+    })();
   }, [id]);
 
   async function handleCreate(e: React.FormEvent) {
@@ -55,8 +58,8 @@ export default function TeamPage() {
       setShowForm(false);
       setForm({ name: "", role: "", email: "", availability_status: "available", is_xcreativs: false });
       await fetchMembers();
-    } catch (err: any) {
-      alert(err?.message || "Failed to add team member");
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Failed to add team member");
     } finally {
       setSaving(false);
     }
@@ -68,8 +71,8 @@ export default function TeamPage() {
     try {
       await api.removeTeamMember(id as string, memberID);
       await fetchMembers();
-    } catch (err: any) {
-      alert(err?.message || "Failed to remove");
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Failed to remove");
     } finally {
       setRemoving(null);
     }

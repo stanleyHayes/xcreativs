@@ -2,18 +2,44 @@
 
 import { useState } from "react";
 import { api } from "@/lib/api";
-import { ArrowRight, FileText, Newspaper, Calculator, CheckCircle, Calendar } from "lucide-react";
+import { FileText, Newspaper, Calculator, CheckCircle, Calendar, Mail } from "lucide-react";
+import PageBanner from "@/components/PageBanner";
+
+function errorMessage(err: unknown): string | undefined {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "object" && err !== null && "message" in err) {
+    const message = (err as { message?: unknown }).message;
+    if (typeof message === "string") return message;
+  }
+  return undefined;
+}
+
+interface EstimateComponent {
+  name: string;
+  phase: string;
+}
+
+interface EstimateResult {
+  WeeksBand: string;
+  PriceBandUSD: string;
+  PriceBandGHS: string;
+  Components?: EstimateComponent[];
+  SampleArchitecture?: string;
+}
 
 export default function ContactPage() {
   const [tab, setTab] = useState<"diagnostic" | "estimate" | "book" | "newsletter">("diagnostic");
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <h1 className="text-3xl lg:text-5xl font-bold">Contact</h1>
-      <p className="mt-4 text-lg text-gravity/60 max-w-2xl">
-        Engagement is by qualification, not by enquiry. Serious prospects: begin with the diagnostic.
-      </p>
-
+    <>
+      <PageBanner
+        icon={Mail}
+        eyebrow="Start a conversation"
+        title="Contact"
+        description="Engagement is by qualification, not by enquiry. Serious prospects: begin with the diagnostic."
+        crumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
+      />
+      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
       <div className="mt-10 flex gap-4 border-b border-hairline">
         {[
           { key: "diagnostic" as const, label: "Diagnostic", icon: FileText },
@@ -42,7 +68,8 @@ export default function ContactPage() {
         {tab === "book" && <BookingForm />}
         {tab === "newsletter" && <NewsletterForm />}
       </div>
-    </main>
+      </main>
+    </>
   );
 }
 
@@ -62,14 +89,14 @@ function DiagnosticForm() {
       });
       setId(res.diagnostic_id);
       setSubmitted(true);
-    } catch (err: any) {
-      alert(err?.message || "Failed to start diagnostic");
+    } catch (err: unknown) {
+      alert(errorMessage(err) || "Failed to start diagnostic");
     }
   }
 
   if (submitted) {
     return (
-      <div className="border border-hairline rounded p-8 bg-soft">
+      <div className="card-x p-8">
         <h2 className="text-xl font-semibold">Diagnostic Started</h2>
         <p className="mt-2 text-gravity/60">Your diagnostic ID: {id}</p>
         <p className="mt-4 text-sm text-gravity/60">Our team will review your responses and route you accordingly.</p>
@@ -121,14 +148,14 @@ function DiagnosticForm() {
 }
 
 function EstimateForm() {
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<EstimateResult | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
     const fd = new FormData(e.currentTarget);
-    const params: Record<string, any> = {};
+    const params: Record<string, string | number | FormDataEntryValue> = {};
     const integrations = fd.get("integrations");
     if (integrations) params.integrations = parseInt(integrations as string);
     const users = fd.get("user_count");
@@ -150,9 +177,9 @@ function EstimateForm() {
         service_line: fd.get("service_line"),
         parameters: params,
       });
-      setResult(res);
-    } catch (err: any) {
-      alert(err?.message || "Failed to generate estimate");
+      setResult(res as EstimateResult);
+    } catch (err: unknown) {
+      alert(errorMessage(err) || "Failed to generate estimate");
     } finally {
       setSubmitting(false);
     }
@@ -160,21 +187,21 @@ function EstimateForm() {
 
   if (result) {
     return (
-      <div className="border border-hairline rounded p-8 bg-soft">
+      <div className="card-x p-8">
         <div className="flex items-center gap-2 mb-4">
           <CheckCircle className="w-5 h-5 text-signal" />
           <h2 className="text-xl font-semibold">Indicative Estimate</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="border border-hairline rounded p-4 bg-foundation">
+          <div className="card-x p-4">
             <p className="text-xs text-gravity/40 uppercase tracking-wider">Timeline</p>
             <p className="text-xl font-bold text-signal">{result.WeeksBand}</p>
           </div>
-          <div className="border border-hairline rounded p-4 bg-foundation">
+          <div className="card-x p-4">
             <p className="text-xs text-gravity/40 uppercase tracking-wider">Price (USD)</p>
             <p className="text-xl font-bold">{result.PriceBandUSD}</p>
           </div>
-          <div className="border border-hairline rounded p-4 bg-foundation">
+          <div className="card-x p-4">
             <p className="text-xs text-gravity/40 uppercase tracking-wider">Price (GHS)</p>
             <p className="text-xl font-bold">{result.PriceBandGHS}</p>
           </div>
@@ -184,7 +211,7 @@ function EstimateForm() {
           <div className="mb-6">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-gravity/40 mb-3">Phase Breakdown</h3>
             <div className="space-y-2">
-              {result.Components.map((c: any, i: number) => (
+              {result.Components.map((c: EstimateComponent, i: number) => (
                 <div key={i} className="flex items-center justify-between py-2 border-b border-hairline last:border-0">
                   <span className="font-medium">{c.name}</span>
                   <span className="text-sm text-gravity/50">{c.phase}</span>
@@ -319,14 +346,14 @@ function BookingForm() {
       });
       setId(res.booking_id);
       setSubmitted(true);
-    } catch (err: any) {
-      alert(err?.message || "Failed to submit booking request");
+    } catch (err: unknown) {
+      alert(errorMessage(err) || "Failed to submit booking request");
     }
   }
 
   if (submitted) {
     return (
-      <div className="border border-hairline rounded p-8 bg-soft">
+      <div className="card-x p-8">
         <div className="flex items-center gap-2 mb-4">
           <CheckCircle className="w-5 h-5 text-signal" />
           <h2 className="text-xl font-semibold">Booking Requested</h2>
@@ -404,14 +431,14 @@ function NewsletterForm() {
         segments: ["general"],
       });
       setDone(true);
-    } catch (err: any) {
-      alert(err?.message || "Failed to subscribe");
+    } catch (err: unknown) {
+      alert(errorMessage(err) || "Failed to subscribe");
     }
   }
 
   if (done) {
     return (
-      <div className="border border-hairline rounded p-8 bg-soft">
+      <div className="card-x p-8">
         <h2 className="text-xl font-semibold">Subscribed</h2>
         <p className="mt-2 text-gravity/60">Thank you for joining. You will hear from us soon.</p>
       </div>

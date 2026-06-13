@@ -4,6 +4,31 @@
 -- expect a richer model. All affected tables are empty, so we recreate them
 -- cleanly. partner.applications already matches the code and is left intact.
 
+-- partner.applications was originally created outside the migration history;
+-- create it here (idempotently) so a fresh database reproduces the full schema.
+-- partner.partners below references it, so it must exist first.
+CREATE TABLE IF NOT EXISTS partner.applications (
+    id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    org_name         TEXT NOT NULL,
+    org_website      TEXT NOT NULL DEFAULT '',
+    contact_name     TEXT NOT NULL DEFAULT '',
+    contact_email    TEXT NOT NULL DEFAULT '',
+    contact_phone    TEXT,
+    partner_type     TEXT NOT NULL DEFAULT 'technology',
+    existing_product TEXT,
+    domain_expertise TEXT,
+    traction_metrics TEXT,
+    what_they_need   TEXT,
+    what_they_bring  TEXT,
+    target_markets   TEXT[] NOT NULL DEFAULT '{}',
+    status           TEXT NOT NULL DEFAULT 'pending',
+    reviewed_by      UUID REFERENCES identity.users(id) ON DELETE SET NULL,
+    reviewed_at      TIMESTAMPTZ,
+    notes            TEXT,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 DROP TABLE IF EXISTS partner.distribution_orders CASCADE;
 DROP TABLE IF EXISTS partner.referrals CASCADE;
 DROP TABLE IF EXISTS partner.agreements CASCADE;
@@ -106,3 +131,5 @@ CREATE INDEX IF NOT EXISTS idx_partner_products_partner_id ON partner.products(p
 CREATE INDEX IF NOT EXISTS idx_partner_agreements_partner_id ON partner.agreements(partner_id);
 CREATE INDEX IF NOT EXISTS idx_referrals_partner_id ON partner.referrals(partner_id);
 CREATE INDEX IF NOT EXISTS idx_distribution_orders_partner_id ON partner.distribution_orders(partner_id);
+CREATE INDEX IF NOT EXISTS idx_partner_applications_email ON partner.applications(contact_email);
+CREATE INDEX IF NOT EXISTS idx_partner_applications_status ON partner.applications(status);

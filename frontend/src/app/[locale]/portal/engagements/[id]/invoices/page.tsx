@@ -1,10 +1,21 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Receipt, CheckCircle, Clock, XCircle, Plus, X, Link2 } from "lucide-react";
 import { useCurrency } from "@/components/CurrencyProvider";
+
+interface Invoice {
+  ID: string;
+  InvoiceNumber?: string;
+  Status: string;
+  Amount?: number;
+  Currency?: string;
+  DueDate?: string;
+  StripePaymentLink?: string;
+  PaystackPaymentLink?: string;
+}
 
 const statusStyle = (s: string) =>
   s === "paid" ? "bg-signal/10 text-signal" :
@@ -16,18 +27,18 @@ const statusStyle = (s: string) =>
 export default function InvoicesPage() {
   const { id } = useParams();
   const { format } = useCurrency();
-  const [invoices, setInvoices] = useState<any[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [form, setForm] = useState({ amount: "", currency: "USD", due_date: "" });
 
-  const load = () => {
+  const load = useCallback(() => {
     if (!id) return;
-    api.listInvoices(id as string).then((d) => { setInvoices(d.invoices || []); setLoading(false); }).catch(() => { setError("Failed to load data"); setLoading(false); });
-  };
-  useEffect(() => { load(); }, [id]);
+    api.listInvoices(id as string).then((d) => { setInvoices((d.invoices as Invoice[] | undefined) || []); setLoading(false); }).catch(() => { setError("Failed to load data"); setLoading(false); });
+  }, [id]);
+  useEffect(() => { load(); }, [load]);
 
   async function generate() {
     if (!id || !form.amount) return;

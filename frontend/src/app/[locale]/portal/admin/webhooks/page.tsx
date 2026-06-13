@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import type { WebhooksResponse, WebhookDeliveriesResponse } from "@/lib/types";
 import { Webhook, Plus, Trash2, Loader2, Send, CheckCircle, XCircle, Clock, RefreshCw } from "lucide-react";
 
 interface WebhookSub {
@@ -17,7 +18,7 @@ interface WebhookDelivery {
   id: string;
   subscription_id: string;
   event: string;
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
   response_status: number;
   response_body: string;
   error_message: string;
@@ -35,27 +36,36 @@ export default function AdminWebhooksPage() {
 
   const [form, setForm] = useState({ name: "", url: "", events: "diagnostic_start,rfp_submit,booking_request" });
 
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     try {
-      const whRes = await api.listWebhooks?.() || fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/admin/webhooks`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
-      }).then(r => r.json());
-      setWebhooks(whRes?.webhooks || []);
+      const whRes =
+        (await api.listWebhooks?.()) ||
+        ((await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/admin/webhooks`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
+        }).then((r) => r.json())) as WebhooksResponse);
 
-      const dRes = await api.listWebhookDeliveries?.() || fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/admin/webhooks/deliveries`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
-      }).then(r => r.json());
-      setDeliveries(dRes?.deliveries || []);
+      const dRes =
+        (await api.listWebhookDeliveries?.()) ||
+        ((await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/admin/webhooks/deliveries`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
+        }).then((r) => r.json())) as WebhookDeliveriesResponse);
+
+      await Promise.resolve().then(() => {
+        setWebhooks((whRes?.webhooks as WebhookSub[] | undefined) || []);
+        setDeliveries((dRes?.deliveries as WebhookDelivery[] | undefined) || []);
+      });
     } catch {
       // ignore
     } finally {
-      setLoading(false);
+      await Promise.resolve().then(() => {
+        setLoading(false);
+      });
     }
-  }
+  }, []);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    void fetchData();
+  }, [fetchData]);
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
@@ -76,8 +86,8 @@ export default function AdminWebhooksPage() {
       setCreating(false);
       setForm({ name: "", url: "", events: "diagnostic_start,rfp_submit,booking_request" });
       await fetchData();
-    } catch (err: any) {
-      alert(err?.message || "Failed to create webhook");
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Failed to create webhook");
     } finally {
       setSaving(false);
     }
@@ -92,8 +102,8 @@ export default function AdminWebhooksPage() {
         headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
       });
       await fetchData();
-    } catch (err: any) {
-      alert(err?.message || "Failed to delete");
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Failed to delete");
     } finally {
       setDeleting(null);
     }

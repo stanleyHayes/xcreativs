@@ -35,11 +35,27 @@ export default function CapabilitiesPage() {
     setLoading(true);
     try {
       const d = await api.listCapabilityDeliveries(id as string);
-      setItems(d.capability_deliveries || []);
+      setItems((d.capability_deliveries as unknown as Capability[]) || []);
       setError("");
     } catch { setError("Failed to load capabilities"); } finally { setLoading(false); }
   };
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    if (!id) return;
+    let active = true;
+    void (async () => {
+      try {
+        const d = await api.listCapabilityDeliveries(id as string);
+        if (!active) return;
+        setItems((d.capability_deliveries as unknown as Capability[]) || []);
+        setError("");
+      } catch {
+        if (active) setError("Failed to load capabilities");
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, [id]);
 
   const create = async () => {
     if (!id || !form.capability_name.trim()) return;

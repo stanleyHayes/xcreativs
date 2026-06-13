@@ -81,11 +81,11 @@ func handlePartnerDashboard(pool *pgxpool.Pool) http.HandlerFunc {
 		referrals, _ := deps.Partner.ListReferrals(r.Context(), partner.ID.String())
 		orders, _ := deps.Partner.ListDistributionOrders(r.Context(), partner.ID.String())
 		respondJSON(w, http.StatusOK, map[string]any{
-			"partner":     partner,
-			"products":    products,
-			"agreements":  agreements,
-			"referrals":   referrals,
-			"orders":      orders,
+			"partner":    partner,
+			"products":   products,
+			"agreements": agreements,
+			"referrals":  referrals,
+			"orders":     orders,
 		})
 	}
 }

@@ -5,7 +5,7 @@ Self-hosted, sovereignty-conscious, bilingual (EN/FR).
 
 ## Architecture
 
-- **Backend**: Go 1.24, Chi router, raw PostgreSQL via `pgx/v5` (no ORM), Clean Architecture / Ports & Adapters
+- **Backend**: Go 1.25, Chi router, raw PostgreSQL via `pgx/v5` (no ORM), Clean Architecture / Ports & Adapters
 - **Frontend**: Next.js 16 (App Router), TypeScript, Tailwind CSS, `next-intl` v4, PWA
 - **Database**: PostgreSQL 16 — **81 tables across 9 bounded-context schemas** (`content`, `identity`, `lead_qual`, `talent`, `engagement`, `comms`, `portal_config`, `partner`, `interactive`); **24 versioned migrations** (golang-migrate)
 - **Auth**: JWT (15min access / 30day refresh) + server-side session revocation, bcrypt, TOTP MFA (+ optional mandatory enforcement), RBAC, scoped API keys, OAuth (Google/Microsoft) + generic OIDC enterprise SSO
@@ -22,7 +22,7 @@ Self-hosted, sovereignty-conscious, bilingual (EN/FR).
 
 ### Prerequisites
 
-Go 1.24+ · Node.js 22+ · PostgreSQL 16+ · `golang-migrate` CLI · Docker (optional)
+Go 1.25+ · Node.js 22+ · PostgreSQL 16+ · `golang-migrate` CLI · Docker (optional)
 
 ### Database + backend
 

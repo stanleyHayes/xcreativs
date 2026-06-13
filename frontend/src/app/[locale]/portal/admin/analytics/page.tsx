@@ -1,11 +1,48 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
 import { BarChart3, Users, MousePointerClick, FileText, Briefcase, Globe, TrendingUp, TrendingDown, Activity } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+interface AnalyticsMetrics {
+  visitors_30d?: number;
+  page_views_30d?: number;
+  diagnostics_started_30d?: number;
+  rfps_submitted_30d?: number;
+  portal_logins_30d?: number;
+  portal_actions_30d?: number;
+  new_applications_30d?: number;
+  new_partnerships_30d?: number;
+  active_engagements?: number;
+  active_users?: number;
+}
+
+interface DailyView {
+  day: string;
+  views: number;
+}
+
+interface TopPage {
+  path: string;
+  views: number;
+}
+
+interface AnalyticsFunnel {
+  visitors?: number;
+  diagnostics?: number;
+  rfps?: number;
+  portal_users?: number;
+}
+
+interface AnalyticsData {
+  metrics?: AnalyticsMetrics;
+  daily_views?: DailyView[];
+  top_pages?: TopPage[];
+  funnel?: AnalyticsFunnel;
+}
 
 export default function AnalyticsDashboardPage() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,7 +59,7 @@ export default function AnalyticsDashboardPage() {
 
   const { metrics, daily_views, top_pages, funnel } = data;
 
-  const maxViews = Math.max(...(daily_views || []).map((d: any) => d.views), 1);
+  const maxViews = Math.max(...(daily_views || []).map((d: DailyView) => d.views), 1);
 
   return (
     <div className="space-y-8">
@@ -77,7 +114,7 @@ export default function AnalyticsDashboardPage() {
         <div className="border border-white/10 rounded-lg p-5">
           <h2 className="font-semibold mb-4">Daily Page Views (30 days)</h2>
           <div className="flex items-end gap-1 h-40">
-            {(daily_views || []).map((d: any) => (
+            {(daily_views || []).map((d: DailyView) => (
               <div
                 key={d.day}
                 className="flex-1 bg-signal/40 hover:bg-signal/60 rounded-t transition-colors relative group"
@@ -93,8 +130,8 @@ export default function AnalyticsDashboardPage() {
           <div className="flex justify-between mt-2 text-[10px] text-white/30">
             {(daily_views || []).length > 0 && (
               <>
-                <span>{daily_views[0]?.day?.slice(5)}</span>
-                <span>{daily_views[daily_views.length - 1]?.day?.slice(5)}</span>
+                <span>{daily_views?.[0]?.day?.slice(5)}</span>
+                <span>{daily_views?.[daily_views.length - 1]?.day?.slice(5)}</span>
               </>
             )}
           </div>
@@ -104,7 +141,7 @@ export default function AnalyticsDashboardPage() {
         <div className="border border-white/10 rounded-lg p-5">
           <h2 className="font-semibold mb-4">Top Pages (30 days)</h2>
           <div className="space-y-2">
-            {(top_pages || []).map((p: any, i: number) => (
+            {(top_pages || []).map((p: TopPage, i: number) => (
               <div key={p.path} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-white/30 w-4">{i + 1}</span>
@@ -132,7 +169,7 @@ export default function AnalyticsDashboardPage() {
   );
 }
 
-function MetricCard({ icon: Icon, label, value, color }: { icon: any; label: string; value: number; color: string }) {
+function MetricCard({ icon: Icon, label, value, color }: { icon: LucideIcon; label: string; value: number; color: string }) {
   return (
     <div className="border border-white/10 rounded-lg p-4">
       <Icon className={`w-4 h-4 ${color} mb-2`} />

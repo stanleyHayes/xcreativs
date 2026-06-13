@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { FileUpload } from "@/components/FileUpload";
 import { FileText, CheckCircle, XCircle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
@@ -17,6 +17,10 @@ interface Deliverable {
   Status: string;
   VisibilityRole: string;
   SignatureStatus: string;
+}
+
+interface DeliverablesResponse {
+  deliverables?: Deliverable[];
 }
 
 const statusConfig: Record<string, { color: string; label: string }> = {
@@ -38,11 +42,11 @@ export default function DeliverablesPage() {
   const [submitting, setSubmitting] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (!id) return;
     setLoading(true);
     try {
-      const d = await api.listDeliverables(id as string);
+      const d = (await api.listDeliverables(id as string)) as DeliverablesResponse;
       setDeliverables(d.deliverables || []);
       setError("");
     } catch {
@@ -50,9 +54,27 @@ export default function DeliverablesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    if (!id) return;
+    let active = true;
+    (async () => {
+      try {
+        const d = (await api.listDeliverables(id as string)) as DeliverablesResponse;
+        if (!active) return;
+        setDeliverables(d.deliverables || []);
+        setError("");
+      } catch {
+        if (active) setError("Failed to load deliverables");
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [id]);
 
   const resetForm = () => {
     setForm({ title: "", description: "", version: 1, file_url: "", file_name: "", mime_type: "", visibility_role: "viewer", status: "draft" });

@@ -5,6 +5,14 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { FileText, Download, Shield, BookOpen, FileCheck } from "lucide-react";
 
+interface PortalDocument {
+  ID: string;
+  Title: string;
+  DocType: string;
+  RoleScope: string;
+  FileURL?: string;
+}
+
 const docTypeConfig: Record<string, { icon: React.ReactNode; color: string; label: string }> = {
   contract: { icon: <FileCheck className="w-4 h-4" />, color: "text-signal", label: "Contract" },
   nda: { icon: <Shield className="w-4 h-4" />, color: "text-yellow-400", label: "NDA" },
@@ -14,13 +22,13 @@ const docTypeConfig: Record<string, { icon: React.ReactNode; color: string; labe
 
 export default function DocumentsPage() {
   const { id } = useParams();
-  const [documents, setDocuments] = useState<any[]>([]);
+  const [documents, setDocuments] = useState<PortalDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!id) return;
-    api.listDocuments(id as string).then((d) => { setDocuments(d.documents || []); setLoading(false); }).catch(() => setError("Failed to load data"));
+    api.listDocuments(id as string).then((d) => { setDocuments((d.documents as PortalDocument[] | undefined) || []); setLoading(false); }).catch(() => setError("Failed to load data"));
   }, [id]);
 
   if (error) return <div className="text-white/60">{error}</div>;

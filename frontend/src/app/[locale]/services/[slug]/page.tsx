@@ -4,16 +4,35 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import type { Entity } from "@/lib/types";
 import { ArrowLeft } from "lucide-react";
+
+interface ServiceFAQ {
+  q?: string;
+  a?: string;
+}
+
+interface ServiceDetail {
+  Title?: string;
+  Summary?: string;
+  Methodology?: string[];
+  Deliverables?: string[];
+  FAQs?: ServiceFAQ[];
+  IndicativeTimeline?: string;
+  IndicativePriceBand?: string;
+}
 
 export default function ServiceDetailPage() {
   const { slug } = useParams();
-  const [service, setService] = useState<any>(null);
+  const [service, setService] = useState<ServiceDetail | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!slug) return;
-    api.getService(slug as string).then((d) => { setService(d); setLoading(false); });
+    api.getService(slug as string).then((d) => {
+      setService(d as Entity as ServiceDetail);
+      setLoading(false);
+    });
   }, [slug]);
 
   if (loading) return <div className="p-12 text-center">Loading...</div>;
@@ -45,11 +64,11 @@ export default function ServiceDetailPage() {
               ))}
             </ul>
           </section>
-          {service.FAQs?.length > 0 && (
+          {service.FAQs && service.FAQs.length > 0 && (
             <section>
               <h2 className="text-xl font-semibold mb-4">FAQ</h2>
               <div className="space-y-4">
-                {service.FAQs.map((faq: any, i: number) => (
+                {service.FAQs.map((faq: ServiceFAQ, i: number) => (
                   <div key={i} className="border border-hairline rounded p-4">
                     <p className="font-medium">{faq.q}</p>
                     <p className="mt-1 text-sm text-gravity/60">{faq.a}</p>

@@ -1,8 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { api } from "@/lib/api";
 import { Briefcase, Clock, CheckCircle, XCircle, Calendar, Mail } from "lucide-react";
+
+interface JobApplication {
+  ID: string;
+  Status: string;
+  Answers?: Record<string, string> | null;
+  CreatedAt: string;
+  Notes?: string | null;
+  ReviewedAt?: string | null;
+}
 
 const statusConfig: Record<string, { icon: React.ReactNode; color: string; label: string; bg: string }> = {
   received: { icon: <Mail className="w-4 h-4" />, color: "text-white/60", label: "Received", bg: "bg-white/5" },
@@ -14,12 +24,12 @@ const statusConfig: Record<string, { icon: React.ReactNode; color: string; label
 };
 
 export default function MyApplicationsPage() {
-  const [applications, setApplications] = useState<any[]>([]);
+  const [applications, setApplications] = useState<JobApplication[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api.myApplications()
-      .then((d) => { setApplications(d.applications || []); setLoading(false); })
+      .then((d) => { setApplications((d.applications ?? []) as unknown as JobApplication[]); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
@@ -73,9 +83,9 @@ export default function MyApplicationsPage() {
           <div className="border border-white/10 rounded-lg p-8 text-center">
             <Briefcase className="w-8 h-8 text-white/20 mx-auto mb-3" />
             <p className="text-white/50">No applications yet.</p>
-            <a href="/careers" className="text-sm text-signal hover:underline mt-2 inline-block">
+            <Link href="/careers" className="text-sm text-signal hover:underline mt-2 inline-block">
               Browse open roles
-            </a>
+            </Link>
           </div>
         )}
       </div>

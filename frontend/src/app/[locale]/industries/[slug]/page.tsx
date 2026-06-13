@@ -6,18 +6,32 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { ArrowLeft } from "lucide-react";
 
+interface CapabilityMappingItem {
+  capability?: string;
+  description?: string;
+}
+
+interface Industry {
+  Title?: string;
+  Description?: string;
+  CapabilityMapping?: CapabilityMappingItem[];
+  IntakeCTAText?: string;
+}
+
 export default function IndustryDetailPage() {
   const { slug } = useParams();
-  const [industry, setIndustry] = useState<any>(null);
+  const [industry, setIndustry] = useState<Industry | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!slug) return;
-    api.getIndustry(slug as string).then((d) => { setIndustry(d); setLoading(false); });
+    api.getIndustry(slug as string).then((d) => { setIndustry(d as Industry); setLoading(false); });
   }, [slug]);
 
   if (loading) return <div className="p-12 text-center">Loading...</div>;
   if (!industry) return <div className="p-12 text-center">Industry not found</div>;
+
+  const capabilities = industry.CapabilityMapping ?? [];
 
   return (
     <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
@@ -27,11 +41,11 @@ export default function IndustryDetailPage() {
       <h1 className="text-3xl lg:text-5xl font-bold">{industry.Title}</h1>
       <p className="mt-6 text-lg text-gravity/70 max-w-3xl">{industry.Description}</p>
 
-      {industry.CapabilityMapping?.length > 0 && (
+      {capabilities.length > 0 && (
         <div className="mt-12">
           <h2 className="text-xl font-semibold mb-6">Capability Mapping</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {industry.CapabilityMapping.map((cap: any, i: number) => (
+            {capabilities.map((cap, i) => (
               <div key={i} className="border border-hairline rounded p-6">
                 <h3 className="font-semibold">{cap.capability}</h3>
                 <p className="mt-1 text-sm text-gravity/60">{cap.description}</p>

@@ -6,9 +6,20 @@ import { api } from "@/lib/api";
 import { FileUpload } from "@/components/FileUpload";
 import { Clock, CheckCircle, Code } from "lucide-react";
 
+interface CandidateChallenge {
+  title: string;
+  applicant_name: string;
+  time_limit_minutes: number;
+  status?: string;
+  due_at?: string | null;
+  skills?: string[];
+  description?: string | null;
+  prompt?: string | null;
+}
+
 export default function CandidateAssessmentPage() {
   const { token } = useParams();
-  const [challenge, setChallenge] = useState<any>(null);
+  const [challenge, setChallenge] = useState<CandidateChallenge | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [form, setForm] = useState({ submission_url: "", submission_notes: "" });
@@ -18,7 +29,7 @@ export default function CandidateAssessmentPage() {
   useEffect(() => {
     if (!token) return;
     api.getCandidateChallenge(token as string)
-      .then((d) => { setChallenge(d); if (d.status === "submitted" || d.status === "reviewed") setDone(true); })
+      .then((d) => { const c = d as unknown as CandidateChallenge; setChallenge(c); if (c.status === "submitted" || c.status === "reviewed") setDone(true); })
       .catch(() => setError("This assessment link is invalid or has expired."))
       .finally(() => setLoading(false));
   }, [token]);
@@ -34,6 +45,7 @@ export default function CandidateAssessmentPage() {
 
   if (loading) return <div className="p-12 text-center">Loading…</div>;
   if (error && !challenge) return <div className="p-12 text-center text-gravity/60">{error}</div>;
+  if (!challenge) return null;
 
   return (
     <main className="mx-auto max-w-3xl px-6 lg:px-12 py-16">
@@ -43,7 +55,7 @@ export default function CandidateAssessmentPage() {
       <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-gravity/50">
         <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {challenge.time_limit_minutes} min</span>
         {challenge.due_at && <span>Due {new Date(challenge.due_at).toLocaleString()}</span>}
-        {challenge.skills?.length > 0 && <span>{challenge.skills.join(" · ")}</span>}
+        {challenge.skills && challenge.skills.length > 0 && <span>{challenge.skills.join(" · ")}</span>}
       </div>
 
       {challenge.description && <p className="mt-8 text-gravity/80 leading-relaxed whitespace-pre-line">{challenge.description}</p>}

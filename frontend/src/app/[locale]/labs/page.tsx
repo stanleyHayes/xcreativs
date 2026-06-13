@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { FlaskConical } from "lucide-react";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Labs — XCreativs Technologies",
@@ -8,13 +9,25 @@ export const metadata: Metadata = {
     "The IP arm of XCreativs. Mandate → Build → License → Spin out. Real products, real platforms, real ownership.",
 };
 
-async function getLabs() {
+interface LabProduct {
+  Slug: string;
+  Name: string;
+  Tagline?: string;
+  ProblemStatement?: string;
+  Sectors?: string[];
+}
+
+interface LabsResponse {
+  products: LabProduct[];
+}
+
+async function getLabs(): Promise<LabsResponse> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/labs`,
     { next: { revalidate: 60 } }
   );
   if (!res.ok) return { products: [] };
-  return res.json();
+  return res.json() as Promise<LabsResponse>;
 }
 
 export default async function LabsPage() {
@@ -22,20 +35,24 @@ export default async function LabsPage() {
   const products = data.products || [];
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <h1 className="text-3xl lg:text-5xl font-bold">XCreativs Labs</h1>
-      <p className="mt-4 text-lg text-gravity/60 max-w-2xl">
-        The IP arm of XCreativs. Mandate → Build → License → Spin out. Real products, real platforms, real ownership.
-      </p>
-      <div className="mt-12 space-y-8">
+    <>
+      <PageBanner
+        icon={FlaskConical}
+        eyebrow="Product ventures"
+        title="XCreativs Labs"
+        description="The IP arm of XCreativs. Mandate → Build → License → Spin out. Real products, real platforms, real ownership."
+        crumbs={[{ label: "Home", href: "/" }, { label: "XCreativs Labs" }]}
+      />
+      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+        <div className="mt-12 space-y-8">
         {products.length === 0 && (
           <p className="text-center text-gravity/40 py-12">No lab products available yet.</p>
         )}
-        {products.map((p: any) => (
+        {products.map((p) => (
           <Link
             key={p.Slug}
             href={`/labs/${p.Slug}`}
-            className="group block border border-hairline rounded p-8 hover:border-signal transition-colors"
+            className="group card-x block p-8"
           >
             <div className="flex items-start gap-6">
               <div className="hidden sm:flex items-center justify-center w-16 h-16 rounded bg-soft border border-hairline shrink-0">
@@ -58,7 +75,8 @@ export default async function LabsPage() {
             </div>
           </Link>
         ))}
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   );
 }
