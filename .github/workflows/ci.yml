@@ -22,7 +22,9 @@ jobs:
       - name: Lint
         uses: golangci/golangci-lint-action@v8
         with:
-          version: latest
+          # Pinned for deterministic results (matches local toolchain). `latest`
+          # drifts and enables new rules on each release.
+          version: v2.8.0
           working-directory: backend
       - name: Vet
         run: go vet ./...
