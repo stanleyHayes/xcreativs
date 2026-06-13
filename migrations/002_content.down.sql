@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS content.media_kit CASCADE;
+DROP TABLE IF EXISTS content.press_releases CASCADE;
+DROP TABLE IF EXISTS content.faqs CASCADE;
+DROP TABLE IF EXISTS content.glossary CASCADE;
+DROP TABLE IF EXISTS content.insights CASCADE;
+DROP TABLE IF EXISTS content.industries CASCADE;
+DROP TABLE IF EXISTS content.case_dossiers CASCADE;
+DROP TABLE IF EXISTS content.subsidiaries CASCADE;
+DROP TABLE IF EXISTS content.labs_products CASCADE;
+DROP TABLE IF EXISTS content.services CASCADE;
+DROP TABLE IF EXISTS content.pages CASCADE;

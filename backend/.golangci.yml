@@ -1,0 +1,34 @@
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  enable:
+    - govet
+    - staticcheck
+    - errcheck
+    - ineffassign
+    - unused
+    - revive
+    - gosec
+    - misspell
+    - bodyclose
+
+linters-settings:
+  gosec:
+    excludes:
+      - G104  # audited best-effort error handling (fire-and-forget writes)
+  revive:
+    rules:
+      - name: unused-parameter
+        disabled: true
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  exclude-rules:
+    # Test files may use dot-imports / long funcs.
+    - path: _test\.go
+      linters:
+        - gosec
+        - errcheck

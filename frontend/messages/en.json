@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "title": "XCreativs Technologies — Intelligent Digital Systems",
+    "description": "We build intelligent digital systems for governments and enterprises. National-scale platforms, AI integration, and strategic advisory."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "labs": "Labs",
+    "work": "Work",
+    "industries": "Industries",
+    "insights": "Insights",
+    "careers": "Careers",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero": "Intelligent digital systems for governments and enterprises.",
+    "hero_sub": "We build infrastructure that compounds. National-scale platforms, AI integration, and strategic advisory for institutions that cannot afford to fail.",
+    "cta_work": "See the work",
+    "cta_engage": "Engage",
+    "services_title": "Services",
+    "labs_title": "Labs",
+    "labs_sub": "The IP arm of XCreativs. Mandate → Build → License → Spin out.",
+    "dossiers_title": "Selected Work",
+    "manifesto": "We do not build websites. We build infrastructure that governments and enterprises cannot operate without.",
+    "engage_title": "Begin a qualified conversation"
+  },
+  "ticker": {
+    "active_engagements": "Active engagements",
+    "sectors_covered": "Sectors covered",
+    "capabilities_deployed": "Capabilities deployed",
+    "deliverables_in_flight": "Deliverables in flight"
+  },
+  "footer": {
+    "rights": "© {year} XCreativs Technologies. All rights reserved.",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "security": "Security"
+  },
+  "common": {
+    "read_more": "Read more",
+    "learn_more": "Learn more",
+    "apply": "Apply",
+    "download": "Download",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again."
+  }
+}

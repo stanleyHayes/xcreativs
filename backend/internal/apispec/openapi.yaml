@@ -1,0 +1,3125 @@
+openapi: 3.0.3
+info:
+  title: XCreativs Web Platform API
+  version: "1.0"
+  description: >
+    REST API for the XCreativs platform. Bearer (JWT) auth is offered globally via the
+    Authorize button; public endpoints ignore the token. Scoped API keys use the
+    X-API-Key header. Generated from the live router — do not edit by hand;
+    run `go run ./cmd/genopenapi > api/openapi.yaml`.
+servers:
+  - url: http://localhost:8081
+    description: Local
+  - url: /
+    description: Same origin
+tags:
+  - { name: Health }
+  - { name: Auth }
+  - { name: Public }
+  - { name: Careers }
+  - { name: Tools }
+  - { name: Concierge }
+  - { name: Portal }
+  - { name: Partner }
+  - { name: Admin }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+    apiKeyAuth: { type: apiKey, in: header, name: X-API-Key }
+  schemas:
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+  responses:
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+security:
+  - bearerAuth: []
+paths:
+  "/api/v1/admin/analytics":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/analytics
+      operationId: get_api_v1_admin_analytics
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/applications":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/applications
+      operationId: get_api_v1_admin_applications
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/applications/{id}/assessments":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/applications/{id}/assessments
+      operationId: get_api_v1_admin_applications_id_assessments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/applications/{id}/assessments
+      operationId: post_api_v1_admin_applications_id_assessments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/applications/{id}/interviews":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/applications/{id}/interviews
+      operationId: get_api_v1_admin_applications_id_interviews
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/applications/{id}/interviews
+      operationId: post_api_v1_admin_applications_id_interviews
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/applications/{id}/status":
+    patch:
+      tags: [Admin]
+      summary: PATCH /api/v1/admin/applications/{id}/status
+      operationId: patch_api_v1_admin_applications_id_status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/assessment-challenges":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/assessment-challenges
+      operationId: get_api_v1_admin_assessment_challenges
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/assessment-challenges
+      operationId: post_api_v1_admin_assessment_challenges
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/assessments/{aid}":
+    patch:
+      tags: [Admin]
+      summary: PATCH /api/v1/admin/assessments/{aid}
+      operationId: patch_api_v1_admin_assessments_aid
+      parameters:
+        - name: aid
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/audio-briefs/{slug}/generate-tts":
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/audio-briefs/{slug}/generate-tts
+      operationId: post_api_v1_admin_audio_briefs_slug_generate_tts
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/bookings":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/bookings
+      operationId: get_api_v1_admin_bookings
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/bookings/{id}":
+    put:
+      tags: [Admin]
+      summary: PUT /api/v1/admin/bookings/{id}
+      operationId: put_api_v1_admin_bookings_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/concierge/reindex":
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/concierge/reindex
+      operationId: post_api_v1_admin_concierge_reindex
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/engagements":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/engagements
+      operationId: get_api_v1_admin_engagements
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/engagements
+      operationId: post_api_v1_admin_engagements
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/exports/bookings":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/exports/bookings
+      operationId: get_api_v1_admin_exports_bookings
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/exports/diagnostics":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/exports/diagnostics
+      operationId: get_api_v1_admin_exports_diagnostics
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/exports/rfps":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/exports/rfps
+      operationId: get_api_v1_admin_exports_rfps
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/interviews/{iid}":
+    patch:
+      tags: [Admin]
+      summary: PATCH /api/v1/admin/interviews/{iid}
+      operationId: patch_api_v1_admin_interviews_iid
+      parameters:
+        - name: iid
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/notifications/broadcast":
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/notifications/broadcast
+      operationId: post_api_v1_admin_notifications_broadcast
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/notifications/send-digests":
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/notifications/send-digests
+      operationId: post_api_v1_admin_notifications_send_digests
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/pages":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/pages
+      operationId: get_api_v1_admin_pages
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/pages
+      operationId: post_api_v1_admin_pages
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/pages/{id}":
+    delete:
+      tags: [Admin]
+      summary: DELETE /api/v1/admin/pages/{id}
+      operationId: delete_api_v1_admin_pages_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Admin]
+      summary: PUT /api/v1/admin/pages/{id}
+      operationId: put_api_v1_admin_pages_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/pages/{slug}":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/pages/{slug}
+      operationId: get_api_v1_admin_pages_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/partner/applications":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/partner/applications
+      operationId: get_api_v1_admin_partner_applications
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/partner/applications/{id}":
+    put:
+      tags: [Admin]
+      summary: PUT /api/v1/admin/partner/applications/{id}
+      operationId: put_api_v1_admin_partner_applications_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/rfps":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/rfps
+      operationId: get_api_v1_admin_rfps
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/rfps/{id}":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/rfps/{id}
+      operationId: get_api_v1_admin_rfps_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Admin]
+      summary: PUT /api/v1/admin/rfps/{id}
+      operationId: put_api_v1_admin_rfps_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/signatures":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/signatures
+      operationId: get_api_v1_admin_signatures
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/signatures
+      operationId: post_api_v1_admin_signatures
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/signatures/{id}":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/signatures/{id}
+      operationId: get_api_v1_admin_signatures_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Admin]
+      summary: PUT /api/v1/admin/signatures/{id}
+      operationId: put_api_v1_admin_signatures_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/signatures/{id}/send":
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/signatures/{id}/send
+      operationId: post_api_v1_admin_signatures_id_send
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/training-modules":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/training-modules
+      operationId: get_api_v1_admin_training_modules
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/training-modules
+      operationId: post_api_v1_admin_training_modules
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/webhooks":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/webhooks
+      operationId: get_api_v1_admin_webhooks
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/webhooks
+      operationId: post_api_v1_admin_webhooks
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/webhooks/deliveries":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/webhooks/deliveries
+      operationId: get_api_v1_admin_webhooks_deliveries
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/webhooks/{id}":
+    delete:
+      tags: [Admin]
+      summary: DELETE /api/v1/admin/webhooks/{id}
+      operationId: delete_api_v1_admin_webhooks_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/api-keys":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/api-keys
+      operationId: get_api_v1_api_keys
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/api-keys
+      operationId: post_api_v1_api_keys
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/api-keys/{id}/revoke":
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/api-keys/{id}/revoke
+      operationId: post_api_v1_api_keys_id_revoke
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/approvals/{id}":
+    put:
+      tags: [Public]
+      summary: PUT /api/v1/approvals/{id}
+      operationId: put_api_v1_approvals_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/assessments/challenge/{token}":
+    get:
+      tags: [Tools]
+      summary: GET /api/v1/assessments/challenge/{token}
+      operationId: get_api_v1_assessments_challenge_token
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/assessments/challenge/{token}/submit":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/assessments/challenge/{token}/submit
+      operationId: post_api_v1_assessments_challenge_token_submit
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/assessments/sessions":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/assessments/sessions
+      operationId: post_api_v1_assessments_sessions
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/assessments/sessions/{id}/submit":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/assessments/sessions/{id}/submit
+      operationId: post_api_v1_assessments_sessions_id_submit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/assessments/{slug}":
+    get:
+      tags: [Tools]
+      summary: GET /api/v1/assessments/{slug}
+      operationId: get_api_v1_assessments_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/audio-briefs":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/audio-briefs
+      operationId: get_api_v1_audio_briefs
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/audio-briefs/{slug}":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/audio-briefs/{slug}
+      operationId: get_api_v1_audio_briefs_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/audit-log":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/audit-log
+      operationId: get_api_v1_audit_log
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/forgot-password":
+    post:
+      tags: [Auth]
+      summary: POST /api/v1/auth/forgot-password
+      operationId: post_api_v1_auth_forgot_password
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/login":
+    post:
+      tags: [Auth]
+      summary: POST /api/v1/auth/login
+      operationId: post_api_v1_auth_login
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/logout":
+    post:
+      tags: [Auth]
+      summary: POST /api/v1/auth/logout
+      operationId: post_api_v1_auth_logout
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/me":
+    get:
+      tags: [Auth]
+      summary: GET /api/v1/auth/me
+      operationId: get_api_v1_auth_me
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/mfa/enroll":
+    post:
+      tags: [Auth]
+      summary: POST /api/v1/auth/mfa/enroll
+      operationId: post_api_v1_auth_mfa_enroll
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/mfa/verify":
+    post:
+      tags: [Auth]
+      summary: POST /api/v1/auth/mfa/verify
+      operationId: post_api_v1_auth_mfa_verify
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/oauth/{provider}/callback":
+    get:
+      tags: [Auth]
+      summary: GET /api/v1/auth/oauth/{provider}/callback
+      operationId: get_api_v1_auth_oauth_provider_callback
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/oauth/{provider}/login":
+    get:
+      tags: [Auth]
+      summary: GET /api/v1/auth/oauth/{provider}/login
+      operationId: get_api_v1_auth_oauth_provider_login
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/profile":
+    put:
+      tags: [Auth]
+      summary: PUT /api/v1/auth/profile
+      operationId: put_api_v1_auth_profile
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/refresh":
+    post:
+      tags: [Auth]
+      summary: POST /api/v1/auth/refresh
+      operationId: post_api_v1_auth_refresh
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/register":
+    post:
+      tags: [Auth]
+      summary: POST /api/v1/auth/register
+      operationId: post_api_v1_auth_register
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/resend-verification":
+    post:
+      tags: [Auth]
+      summary: POST /api/v1/auth/resend-verification
+      operationId: post_api_v1_auth_resend_verification
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/reset-password":
+    post:
+      tags: [Auth]
+      summary: POST /api/v1/auth/reset-password
+      operationId: post_api_v1_auth_reset_password
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/sessions":
+    delete:
+      tags: [Auth]
+      summary: DELETE /api/v1/auth/sessions
+      operationId: delete_api_v1_auth_sessions
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    get:
+      tags: [Auth]
+      summary: GET /api/v1/auth/sessions
+      operationId: get_api_v1_auth_sessions
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/sessions/{id}":
+    delete:
+      tags: [Auth]
+      summary: DELETE /api/v1/auth/sessions/{id}
+      operationId: delete_api_v1_auth_sessions_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/auth/verify-email":
+    post:
+      tags: [Auth]
+      summary: POST /api/v1/auth/verify-email
+      operationId: post_api_v1_auth_verify_email
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/bookings":
+    post:
+      tags: [Public]
+      summary: POST /api/v1/bookings
+      operationId: post_api_v1_bookings
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/careers/applications":
+    get:
+      tags: [Careers]
+      summary: GET /api/v1/careers/applications
+      operationId: get_api_v1_careers_applications
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/careers/roles":
+    get:
+      tags: [Careers]
+      summary: GET /api/v1/careers/roles
+      operationId: get_api_v1_careers_roles
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/careers/roles/{slug}":
+    get:
+      tags: [Careers]
+      summary: GET /api/v1/careers/roles/{slug}
+      operationId: get_api_v1_careers_roles_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/careers/roles/{slug}/apply":
+    post:
+      tags: [Careers]
+      summary: POST /api/v1/careers/roles/{slug}/apply
+      operationId: post_api_v1_careers_roles_slug_apply
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/careers/talent-network":
+    post:
+      tags: [Careers]
+      summary: POST /api/v1/careers/talent-network
+      operationId: post_api_v1_careers_talent_network
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/concierge/sessions":
+    get:
+      tags: [Concierge]
+      summary: GET /api/v1/concierge/sessions
+      operationId: get_api_v1_concierge_sessions
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Concierge]
+      summary: POST /api/v1/concierge/sessions
+      operationId: post_api_v1_concierge_sessions
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/concierge/sessions/{session_id}/close":
+    post:
+      tags: [Concierge]
+      summary: POST /api/v1/concierge/sessions/{session_id}/close
+      operationId: post_api_v1_concierge_sessions_session_id_close
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/concierge/sessions/{session_id}/messages":
+    get:
+      tags: [Concierge]
+      summary: GET /api/v1/concierge/sessions/{session_id}/messages
+      operationId: get_api_v1_concierge_sessions_session_id_messages
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Concierge]
+      summary: POST /api/v1/concierge/sessions/{session_id}/messages
+      operationId: post_api_v1_concierge_sessions_session_id_messages
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/demos/{id}/revoke":
+    post:
+      tags: [Public]
+      summary: POST /api/v1/demos/{id}/revoke
+      operationId: post_api_v1_demos_id_revoke
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/demos/{token}":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/demos/{token}
+      operationId: get_api_v1_demos_token
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/diagnostics/start":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/diagnostics/start
+      operationId: post_api_v1_diagnostics_start
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/diagnostics/{id}/answer":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/diagnostics/{id}/answer
+      operationId: post_api_v1_diagnostics_id_answer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/diagnostics/{id}/result":
+    get:
+      tags: [Tools]
+      summary: GET /api/v1/diagnostics/{id}/result
+      operationId: get_api_v1_diagnostics_id_result
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/diagnostics/{id}/summary.pdf":
+    get:
+      tags: [Tools]
+      summary: GET /api/v1/diagnostics/{id}/summary.pdf
+      operationId: get_api_v1_diagnostics_id_summary_pdf
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/document-intelligence/extract":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/document-intelligence/extract
+      operationId: post_api_v1_document_intelligence_extract
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/document-intelligence/extract-file":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/document-intelligence/extract-file
+      operationId: post_api_v1_document_intelligence_extract_file
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties: { file: { type: string, format: binary } }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/estimates":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/estimates
+      operationId: post_api_v1_estimates
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/faq":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/faq
+      operationId: get_api_v1_faq
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/feed/audio":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/feed/audio
+      operationId: get_api_v1_feed_audio
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/glossary":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/glossary
+      operationId: get_api_v1_glossary
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/industries":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/industries
+      operationId: get_api_v1_industries
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/industries/{slug}":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/industries/{slug}
+      operationId: get_api_v1_industries_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/insights":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/insights
+      operationId: get_api_v1_insights
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/insights/{slug}":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/insights/{slug}
+      operationId: get_api_v1_insights_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/insights/{slug}/download":
+    post:
+      tags: [Public]
+      summary: POST /api/v1/insights/{slug}/download
+      operationId: post_api_v1_insights_slug_download
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/invoices/{id}":
+    patch:
+      tags: [Portal]
+      summary: PATCH /api/v1/invoices/{id}
+      operationId: patch_api_v1_invoices_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/invoices/{id}/payment-link":
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/invoices/{id}/payment-link
+      operationId: post_api_v1_invoices_id_payment_link
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/labs":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/labs
+      operationId: get_api_v1_labs
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/labs/{slug}":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/labs/{slug}
+      operationId: get_api_v1_labs_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/live-counter":
+    get:
+      tags: [Tools]
+      summary: GET /api/v1/live-counter
+      operationId: get_api_v1_live_counter
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/live-counter/stream":
+    get:
+      tags: [Tools]
+      summary: GET /api/v1/live-counter/stream
+      operationId: get_api_v1_live_counter_stream
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/media-kit":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/media-kit
+      operationId: get_api_v1_media_kit
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/metrics/engagements":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/metrics/engagements
+      operationId: get_api_v1_metrics_engagements
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/metrics/ticker":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/metrics/ticker
+      operationId: get_api_v1_metrics_ticker
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/newsletter/subscribe":
+    post:
+      tags: [Public]
+      summary: POST /api/v1/newsletter/subscribe
+      operationId: post_api_v1_newsletter_subscribe
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/notifications":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/notifications
+      operationId: get_api_v1_notifications
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/notifications/preferences":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/notifications/preferences
+      operationId: get_api_v1_notifications_preferences
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Portal]
+      summary: PUT /api/v1/notifications/preferences
+      operationId: put_api_v1_notifications_preferences
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/notifications/unread-count":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/notifications/unread-count
+      operationId: get_api_v1_notifications_unread_count
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/notifications/{id}/read":
+    put:
+      tags: [Portal]
+      summary: PUT /api/v1/notifications/{id}/read
+      operationId: put_api_v1_notifications_id_read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/pages/about":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/pages/about
+      operationId: get_api_v1_pages_about
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/pages/home":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/pages/home
+      operationId: get_api_v1_pages_home
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partner/agreements":
+    get:
+      tags: [Partner]
+      summary: GET /api/v1/partner/agreements
+      operationId: get_api_v1_partner_agreements
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partner/codev/{id}":
+    delete:
+      tags: [Partner]
+      summary: DELETE /api/v1/partner/codev/{id}
+      operationId: delete_api_v1_partner_codev_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Partner]
+      summary: PATCH /api/v1/partner/codev/{id}
+      operationId: patch_api_v1_partner_codev_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partner/dashboard":
+    get:
+      tags: [Partner]
+      summary: GET /api/v1/partner/dashboard
+      operationId: get_api_v1_partner_dashboard
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partner/orders":
+    get:
+      tags: [Partner]
+      summary: GET /api/v1/partner/orders
+      operationId: get_api_v1_partner_orders
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partner/performance":
+    get:
+      tags: [Partner]
+      summary: GET /api/v1/partner/performance
+      operationId: get_api_v1_partner_performance
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partner/products":
+    get:
+      tags: [Partner]
+      summary: GET /api/v1/partner/products
+      operationId: get_api_v1_partner_products
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partner/products/{pid}/codev":
+    get:
+      tags: [Partner]
+      summary: GET /api/v1/partner/products/{pid}/codev
+      operationId: get_api_v1_partner_products_pid_codev
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Partner]
+      summary: POST /api/v1/partner/products/{pid}/codev
+      operationId: post_api_v1_partner_products_pid_codev
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partner/referrals":
+    get:
+      tags: [Partner]
+      summary: GET /api/v1/partner/referrals
+      operationId: get_api_v1_partner_referrals
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Partner]
+      summary: POST /api/v1/partner/referrals
+      operationId: post_api_v1_partner_referrals
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partner/training":
+    get:
+      tags: [Partner]
+      summary: GET /api/v1/partner/training
+      operationId: get_api_v1_partner_training
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partner/training/{moduleId}/complete":
+    post:
+      tags: [Partner]
+      summary: POST /api/v1/partner/training/{moduleId}/complete
+      operationId: post_api_v1_partner_training_moduleId_complete
+      parameters:
+        - name: moduleId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/partners/apply":
+    post:
+      tags: [Public]
+      summary: POST /api/v1/partners/apply
+      operationId: post_api_v1_partners_apply
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal
+      operationId: get_api_v1_portal
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements
+      operationId: get_api_v1_portal_engagements
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}
+      operationId: get_api_v1_portal_engagements_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/activity":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/activity
+      operationId: get_api_v1_portal_engagements_id_activity
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/approvals":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/approvals
+      operationId: get_api_v1_portal_engagements_id_approvals
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/approvals
+      operationId: post_api_v1_portal_engagements_id_approvals
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/budget":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/budget
+      operationId: get_api_v1_portal_engagements_id_budget
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/capabilities":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/capabilities
+      operationId: get_api_v1_portal_engagements_id_capabilities
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/capabilities
+      operationId: post_api_v1_portal_engagements_id_capabilities
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/capabilities/{cid}":
+    delete:
+      tags: [Portal]
+      summary: DELETE /api/v1/portal/engagements/{id}/capabilities/{cid}
+      operationId: delete_api_v1_portal_engagements_id_capabilities_cid
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: cid
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Portal]
+      summary: PATCH /api/v1/portal/engagements/{id}/capabilities/{cid}
+      operationId: patch_api_v1_portal_engagements_id_capabilities_cid
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: cid
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/dashboard":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/dashboard
+      operationId: get_api_v1_portal_engagements_id_dashboard
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/decisions":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/decisions
+      operationId: get_api_v1_portal_engagements_id_decisions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/decisions
+      operationId: post_api_v1_portal_engagements_id_decisions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/decisions/{decisionID}":
+    delete:
+      tags: [Portal]
+      summary: DELETE /api/v1/portal/engagements/{id}/decisions/{decisionID}
+      operationId: delete_api_v1_portal_engagements_id_decisions_decisionID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: decisionID
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Portal]
+      summary: PATCH /api/v1/portal/engagements/{id}/decisions/{decisionID}
+      operationId: patch_api_v1_portal_engagements_id_decisions_decisionID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: decisionID
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/deliverables":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/deliverables
+      operationId: get_api_v1_portal_engagements_id_deliverables
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/deliverables
+      operationId: post_api_v1_portal_engagements_id_deliverables
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/deliverables/{deliverableID}":
+    delete:
+      tags: [Portal]
+      summary: DELETE /api/v1/portal/engagements/{id}/deliverables/{deliverableID}
+      operationId: delete_api_v1_portal_engagements_id_deliverables_deliverableID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: deliverableID
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Portal]
+      summary: PATCH /api/v1/portal/engagements/{id}/deliverables/{deliverableID}
+      operationId: patch_api_v1_portal_engagements_id_deliverables_deliverableID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: deliverableID
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/demos":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/demos
+      operationId: get_api_v1_portal_engagements_id_demos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/demos
+      operationId: post_api_v1_portal_engagements_id_demos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/documents":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/documents
+      operationId: get_api_v1_portal_engagements_id_documents
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/invoices":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/invoices
+      operationId: get_api_v1_portal_engagements_id_invoices
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/invoices
+      operationId: post_api_v1_portal_engagements_id_invoices
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/milestones":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/milestones
+      operationId: get_api_v1_portal_engagements_id_milestones
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/milestones
+      operationId: post_api_v1_portal_engagements_id_milestones
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/milestones/{milestoneID}":
+    delete:
+      tags: [Portal]
+      summary: DELETE /api/v1/portal/engagements/{id}/milestones/{milestoneID}
+      operationId: delete_api_v1_portal_engagements_id_milestones_milestoneID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: milestoneID
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Portal]
+      summary: PATCH /api/v1/portal/engagements/{id}/milestones/{milestoneID}
+      operationId: patch_api_v1_portal_engagements_id_milestones_milestoneID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: milestoneID
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/reports":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/reports
+      operationId: get_api_v1_portal_engagements_id_reports
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/risks":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/risks
+      operationId: get_api_v1_portal_engagements_id_risks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/risks
+      operationId: post_api_v1_portal_engagements_id_risks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/risks/{riskID}":
+    delete:
+      tags: [Portal]
+      summary: DELETE /api/v1/portal/engagements/{id}/risks/{riskID}
+      operationId: delete_api_v1_portal_engagements_id_risks_riskID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: riskID
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Portal]
+      summary: PATCH /api/v1/portal/engagements/{id}/risks/{riskID}
+      operationId: patch_api_v1_portal_engagements_id_risks_riskID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: riskID
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/stakeholders":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/stakeholders
+      operationId: get_api_v1_portal_engagements_id_stakeholders
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/stakeholders
+      operationId: post_api_v1_portal_engagements_id_stakeholders
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/stakeholders/{sid}":
+    delete:
+      tags: [Portal]
+      summary: DELETE /api/v1/portal/engagements/{id}/stakeholders/{sid}
+      operationId: delete_api_v1_portal_engagements_id_stakeholders_sid
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: sid
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Portal]
+      summary: PATCH /api/v1/portal/engagements/{id}/stakeholders/{sid}
+      operationId: patch_api_v1_portal_engagements_id_stakeholders_sid
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: sid
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/team":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/team
+      operationId: get_api_v1_portal_engagements_id_team
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/team
+      operationId: post_api_v1_portal_engagements_id_team
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/team/{memberID}":
+    delete:
+      tags: [Portal]
+      summary: DELETE /api/v1/portal/engagements/{id}/team/{memberID}
+      operationId: delete_api_v1_portal_engagements_id_team_memberID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: memberID
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/threads":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/threads
+      operationId: get_api_v1_portal_engagements_id_threads
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/threads
+      operationId: post_api_v1_portal_engagements_id_threads
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/tickets":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/engagements/{id}/tickets
+      operationId: get_api_v1_portal_engagements_id_tickets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/engagements/{id}/tickets
+      operationId: post_api_v1_portal_engagements_id_tickets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/engagements/{id}/tickets/{ticketID}":
+    delete:
+      tags: [Portal]
+      summary: DELETE /api/v1/portal/engagements/{id}/tickets/{ticketID}
+      operationId: delete_api_v1_portal_engagements_id_tickets_ticketID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: ticketID
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Portal]
+      summary: PATCH /api/v1/portal/engagements/{id}/tickets/{ticketID}
+      operationId: patch_api_v1_portal_engagements_id_tickets_ticketID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: ticketID
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/search":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/search
+      operationId: get_api_v1_portal_search
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/portal/theme":
+    get:
+      tags: [Portal]
+      summary: GET /api/v1/portal/theme
+      operationId: get_api_v1_portal_theme
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Portal]
+      summary: POST /api/v1/portal/theme
+      operationId: post_api_v1_portal_theme
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/press":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/press
+      operationId: get_api_v1_press
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/reading-list":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/reading-list
+      operationId: get_api_v1_reading_list
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/reading-list/{slug}":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/reading-list/{slug}
+      operationId: get_api_v1_reading_list_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/rfps":
+    post:
+      tags: [Public]
+      summary: POST /api/v1/rfps
+      operationId: post_api_v1_rfps
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/search":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/search
+      operationId: get_api_v1_search
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/services":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/services
+      operationId: get_api_v1_services
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/services/{slug}":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/services/{slug}
+      operationId: get_api_v1_services_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/sign/{id}":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/sign/{id}
+      operationId: get_api_v1_sign_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Public]
+      summary: POST /api/v1/sign/{id}
+      operationId: post_api_v1_sign_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/subsidiaries":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/subsidiaries
+      operationId: get_api_v1_subsidiaries
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/threads/{thread_id}/comments":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/threads/{thread_id}/comments
+      operationId: get_api_v1_threads_thread_id_comments
+      parameters:
+        - name: thread_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Public]
+      summary: POST /api/v1/threads/{thread_id}/comments
+      operationId: post_api_v1_threads_thread_id_comments
+      parameters:
+        - name: thread_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/tools/capability-lattice":
+    get:
+      tags: [Tools]
+      summary: GET /api/v1/tools/capability-lattice
+      operationId: get_api_v1_tools_capability_lattice
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/tools/cost-estimate":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/tools/cost-estimate
+      operationId: post_api_v1_tools_cost_estimate
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/tools/tech-debt-estimate":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/tools/tech-debt-estimate
+      operationId: post_api_v1_tools_tech_debt_estimate
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/track":
+    post:
+      tags: [Public]
+      summary: POST /api/v1/track
+      operationId: post_api_v1_track
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/uploads":
+    post:
+      tags: [Tools]
+      summary: POST /api/v1/uploads
+      operationId: post_api_v1_uploads
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties: { file: { type: string, format: binary } }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/visualizations/holding-tree":
+    get:
+      tags: [Tools]
+      summary: GET /api/v1/visualizations/holding-tree
+      operationId: get_api_v1_visualizations_holding_tree
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/visualizations/value-flow":
+    get:
+      tags: [Tools]
+      summary: GET /api/v1/visualizations/value-flow
+      operationId: get_api_v1_visualizations_value_flow
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/webinars":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/webinars
+      operationId: get_api_v1_webinars
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/webinars/{slug}":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/webinars/{slug}
+      operationId: get_api_v1_webinars_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/webinars/{slug}/register":
+    post:
+      tags: [Public]
+      summary: POST /api/v1/webinars/{slug}/register
+      operationId: post_api_v1_webinars_slug_register
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/work":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/work
+      operationId: get_api_v1_work
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/work/{slug}":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/work/{slug}
+      operationId: get_api_v1_work_slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/docs":
+    get:
+      tags: [Public]
+      summary: GET /docs
+      operationId: get_docs
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/healthz":
+    get:
+      tags: [Health]
+      summary: GET /healthz
+      operationId: get_healthz
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/openapi.yaml":
+    get:
+      tags: [Public]
+      summary: GET /openapi.yaml
+      operationId: get_openapi_yaml
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/readyz":
+    get:
+      tags: [Health]
+      summary: GET /readyz
+      operationId: get_readyz
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }

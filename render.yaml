@@ -1,0 +1,67 @@
+# Render Blueprint — backend API + managed Postgres + Redis.
+# Frontend deploys separately on Vercel (see frontend/vercel.json).
+#
+# Migrations are NOT run on app start (no auto-migrate). After the first deploy,
+# run them once against the Render database:
+#   DB_URL=<render external connection string> make -C backend migrate-up
+# (or add a Render "Job" that runs golang-migrate). Then `make seed` if desired.
+
+databases:
+  - name: xcreativs-db
+    databaseName: xcreativs
+    user: xcreativs
+    postgresMajorVersion: "16"
+    plan: basic-256mb
+
+services:
+  - type: redis
+    name: xcreativs-redis
+    plan: free
+    ipAllowList: [] # internal only
+
+  - type: web
+    name: xcreativs-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: ENV
+        value: production
+      - key: DB_URL
+        fromDatabase:
+          name: xcreativs-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: xcreativs-redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      # Set these after the Vercel domain is known:
+      - key: BASE_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      # Optional integrations:
+      - key: RESEND_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: PAYSTACK_SECRET_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: MFA_REQUIRED
+        value: "true"

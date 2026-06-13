@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="XCreativs">
+  <polygon points="256,490 72,398 28,202 158,44 354,44 484,202 440,398" fill="#0066CC"/>
+  <g fill="#ffffff">
+    <!-- X: upper-left to lower-right arm -->
+    <polygon points="150,178 232,178 340,444 264,444"/>
+    <!-- X: lower-left to upper-right arm -->
+    <polygon points="280,178 362,178 248,444 172,444"/>
+    <!-- slash separating the top-right wedge (parallel to the upper-right arm) -->
+    <polygon points="346,298 402,298 474,120 418,120"/>
+  </g>
+</svg>

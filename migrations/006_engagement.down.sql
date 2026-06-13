@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS engagement.support_tickets CASCADE;
+DROP TABLE IF EXISTS engagement.team_members CASCADE;
+DROP TABLE IF EXISTS engagement.document_library CASCADE;
+DROP TABLE IF EXISTS engagement.reports CASCADE;
+DROP TABLE IF EXISTS engagement.approval_workflows CASCADE;
+DROP TABLE IF EXISTS engagement.invoices CASCADE;
+DROP TABLE IF EXISTS engagement.budget_lines CASCADE;
+DROP TABLE IF EXISTS engagement.capability_deliveries CASCADE;
+DROP TABLE IF EXISTS engagement.risks CASCADE;
+DROP TABLE IF EXISTS engagement.decisions CASCADE;
+DROP TABLE IF EXISTS engagement.deliverables CASCADE;
+DROP TABLE IF EXISTS engagement.milestones CASCADE;
+DROP TABLE IF EXISTS engagement.engagements CASCADE;

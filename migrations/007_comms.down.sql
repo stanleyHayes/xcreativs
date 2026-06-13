@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS comms.activity_feed CASCADE;
+DROP TABLE IF EXISTS comms.notifications CASCADE;
+DROP TABLE IF EXISTS comms.comments CASCADE;
+DROP TABLE IF EXISTS comms.threads CASCADE;

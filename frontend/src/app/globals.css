@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  --color-signal: #0066CC;
+  --color-foundation: #FFFFFF;
+  --color-gravity: #000000;
+  --color-hairline: #DDDDDD;
+  --color-soft: #F4F7FB;
+}
+
+.dark {
+  --color-foundation: #000000;
+  --color-gravity: #FFFFFF;
+  --color-hairline: #333333;
+  --color-soft: #111111;
+}
+
+@theme {
+  --color-signal: var(--color-signal);
+  --color-foundation: var(--color-foundation);
+  --color-gravity: var(--color-gravity);
+  --color-hairline: var(--color-hairline);
+  --color-soft: var(--color-soft);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-foundation);
+  color: var(--color-gravity);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

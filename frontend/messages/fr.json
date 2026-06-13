@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "title": "XCreativs Technologies — Systèmes Numériques Intelligents",
+    "description": "Nous construisons des systèmes numériques intelligents pour les gouvernements et les entreprises. Plateformes à l'échelle nationale, intégration de l'IA et conseil stratégique."
+  },
+  "nav": {
+    "home": "Accueil",
+    "about": "À Propos",
+    "services": "Services",
+    "labs": "Labs",
+    "work": "Réalisations",
+    "industries": "Secteurs",
+    "insights": "Publications",
+    "careers": "Carrières",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero": "Des systèmes numériques intelligents pour les gouvernements et les entreprises.",
+    "hero_sub": "Nous construisons l'infrastructure qui se renforce. Plateformes à l'échelle nationale, intégration de l'IA et conseil stratégique pour les institutions qui ne peuvent pas se permettre d'échouer.",
+    "cta_work": "Voir les réalisations",
+    "cta_engage": "Engager",
+    "services_title": "Services",
+    "labs_title": "Labs",
+    "labs_sub": "Le bras IP de XCreativs. Mandat → Construire → Licencier → Spin-off.",
+    "dossiers_title": "Réalisations Sélectionnées",
+    "manifesto": "Nous ne construisons pas de sites web. Nous construisons l'infrastructure sans laquelle les gouvernements et les entreprises ne peuvent pas fonctionner.",
+    "engage_title": "Commencer une conversation qualifiée"
+  },
+  "ticker": {
+    "active_engagements": "Engagements actifs",
+    "sectors_covered": "Secteurs couverts",
+    "capabilities_deployed": "Capacités déployées",
+    "deliverables_in_flight": "Livrables en cours"
+  },
+  "footer": {
+    "rights": "© {year} XCreativs Technologies. Tous droits réservés.",
+    "legal": "Légal",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "security": "Sécurité"
+  },
+  "common": {
+    "read_more": "Lire la suite",
+    "learn_more": "En savoir plus",
+    "apply": "Postuler",
+    "download": "Télécharger",
+    "search": "Rechercher",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite. Veuillez réessayer."
+  }
+}
