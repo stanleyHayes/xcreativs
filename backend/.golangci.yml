@@ -10,7 +10,9 @@ linters:
   settings:
     gosec:
       excludes:
-        - G104
+        - G104  # audited best-effort error handling (fire-and-forget writes)
+        - G118  # fire-and-forget goroutines (email/notify) intentionally outlive the request scope
+        - G704  # webhook delivery + media fetch use operator-configured URLs, not arbitrary user input
     revive:
       rules:
         - name: unused-parameter

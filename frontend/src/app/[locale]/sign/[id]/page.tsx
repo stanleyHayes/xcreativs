@@ -16,6 +16,8 @@ interface SigningData {
   signed_at?: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
+
 export default function SignPage() {
   const { id } = useParams();
   const [data, setData] = useState<SigningData | null>(null);
@@ -28,8 +30,6 @@ export default function SignPage() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
-
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
 
   useEffect(() => {
     if (!id) return;

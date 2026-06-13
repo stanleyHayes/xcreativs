@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { MessageCircle, Send, User } from "lucide-react";
 import type { AuthUser, ThreadsResponse, CommentsResponse } from "@/lib/types";
@@ -43,11 +43,7 @@ export default function ThreadedComments({ engagementID, parentType, parentID }:
   const [commentBodies, setCommentBodies] = useState<Record<string, string>>({});
   const [user] = useState<AuthUser | null>(() => readStoredUser());
 
-  useEffect(() => {
-    loadThreads();
-  }, [engagementID, parentType, parentID]);
-
-  async function loadThreads() {
+  const loadThreads = useCallback(async () => {
     setLoading(true);
     try {
       const res = (await api.listThreads(engagementID, parentType, parentID)) as ThreadsResponse;
@@ -62,7 +58,29 @@ export default function ThreadedComments({ engagementID, parentType, parentID }:
       setThreads([]);
     }
     setLoading(false);
-  }
+  }, [engagementID, parentType, parentID]);
+
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      setLoading(true);
+      try {
+        const res = (await api.listThreads(engagementID, parentType, parentID)) as ThreadsResponse;
+        const t = (res.threads || []) as unknown as Thread[];
+        for (const thread of t) {
+          const c = (await api.listComments(thread.ID)) as CommentsResponse;
+          thread.comments = (c.comments || []) as unknown as Comment[];
+        }
+        if (active) setThreads(t);
+      } catch {
+        if (active) setThreads([]);
+      }
+      if (active) setLoading(false);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [engagementID, parentType, parentID]);
 
   async function handleCreateThread(e: React.FormEvent) {
     e.preventDefault();

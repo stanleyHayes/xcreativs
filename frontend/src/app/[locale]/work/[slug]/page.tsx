@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import type { Entity } from "@/lib/types";
 import { ArrowLeft } from "lucide-react";
 
 interface Dossier {
@@ -29,7 +30,7 @@ export default function WorkDetailPage() {
 
   useEffect(() => {
     if (!slug) return;
-    api.getWork(slug as string).then((d) => { setDossier(d as unknown as Dossier); setLoading(false); });
+    api.getWork(slug as string).then((d: Entity) => { setDossier(d as unknown as Dossier); setLoading(false); });
   }, [slug]);
 
   if (loading) return <div className="p-12 text-center">Loading...</div>;
