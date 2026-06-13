@@ -19,11 +19,11 @@ xcreatives/
 ```
 
 ## Steps (each committable + CI-green; verify via CI build, not local)
-- [x] **A. Relocate** `frontend/` → `apps/marketing/` (git mv, no code change); update CI `working-directory`/`cache-dependency-path`. ← current
-- [ ] **0. Workspace scaffold**: root package.json (workspaces) + turbo.json + tsconfig.base.json; root `npm install`; CI = root `npm ci` + `turbo --filter=marketing`.
-- [ ] **1. `@xc/i18n`**: move i18n + messages; rewrite request.ts to static JSON imports; repoint next-intl plugin path + proxy import; add to `transpilePackages`.
-- [ ] **2. `@xc/api`**: move lib/{api,types,useApi}, pwa/sync; codemod `@/lib/*` → `@xc/api*`; make api.ts 401 redirect origin-aware.
-- [ ] **3. `@xc/ui`**: move globals.css→styles.css + shared components; app globals.css = `@import "@xc/ui/styles.css"` + Tailwind v4 `@source` for packages; keep next/font calls in each app layout.
+- [x] **A. Relocate** `frontend/` → `apps/marketing/` — DONE, CI green (commit bfb110d).
+- [x] **0. Workspace scaffold**: npm workspaces (no turbo yet); single root package-lock.json (CLEAN-regenerated for all-platform optional deps — see gotcha #1b); CI = root `npm ci` + `npm run <script> --workspace=apps/marketing`; next.config.ts→.mjs. DONE, CI green (commit 4edeeaf).
+- [x] **1. `@xc/i18n`**: moved i18n + messages; request.ts now static JSON imports; plugin path `../../packages/i18n/src/request.ts`; proxy imports `@xc/i18n/config`; transpilePackages. DONE, CI green (commit 2e72c0c).
+- [x] **2. `@xc/api`**: moved lib/{api,types,useApi}+pwa; codemod `@/lib/api`→`@xc/api`, `@/lib/types`→`@xc/api/types` (92 refs); transpilePackages. DONE, CI green (commit dafdb73). NOTE: api.ts 401 `window.location.href="/login"` still origin-local — make origin-aware in Step 5.
+- [ ] **3. `@xc/ui`** ← NEXT. Move globals.css→packages/ui/src/styles.css (REMOVE its `@import "tailwindcss"`); move shared components (ThemeProvider, CurrencyProvider, PageBanner, FileUpload, Skeleton, ErrorBoundary, concierge/ChatWidget — all have NO internal `@/` imports; FileUpload imports `@xc/api` so @xc/ui deps on @xc/api; none use next-intl). New app `src/app/globals.css` = `@import "tailwindcss";` + `@import "@xc/ui/styles.css";` + `@source "../../../../packages/ui/src/**/*.{ts,tsx}";` (GOTCHA #2 — without @source the package's classes are purged: build passes but renders unstyled). Keep next/font calls in app layout (vars --font-fraunces/--font-hanken consumed by styles.css @theme). Codemod `@/components/{Comp}`→`@xc/ui/{Comp}`. @xc/ui package.json: deps {@xc/api, lucide-react}, peer {react, react-dom, next}. **Verify the site is actually styled, not just that it builds.**
 - [ ] **4. `apps/portal` shell**: scaffold app (next.config, proxy.ts, tsconfig, postcss, eslint, public, [locale]/layout + globals); add to CI matrix.
 - [ ] **5. Move portal routes**: git mv `portal/**`, `login`, `auth/sso`, portal `offline`, portal-only components → apps/portal; marketing `login`/`auth` → redirect to portal URL; split e2e specs.
 - [ ] **6. Deploy**: 2 Vercel projects (Root Directory per app), env (NEXT_PUBLIC_API_URL, API_PROXY_URL), map portal.xcreativs.com; Render `ALLOWED_ORIGINS=https://xcreativs.com,https://www.xcreativs.com,https://portal.xcreativs.com`; Ignored Build Step `npx turbo-ignore`.
