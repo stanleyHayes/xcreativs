@@ -1,4 +1,3 @@
-import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
@@ -18,26 +17,18 @@ const securityHeaders = [
     : []),
 ];
 
-const nextConfig: NextConfig = {
+/** @type {import("next").NextConfig} */
+const nextConfig = {
   poweredByHeader: false,
   async rewrites() {
     return [
-      {
-        source: "/api/:path*",
-        destination: `${API_PROXY_URL}/api/:path*`,
-      },
-      {
-        source: "/offline",
-        destination: "/en/offline",
-      },
+      { source: "/api/:path*", destination: `${API_PROXY_URL}/api/:path*` },
+      { source: "/offline", destination: "/en/offline" },
     ];
   },
   async headers() {
     return [
-      {
-        source: "/:path*",
-        headers: securityHeaders,
-      },
+      { source: "/:path*", headers: securityHeaders },
       {
         source: "/sw.js",
         headers: [
@@ -45,23 +36,11 @@ const nextConfig: NextConfig = {
           { key: "Service-Worker-Allowed", value: "/" },
         ],
       },
-      {
-        source: "/manifest.json",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=3600" },
-        ],
-      },
-      {
-        source: "/icon-:size.svg",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=86400, immutable" },
-        ],
-      },
+      { source: "/manifest.json", headers: [{ key: "Cache-Control", value: "public, max-age=3600" }] },
+      { source: "/icon-:size.svg", headers: [{ key: "Cache-Control", value: "public, max-age=86400, immutable" }] },
     ];
   },
-  images: {
-    remotePatterns: [],
-  },
+  images: { remotePatterns: [] },
 };
 
 export default withNextIntl(nextConfig);
