@@ -226,7 +226,7 @@ func handleSetRolePermissionsAdmin(pool *pgxpool.Pool) http.HandlerFunc {
 			respondError(w, http.StatusInternalServerError, "failed to update role")
 			return
 		}
-		defer tx.Rollback(r.Context())
+		defer func() { _ = tx.Rollback(r.Context()) }()
 		if _, err := tx.Exec(r.Context(), `DELETE FROM identity.role_permissions WHERE role = $1::user_role`, role); err != nil {
 			respondError(w, http.StatusInternalServerError, "failed to update role")
 			return
