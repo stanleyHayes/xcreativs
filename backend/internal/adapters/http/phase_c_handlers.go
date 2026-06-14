@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -218,6 +219,102 @@ func commaInt(n int) string {
 		out = append(out, c)
 	}
 	return string(out)
+}
+
+// handleListAuditLogsAdmin returns a filterable admin view of authenticated
+// reads and writes captured by AuditLogMiddleware.
+func handleListAuditLogsAdmin(pool *pgxpool.Pool) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		limit := 200
+		if rawLimit := strings.TrimSpace(r.URL.Query().Get("limit")); rawLimit != "" {
+			parsed, err := strconv.Atoi(rawLimit)
+			if err == nil && parsed > 0 {
+				limit = parsed
+			}
+		}
+		if limit > 1000 {
+			limit = 1000
+		}
+
+		action := strings.ToUpper(strings.TrimSpace(r.URL.Query().Get("action")))
+		userID := strings.TrimSpace(r.URL.Query().Get("user_id"))
+		query := strings.TrimSpace(r.URL.Query().Get("q"))
+
+		rows, err := pool.Query(r.Context(), `
+			SELECT
+				al.id::text,
+				al.created_at::text,
+				al.action,
+				al.resource,
+				COALESCE(al.resource_id, '') AS resource_id,
+				COALESCE(al.ip_address::text, '') AS ip_address,
+				COALESCE(al.user_agent, '') AS user_agent,
+				COALESCE(al.metadata->>'status_code', '') AS status_code,
+				COALESCE(al.user_id::text, '') AS user_id,
+				COALESCE(u.email, '') AS user_email,
+				trim(COALESCE(u.first_name, '') || ' ' || COALESCE(u.last_name, '')) AS user_name
+			FROM identity.audit_log al
+			LEFT JOIN identity.users u ON u.id = al.user_id
+			WHERE ($1 = '' OR al.action = $1)
+			  AND ($2 = '' OR al.user_id::text = $2)
+			  AND (
+			    $3 = ''
+			    OR al.resource ILIKE '%' || $3 || '%'
+			    OR al.resource_id ILIKE '%' || $3 || '%'
+			    OR u.email ILIKE '%' || $3 || '%'
+			    OR (COALESCE(u.first_name, '') || ' ' || COALESCE(u.last_name, '')) ILIKE '%' || $3 || '%'
+			  )
+			ORDER BY al.created_at DESC
+			LIMIT $4
+		`, action, userID, query, limit)
+		if err != nil {
+			respondError(w, http.StatusInternalServerError, "failed to load audit logs")
+			return
+		}
+		defer rows.Close()
+
+		type adminAuditEntry struct {
+			ID         string `json:"id"`
+			Time       string `json:"time"`
+			Action     string `json:"action"`
+			Resource   string `json:"resource"`
+			ResourceID string `json:"resource_id"`
+			IPAddress  string `json:"ip_address"`
+			UserAgent  string `json:"user_agent"`
+			StatusCode string `json:"status_code"`
+			UserID     string `json:"user_id"`
+			UserEmail  string `json:"user_email"`
+			UserName   string `json:"user_name"`
+		}
+
+		var entries []adminAuditEntry
+		for rows.Next() {
+			var e adminAuditEntry
+			if err := rows.Scan(&e.ID, &e.Time, &e.Action, &e.Resource, &e.ResourceID, &e.IPAddress, &e.UserAgent, &e.StatusCode, &e.UserID, &e.UserEmail, &e.UserName); err != nil {
+				respondError(w, http.StatusInternalServerError, "failed to scan audit logs")
+				return
+			}
+			entries = append(entries, e)
+		}
+		if err := rows.Err(); err != nil {
+			respondError(w, http.StatusInternalServerError, "failed to load audit logs")
+			return
+		}
+
+		if strings.EqualFold(r.URL.Query().Get("format"), "csv") {
+			w.Header().Set("Content-Type", "text/csv; charset=utf-8")
+			w.Header().Set("Content-Disposition", `attachment; filename="admin-audit-log.csv"`)
+			cw := csv.NewWriter(w)
+			_ = cw.Write([]string{"time", "action", "resource", "resource_id", "user_email", "ip_address", "status_code", "user_agent"})
+			for _, e := range entries {
+				_ = cw.Write([]string{e.Time, e.Action, e.Resource, e.ResourceID, e.UserEmail, e.IPAddress, e.StatusCode, e.UserAgent})
+			}
+			cw.Flush()
+			return
+		}
+
+		respondJSON(w, http.StatusOK, map[string]any{"entries": entries})
+	}
 }
 
 // handleAuditLogExport returns the authenticated user's audit trail as JSON or

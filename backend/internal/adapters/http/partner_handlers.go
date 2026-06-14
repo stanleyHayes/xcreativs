@@ -73,7 +73,13 @@ func handlePartnerDashboard(pool *pgxpool.Pool) http.HandlerFunc {
 		userID := r.Context().Value(userIDKey).(string)
 		partner, err := deps.Partner.GetPartnerByUser(r.Context(), userID)
 		if err != nil || partner == nil {
-			respondError(w, http.StatusNotFound, "no partner association found")
+			respondJSON(w, http.StatusOK, map[string]any{
+				"partner":    nil,
+				"products":   []any{},
+				"agreements": []any{},
+				"referrals":  []any{},
+				"orders":     []any{},
+			})
 			return
 		}
 		products, _ := deps.Partner.ListPartnerProducts(r.Context(), partner.ID.String())

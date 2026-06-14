@@ -205,6 +205,7 @@ func NewRouter(cfg *config.Config, log Logger, pool *pgxpool.Pool, identity doma
 			admin.Use(AuditLogMiddleware(pool))
 
 			admin.Get("/admin/analytics", handleAnalyticsDashboard(pool))
+			admin.Get("/admin/audit-logs", handleListAuditLogsAdmin(pool))
 			admin.Get("/admin/partner/applications", handleListPartnerApplications(pool))
 			admin.Put("/admin/partner/applications/{id}", handleUpdatePartnerApplication(pool))
 			// Applicant tracking (ATS)
@@ -213,6 +214,9 @@ func NewRouter(cfg *config.Config, log Logger, pool *pgxpool.Pool, identity doma
 			admin.Get("/admin/applications/{id}/interviews", handleListInterviews(pool))
 			admin.Post("/admin/applications/{id}/interviews", handleScheduleInterview(pool, emailSender))
 			admin.Patch("/admin/interviews/{iid}", handleUpdateInterview(pool))
+			admin.Get("/admin/careers/roles", handleListJobRolesAdmin(pool))
+			admin.Post("/admin/careers/roles", handleCreateJobRoleAdmin(pool))
+			admin.Put("/admin/careers/roles/{id}", handleUpdateJobRoleAdmin(pool))
 			// Technical assessment challenges
 			admin.Get("/admin/assessment-challenges", handleListChallenges(pool))
 			admin.Post("/admin/assessment-challenges", handleCreateChallenge(pool))

@@ -230,8 +230,7 @@ func RateLimitMiddleware(pool *pgxpool.Pool) func(http.Handler) http.Handler {
 func AuditLogMiddleware(pool *pgxpool.Pool) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Only log state-changing operations
-			if r.Method == http.MethodGet || r.Method == http.MethodOptions {
+			if r.Method == http.MethodOptions {
 				next.ServeHTTP(w, r)
 				return
 			}

@@ -212,6 +212,16 @@ paths:
         '400': { $ref: '#/components/responses/Error' }
         '401': { $ref: '#/components/responses/Error' }
         default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/audit-logs":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/audit-logs
+      operationId: get_api_v1_admin_audit_logs
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
   "/api/v1/admin/bookings":
     get:
       tags: [Admin]
@@ -227,6 +237,50 @@ paths:
       tags: [Admin]
       summary: PUT /api/v1/admin/bookings/{id}
       operationId: put_api_v1_admin_bookings_id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/careers/roles":
+    get:
+      tags: [Admin]
+      summary: GET /api/v1/admin/careers/roles
+      operationId: get_api_v1_admin_careers_roles
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Admin]
+      summary: POST /api/v1/admin/careers/roles
+      operationId: post_api_v1_admin_careers_roles
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
+  "/api/v1/admin/careers/roles/{id}":
+    put:
+      tags: [Admin]
+      summary: PUT /api/v1/admin/careers/roles/{id}
+      operationId: put_api_v1_admin_careers_roles_id
       parameters:
         - name: id
           in: path
