@@ -31,6 +31,9 @@ dist/
 build/
 *.tsbuildinfo
 
+# Turborepo
+.turbo/
+
 # Go / compiled binaries
 backend/xcreatives-api
 *.exe

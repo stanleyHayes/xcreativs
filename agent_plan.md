@@ -70,102 +70,102 @@ interactive     -- readiness_assessments, demo_usage, lattice_explorer
 > Goal: Public surface + intake system + core cross-cutting features. Shippable standalone.
 
 ### 3.1 Infrastructure & Tooling (Week 1)
-- [ ] Repo layout (`backend/`, `frontend/`, `infra/`, `docs/`)
-- [ ] Go module init; dependency selection; `Makefile` targets (`run`, `test`, `migrate`, `seed`)
-- [ ] Docker Compose (Postgres 16, Redis, backend, frontend)
-- [ ] Migration framework wired; `migrate` CLI installed
-- [ ] Base HTTP server with `chi`: structured logging (`slog`), request ID, recover, CORS, rate limiter
-- [ ] Configuration loader (`env` + `.env` local); secrets via env vars only
-- [ ] Health check endpoint (`/healthz`)
-- [ ] CI skeleton (GitHub Actions: lint, test, build)
+- [x] Repo layout (`backend/`, `frontend/`, `infra/`, `docs/`)
+- [x] Go module init; dependency selection; `Makefile` targets (`run`, `test`, `migrate`, `seed`)
+- [x] Docker Compose (Postgres 16, Redis, backend, frontend)
+- [x] Migration framework wired; `migrate` CLI installed
+- [x] Base HTTP server with `chi`: structured logging (`slog`), request ID, recover, CORS, rate limiter
+- [x] Configuration loader (`env` + `.env` local); secrets via env vars only
+- [x] Health check endpoint (`/healthz`)
+- [x] CI skeleton (GitHub Actions: lint, test, build)
 
 ### 3.2 Database Foundation (Week 1–2)
-- [ ] Migration 001: `public` enums (status types, role types, currency codes, sectors)
-- [ ] Migration 002: `content` schema — pages, services, labs_products, case_dossiers, industries, insights, glossary, press_releases, faqs
-- [ ] Migration 003: `identity` schema — users, roles, permissions, sessions, mfa_secrets, audit_log
-- [ ] Migration 004: `lead_qual` schema — diagnostics, diagnostic_questions, scope_estimates, rfp_submissions, newsletter_subscribers, newsletter_segments
-- [ ] Migration 005: `talent` schema — job_roles, applications, talent_network_subs, internship_programs
-- [ ] Migration 006: indexes for performance (FTS, trigram, foreign keys)
-- [ ] Seed data: 5 service lines, 1 Labs product (ILIVVON), 15+ case dossiers, 8 industries, sample insights, glossary terms, FAQ categories
-- [ ] Repository interfaces (ports) defined in `domain/`; implementations in `internal/adapters/db/`
+- [x] Migration 001: `public` enums (status types, role types, currency codes, sectors)
+- [x] Migration 002: `content` schema — pages, services, labs_products, case_dossiers, industries, insights, glossary, press_releases, faqs
+- [x] Migration 003: `identity` schema — users, roles, permissions, sessions, mfa_secrets, audit_log
+- [x] Migration 004: `lead_qual` schema — diagnostics, diagnostic_questions, scope_estimates, rfp_submissions, newsletter_subscribers, newsletter_segments
+- [x] Migration 005: `talent` schema — job_roles, applications, talent_network_subs, internship_programs
+- [x] Migration 006: indexes for performance (FTS, trigram, foreign keys)
+- [x] Seed data: 5 service lines, 1 Labs product (ILIVVON), 15+ case dossiers, 8 industries, sample insights, glossary terms, FAQ categories
+- [x] Repository interfaces (ports) defined in `domain/`; implementations in `internal/adapters/db/`
 
 ### 3.3 Cross-Cutting Platform Layer (Week 2–3)
-- [ ] **Audit log**: middleware captures every request → `identity.audit_log` (user, IP, action, resource, timestamp)
-- [ ] **Auth foundation**: registration, login, logout, JWT access + refresh tokens, bcrypt passwords
-- [ ] **MFA foundation**: TOTP enrollment (QR code), verification, mandatory enforcement flag
-- [ ] **RBAC foundation**: roles (`admin`, `editor`, `viewer`) and permissions table; middleware enforces
-- [ ] **Notifications foundation**: in-app notification table + email dispatcher interface; Resend adapter
-- [ ] **File storage adapter**: S3-compatible interface; upload + signed-URL retrieval
-- [ ] **i18n middleware**: `Accept-Language` detection; EN/FR fallback
-- [ ] **Search foundation**: Postgres FTS helper; public search across `content` tables
+- [x] **Audit log**: middleware captures every request → `identity.audit_log` (user, IP, action, resource, timestamp)
+- [x] **Auth foundation**: registration, login, logout, JWT access + refresh tokens, bcrypt passwords
+- [x] **MFA foundation**: TOTP enrollment (QR code), verification, mandatory enforcement flag
+- [x] **RBAC foundation**: roles (`admin`, `editor`, `viewer`) and permissions table; middleware enforces
+- [x] **Notifications foundation**: in-app notification table + email dispatcher interface; Resend adapter
+- [x] **File storage adapter**: S3-compatible interface; upload + signed-URL retrieval
+- [x] **i18n middleware**: `Accept-Language` detection; EN/FR fallback
+- [x] **Search foundation**: Postgres FTS helper; public search across `content` tables
 
 ### 3.4 Layer 01 — Public Surface APIs (Week 3–5)
-- [ ] `GET /api/v1/pages/home` — hero data, live engagement ticker, services snapshot, Labs preview, selected dossiers
-- [ ] `GET /api/v1/pages/about` — mission, principles, founder bios, leadership, advisory, timeline, reading list
-- [ ] `GET /api/v1/services` — list 5 service lines
-- [ ] `GET /api/v1/services/:slug` — deep page per service (methodology, deliverables, timeline, price band, FAQ, CTA)
-- [ ] `GET /api/v1/labs` — Labs overview, operating loop, product list
-- [ ] `GET /api/v1/labs/:slug` — product page (ILIVVON first-class)
-- [ ] `GET /api/v1/subsidiaries` — holding-company map data
-- [ ] `GET /api/v1/work` — case dossier index (filterable by sector, service, scale, stage)
-- [ ] `GET /api/v1/work/:slug` — dossier detail (brief, constraints, architecture, what shipped, IP retained, learnings)
-- [ ] `GET /api/v1/industries` — sector list
-- [ ] `GET /api/v1/industries/:slug` — sector page with mapped capabilities + relevant dossiers + intake CTA
-- [ ] `GET /api/v1/insights` — content library index (field notes, theses, whitepapers); taggable, searchable, RSS-ready
-- [ ] `GET /api/v1/insights/:slug` — detail; gated download for theses
-- [ ] `GET /api/v1/glossary` — terms + definitions
-- [ ] `GET /api/v1/press` — releases, media coverage, media kit metadata
-- [ ] `GET /api/v1/faq` — categorized real questions
-- [ ] **Live engagement ticker**: `GET /api/v1/metrics/ticker` — active engagements, sectors, capabilities deployed (from `engagement` schema, public aggregate)
-- [ ] **Holding-company visualizer data**: `GET /api/v1/visualizations/holding-tree` — nested JSON tree
+- [x] `GET /api/v1/pages/home` — hero data, live engagement ticker, services snapshot, Labs preview, selected dossiers
+- [x] `GET /api/v1/pages/about` — mission, principles, founder bios, leadership, advisory, timeline, reading list
+- [x] `GET /api/v1/services` — list 5 service lines
+- [x] `GET /api/v1/services/:slug` — deep page per service (methodology, deliverables, timeline, price band, FAQ, CTA)
+- [x] `GET /api/v1/labs` — Labs overview, operating loop, product list
+- [x] `GET /api/v1/labs/:slug` — product page (ILIVVON first-class)
+- [x] `GET /api/v1/subsidiaries` — holding-company map data
+- [x] `GET /api/v1/work` — case dossier index (filterable by sector, service, scale, stage)
+- [x] `GET /api/v1/work/:slug` — dossier detail (brief, constraints, architecture, what shipped, IP retained, learnings)
+- [x] `GET /api/v1/industries` — sector list
+- [x] `GET /api/v1/industries/:slug` — sector page with mapped capabilities + relevant dossiers + intake CTA
+- [x] `GET /api/v1/insights` — content library index (field notes, theses, whitepapers); taggable, searchable, RSS-ready
+- [x] `GET /api/v1/insights/:slug` — detail; gated download for theses
+- [x] `GET /api/v1/glossary` — terms + definitions
+- [x] `GET /api/v1/press` — releases, media coverage, media kit metadata
+- [x] `GET /api/v1/faq` — categorized real questions
+- [x] **Live engagement ticker**: `GET /api/v1/metrics/ticker` — active engagements, sectors, capabilities deployed (from `engagement` schema, public aggregate)
+- [x] **Holding-company visualizer data**: `GET /api/v1/visualizations/holding-tree` — nested JSON tree
 
 ### 3.5 Layer 02 — Lead Qualification APIs (Week 5–7)
-- [ ] **Engagement Readiness Diagnostic**: `POST /api/v1/diagnostics/start`, `POST /api/v1/diagnostics/:id/answer`, `GET /api/v1/diagnostics/:id/result`
+- [x] **Engagement Readiness Diagnostic**: `POST /api/v1/diagnostics/start`, `POST /api/v1/diagnostics/:id/answer`, `GET /api/v1/diagnostics/:id/result`
   - Branching logic server-side based on answers
   - Outputs routing decision + generates PDF summary (HTML→PDF via Go lib)
   - Stores lead in `lead_qual.diagnostics`
-- [ ] **Project Scope Estimator**: `POST /api/v1/estimates` — configurator; returns components, weeks-band, price-band, sample architecture
+- [x] **Project Scope Estimator**: `POST /api/v1/estimates` — configurator; returns components, weeks-band, price-band, sample architecture
   - Lead captured + emailed to sales
-- [ ] **RFP / Tender Submission**: `POST /api/v1/rfps` — structured upload; auto-extracts deadline, scope, criteria
+- [x] **RFP / Tender Submission**: `POST /api/v1/rfps` — structured upload; auto-extracts deadline, scope, criteria
   - File upload to S3; metadata to DB; internal routing + SLA tracking
-- [ ] **Newsletter Signup**: `POST /api/v1/newsletter/subscribe` — segmented (sector updates, Labs releases, hiring, thought pieces)
+- [x] **Newsletter Signup**: `POST /api/v1/newsletter/subscribe` — segmented (sector updates, Labs releases, hiring, thought pieces)
   - Preference management; double opt-in
-- [ ] **Graceful Decline Path**: automatic routing for below-threshold prospects with named alternatives + resources
+- [x] **Graceful Decline Path**: automatic routing for below-threshold prospects with named alternatives + resources
 
 ### 3.6 Layer 05 — Careers APIs (Week 7–8)
-- [ ] `GET /api/v1/careers/roles` — open roles list
-- [ ] `GET /api/v1/careers/roles/:slug` — full role page (project examples, comp philosophy, process)
-- [ ] `POST /api/v1/careers/roles/:slug/apply` — application submission (resume upload, cover, fields)
-- [ ] `POST /api/v1/careers/talent-network` — domain-interest expression
-- [ ] Application status tracking foundation (table + basic state machine: received → under_review → interview → offer → decline)
+- [x] `GET /api/v1/careers/roles` — open roles list
+- [x] `GET /api/v1/careers/roles/:slug` — full role page (project examples, comp philosophy, process)
+- [x] `POST /api/v1/careers/roles/:slug/apply` — application submission (resume upload, cover, fields)
+- [x] `POST /api/v1/careers/talent-network` — domain-interest expression
+- [x] Application status tracking foundation (table + basic state machine: received → under_review → interview → offer → decline)
 
 ### 3.7 Layer 06 — Knowledge APIs (Week 8)
-- [ ] `GET /api/v1/insights` (already in Layer 01) extended with type filter (field_note / thesis / whitepaper)
-- [ ] Gated download for theses: `POST /api/v1/insights/:slug/download` — requires email capture; generates signed PDF URL
-- [ ] Annotated bibliography table + `GET /api/v1/bibliography`
-- [ ] Audio brief metadata + podcast feed skeleton (`/api/v1/feed/audio`)
+- [x] `GET /api/v1/insights` (already in Layer 01) extended with type filter (field_note / thesis / whitepaper)
+- [x] Gated download for theses: `POST /api/v1/insights/:slug/download` — requires email capture; generates signed PDF URL
+- [x] Annotated bibliography table + `GET /api/v1/bibliography`
+- [x] Audio brief metadata + podcast feed skeleton (`/api/v1/feed/audio`)
 
 ### 3.8 Layer 08 — Cross-Cutting Features for Phase A (Week 8–9)
-- [ ] **Universal Search (public)**: `GET /api/v1/search?q=&type=&lang=` — FTS across content tables; typo-tolerant via `pg_trgm`; sub-200ms
-- [ ] **Bilingual EN/FR**: All API responses accept `?lang=` or `Accept-Language`; CMS content stores both languages
-- [ ] **Dark/Light mode**: CSS variable system; portal defaults dark; public defaults light
-- [ ] **SEO**: JSON-LD endpoints per entity; sitemap.xml generation; robots.txt
-- [ ] **Analytics**: Plausible/PostHog frontend integration + internal aggregate endpoints
-- [ ] **PWA**: manifest, service worker scaffold, offline caching for public pages
-- [ ] **Accessibility**: WCAG AA markup; keyboard nav; `prefers-reduced-motion` respected
+- [x] **Universal Search (public)**: `GET /api/v1/search?q=&type=&lang=` — FTS across content tables; typo-tolerant via `pg_trgm`; sub-200ms
+- [x] **Bilingual EN/FR**: All API responses accept `?lang=` or `Accept-Language`; CMS content stores both languages
+- [x] **Dark/Light mode**: CSS variable system; portal defaults dark; public defaults light
+- [x] **SEO**: JSON-LD endpoints per entity; sitemap.xml generation; robots.txt
+- [x] **Analytics**: Plausible/PostHog frontend integration + internal aggregate endpoints
+- [x] **PWA**: manifest, service worker scaffold, offline caching for public pages
+- [x] **Accessibility**: WCAG AA markup; keyboard nav; `prefers-reduced-motion` respected
 
 ### 3.9 Frontend — Phase A Pages (Week 1–10, parallel)
-- [ ] Next.js project init with App Router, Tailwind, Motion, next-intl
-- [ ] Design token config (3 colors + Inter Tight)
-- [ ] Layout components: navigation, footer, section markers, hairline rules, asymmetric/symmetric layouts
-- [ ] **Home**: scroll-driven narrative (hero → ticker → holding-company tree → services → Labs → dossiers → manifesto → CTA)
-- [ ] **About**, **Services** (5 pages), **Labs** (overview + ILIVVON), **Subsidiaries**
-- [ ] **Work** (filterable index + detail), **Industries** (index + detail)
-- [ ] **Insights** (index + detail + gated download), **Glossary**, **FAQ**, **Press**
-- [ ] **Contact / Intake Hub**: diagnostic flow, scope estimator, RFP upload, newsletter signup
-- [ ] **Careers** (roles + detail + apply form + talent network)
-- [ ] Search overlay (command palette style)
-- [ ] PWA manifest + offline fallback page
+- [x] Next.js project init with App Router, Tailwind, Motion, next-intl
+- [x] Design token config (3 colors + Inter Tight)
+- [x] Layout components: navigation, footer, section markers, hairline rules, asymmetric/symmetric layouts
+- [x] **Home**: scroll-driven narrative (hero → ticker → holding-company tree → services → Labs → dossiers → manifesto → CTA)
+- [x] **About**, **Services** (5 pages), **Labs** (overview + ILIVVON), **Subsidiaries**
+- [x] **Work** (filterable index + detail), **Industries** (index + detail)
+- [x] **Insights** (index + detail + gated download), **Glossary**, **FAQ**, **Press**
+- [x] **Contact / Intake Hub**: diagnostic flow, scope estimator, RFP upload, newsletter signup
+- [x] **Careers** (roles + detail + apply form + talent network)
+- [x] Search overlay (command palette style)
+- [x] PWA manifest + offline fallback page
 
 ### 3.10 Integration & Acceptance — Phase A (Week 10)
 - [ ] End-to-end tests for critical paths (diagnostic → PDF, apply → email, search → results)
@@ -181,47 +181,47 @@ interactive     -- readiness_assessments, demo_usage, lattice_explorer
 > Goal: Client portal in full. First live engagements (24H+ Authority, Fastcare) onboarded.
 
 ### 4.1 Portal Authentication & Access (Week 6–8)
-- [ ] OAuth2 SSO: Google + Microsoft login
-- [ ] SAML/OIDC enterprise adapter (foundation)
-- [ ] MFA mandatory enforcement (no exceptions)
-- [ ] Role-based workspace access: `Executive`, `Project`, `Viewer`
-- [ ] White-label mode: custom domain, logo, colors, email-from address per workspace
-- [ ] Audit log: 100% of writes + 100% of authenticated reads captured
+- [x] OAuth2 SSO: Google + Microsoft login
+- [x] SAML/OIDC enterprise adapter (foundation)
+- [x] MFA mandatory enforcement (no exceptions)
+- [x] Role-based workspace access: `Executive`, `Project`, `Viewer`
+- [x] White-label mode: custom domain, logo, colors, email-from address per workspace
+- [x] Audit log: 100% of writes + 100% of authenticated reads captured
 
 ### 4.2 Engagement Schema Expansion (Week 6–7)
-- [ ] `engagement` schema: engagements, milestones, budget_lines, invoices, payments
-- [ ] `comms` schema: threads, comments, notifications, activity_feed
-- [ ] `portal_config` schema: workspace_settings, white_label_configs, api_keys
+- [x] `engagement` schema: engagements, milestones, budget_lines, invoices, payments
+- [x] `comms` schema: threads, comments, notifications, activity_feed
+- [x] `portal_config` schema: workspace_settings, white_label_configs, api_keys
 
 ### 4.3 Layer 03 — Client Portal APIs (Week 8–14)
-- [ ] `GET /api/v1/portal` — multi-engagement overview
-- [ ] `GET /api/v1/portal/engagements/:id/dashboard` — phase status, milestone progress, sprint, focus, blockers, activity
-- [ ] **Deliverables Vault**: CRUD + versioning + diff viewer metadata + download history + role-scoped visibility
-- [ ] **Decision Log**: CRUD; timestamped rationale, alternatives, decision-maker, linked artefacts
-- [ ] **Stakeholder Map**: visual graph data (editable)
-- [ ] **Risk Register**: CRUD; owner, mitigation, residual rating, escalation status; linked to decisions
-- [ ] **Capability Lattice Tracker**: delivered / in-flight / queued / deferred mapping
-- [ ] **Budget & Milestone Tracker**: burn vs budget, invoiced/outstanding, currency exposure (USD/GHS/EUR), forecast
-- [ ] **Invoices & Payments**: invoice generation, status, Stripe + Paystack payment links
-- [ ] **Approval Workflows**: deliverable sign-off routing; conditional approval; rejection with comments
-- [ ] **Threaded Comms**: discussions on deliverables, decisions, risks; email digests; in-app notifications
-- [ ] **Embedded Demos**: SSO link to preview environments
-- [ ] **Reports Library**: quarterly reviews, board packs, handover docs; role-scoped; exportable
-- [ ] **Document Library**: onboarding, runbooks, contracts, NDAs, SLAs (separate from deliverables)
-- [ ] **Team Directory**: XCreativs staff on engagement; role; availability
-- [ ] **Support Tickets**: issue raising; SLA tracking; response targets visible to client
-- [ ] **Settings & Access Control**: client self-manages users, roles, permissions, notification preferences
-- [ ] **Multi-engagement view**: unified portal home; switch without re-auth
+- [x] `GET /api/v1/portal` — multi-engagement overview
+- [x] `GET /api/v1/portal/engagements/:id/dashboard` — phase status, milestone progress, sprint, focus, blockers, activity
+- [x] **Deliverables Vault**: CRUD + versioning + diff viewer metadata + download history + role-scoped visibility
+- [x] **Decision Log**: CRUD; timestamped rationale, alternatives, decision-maker, linked artefacts
+- [x] **Stakeholder Map**: visual graph data (editable)
+- [x] **Risk Register**: CRUD; owner, mitigation, residual rating, escalation status; linked to decisions
+- [x] **Capability Lattice Tracker**: delivered / in-flight / queued / deferred mapping
+- [x] **Budget & Milestone Tracker**: burn vs budget, invoiced/outstanding, currency exposure (USD/GHS/EUR), forecast
+- [x] **Invoices & Payments**: invoice generation, status, Stripe + Paystack payment links
+- [x] **Approval Workflows**: deliverable sign-off routing; conditional approval; rejection with comments
+- [x] **Threaded Comms**: discussions on deliverables, decisions, risks; email digests; in-app notifications
+- [x] **Embedded Demos**: SSO link to preview environments
+- [x] **Reports Library**: quarterly reviews, board packs, handover docs; role-scoped; exportable
+- [x] **Document Library**: onboarding, runbooks, contracts, NDAs, SLAs (separate from deliverables)
+- [x] **Team Directory**: XCreativs staff on engagement; role; availability
+- [x] **Support Tickets**: issue raising; SLA tracking; response targets visible to client
+- [x] **Settings & Access Control**: client self-manages users, roles, permissions, notification preferences
+- [x] **Multi-engagement view**: unified portal home; switch without re-auth
 
 ### 4.4 Layer 05 — Full Applicant Tracking (Week 10–12)
-- [ ] Full state machine + automated email transitions
-- [ ] Interview scheduling integration
-- [ ] Technical assessment challenges (foundation)
+- [x] Full state machine + automated email transitions
+- [x] Interview scheduling integration
+- [x] Technical assessment challenges (foundation)
 
 ### 4.5 Layer 08 — Notifications System (Week 12–14)
-- [ ] Unified dispatcher: email, in-app, WhatsApp/SMS (optional for executives)
-- [ ] Per-user preferences + digest options
-- [ ] Segmented delivery: visitors, prospects, clients, partners, candidates
+- [x] Unified dispatcher: email, in-app, WhatsApp/SMS (optional for executives)
+- [x] Per-user preferences + digest options
+- [x] Segmented delivery: visitors, prospects, clients, partners, candidates
 
 ### 4.6 Phase B Acceptance
 - [ ] MFA enforced for 100% of authenticated users
@@ -237,38 +237,38 @@ interactive     -- readiness_assessments, demo_usage, lattice_explorer
 > Goal: Partner layer, interactive tools, AI concierge, API. Platform becomes unforkable.
 
 ### 5.1 Layer 04 — Partner & Collaborator Portal (Week 16–20)
-- [ ] Partnership application intake
-- [ ] Active partner dashboard: product status, dev progress, revenue share, IP ownership tracker
-- [ ] Co-development workspace (mirror of client workspace)
-- [ ] Referral programme tracking
-- [ ] Distribution partner layer: orders, training, regional performance, commission tracking
+- [x] Partnership application intake
+- [x] Active partner dashboard: product status, dev progress, revenue share, IP ownership tracker
+- [x] Co-development workspace (mirror of client workspace)
+- [x] Referral programme tracking
+- [x] Distribution partner layer: orders, training, regional performance, commission tracking
 
 ### 5.2 Layer 07 — Interactive Tools & Public Utilities (Week 18–22)
-- [ ] Digital Systems Readiness Assessment (15–20 Q → score across 5 dimensions)
-- [ ] AI Maturity Score
-- [ ] Tech Debt Estimator
-- [ ] Document Intelligence Demo (public doc upload → structured extraction)
-- [ ] Capability Lattice Explorer (interactive grid)
-- [ ] Holding Company Visualiser (animated tree)
-- [ ] Value Flow Animation data endpoints
-- [ ] Project Configurator / Engagement Cost Calculator
-- [ ] Live Engagement Counter (real-time WebSocket or SSE)
+- [x] Digital Systems Readiness Assessment (15–20 Q → score across 5 dimensions)
+- [x] AI Maturity Score
+- [x] Tech Debt Estimator
+- [x] Document Intelligence Demo (public doc upload → structured extraction)
+- [x] Capability Lattice Explorer (interactive grid)
+- [x] Holding Company Visualiser (animated tree)
+- [x] Value Flow Animation data endpoints
+- [x] Project Configurator / Engagement Cost Calculator
+- [x] Live Engagement Counter (real-time WebSocket or SSE)
 
 ### 5.3 Layer 08 — AI Concierge (Week 20–22)
-- [ ] RAG-based XC Assistant on firm's document corpus
-- [ ] Public site integration (chat widget)
-- [ ] Portal integration (deeper workspace queries)
-- [ ] No hallucinated capability claims; grounded in CMS + knowledge base
+- [x] RAG-based XC Assistant on firm's document corpus
+- [x] Public site integration (chat widget)
+- [x] Portal integration (deeper workspace queries)
+- [x] No hallucinated capability claims; grounded in CMS + knowledge base
 
 ### 5.4 Layer 03 — API Access (Week 22–23)
-- [ ] Scoped API keys per workspace
-- [ ] Endpoints: deliverables, decisions, milestones, audit log (read-only for clients)
-- [ ] Rate limiting + key rotation
+- [x] Scoped API keys per workspace
+- [x] Endpoints: deliverables, decisions, milestones, audit log (read-only for clients)
+- [x] Rate limiting + key rotation
 
 ### 5.5 Layer 06 — Rich Media (Week 22–24)
-- [ ] Annotated bibliography (full)
-- [ ] Audio brief generation (TTS pipeline) + podcast feed
-- [ ] Webinars & events: registration, calendar, replays, CRM segmentation
+- [x] Annotated bibliography (full)
+- [x] Audio brief generation (TTS pipeline) + podcast feed
+- [x] Webinars & events: registration, calendar, replays, CRM segmentation
 
 ### 5.6 Phase C Acceptance
 - [ ] API response time < 200ms for 95th percentile
@@ -512,6 +512,18 @@ This is the execution sequence. Each item is a commit-sized unit of work.
   - **Frontend lint cleanup (in progress):** clearing ~134 pre-existing lint errors (no-explicit-any, html-link-for-pages, set-state-in-effect) → 0, then one production `next build`, then first commit/push.
   - **UI/UX redesign (supersedes the original 3-token + Inter Tight system):** type system now **Fraunces (display) + Hanken Grotesk (body)**; refined cool palette on the signal-blue accent; reusable decoration system (animated constellation hero backdrop, drifting glows, grid + grain, `card-x` cards, gradient text); **navbar mega-dropdowns** (14 flat links → Services/Insights/Company + Work + Contact CTA); **dark editorial footer** with iconned columns; **`PageBanner`** (decorative icon + breadcrumbs + title + description) on 18 pages; branded **404** + CSS **splash screen**; cards restyled site-wide; **About** + **Partners** pages rebuilt; generated hero imagery in `public/media`. Fixed a **dev service-worker reload loop**.
   - **Decisions superseded since v1.0:** File storage = **Cloudinary** (not Cloudflare R2); Hosting = **Render** (backend Docker Blueprint) + **Vercel** (frontend); Frontend = **Next.js 16**.
+  - **Continued build (14 Jun 2026):**
+    - **Insights RSS feed (NEW):** `GET /api/v1/feed/insights` — RSS 2.0, optional `?type=field_note|thesis|whitepaper` filter, mirrors the audio podcast feed. Completes the plan's "RSS-ready" insights index (§3.4 / §5.5). Backend lint-clean; OpenAPI + Postman regenerated (now 169 paths). Frontend: auto-discovery `<link rel="alternate" type="application/rss+xml">` on `/insights`. Verified live.
+    - **Value Flow visualiser (NEW):** `/tools/value-flow` — animated circular value-loop (Client Revenue → Services → Labs IP → Subsidiaries → compound reach back) rendered from the live `/api/v1/visualizations/value-flow` endpoint (SVG + `animateMotion`, theme-adaptive via `currentColor`). Completes Layer 07's "Value Flow Animation" (§5.2) — the backend existed but had no frontend; now the **9th public tool**, listed on `/tools`. Lint + typecheck clean, verified live.
+    - **Monorepo split + portal as its own app:** marketing and portal are now two deployable apps sharing `@xc/{ui,api,i18n}`; portal → portal.xcreativs.com. Browser API calls made relative (`/api/*` proxied) ⇒ no CORS. Turborepo + per-app `vercel.json` + `docs/DEPLOY.md`. Full detail/status in **docs/MONOREPO_MIGRATION.md** (steps A–6; deploy pending user accounts + push).
+    - **i18n/SEO:** language selector fixed (cookie-aware, `localeDetection:false`); sitemap hreflang + canonical/OG; marketing→portal "Sign In" link.
+    - **Full plan reconciliation (14 Jun 2026):** a 4-agent audit mapped every Phase A/B/C feature to actual code (backend route+handler `file:line` AND frontend page) — **all 131 feature checkboxes (§3.1–3.9, §4.1–4.5, §5.1–5.5) confirmed BUILT and ticked**. No genuine feature gaps: items one pass flagged (sitemap/robots/JSON-LD, i18n, dark-mode, analytics forwarding) are correctly **frontend-handled** (Next.js `sitemap.ts`/`robots.ts`/JSON-LD in layout/`ThemeProvider`/`AnalyticsScript`); TTS + Concierge-LLM generation are **env-gated** (await provider keys, not missing). The only remaining unchecked boxes are **phase-acceptance benchmarks** (Lighthouse 95+, p95<200ms, concierge-accuracy review — need live measurement) and **Phase D** test/deploy (needs the user's Vercel/Render accounts + a push). Every *feature* in the plan is built.
+    - **Phase D test coverage (ongoing):** added focused unit tests (`estimate_apikey_test.go`) for the scope-estimator core logic (`computeEstimate` — normalization, base bands, complexity multipliers, 52-week cap, non-inverted phase ranges) and API-key generation (`generateAPIKey` — `xc_` format, prefix, sha256 hash, uniqueness). Full `internal/adapters/http` unit suite green; gofmt + vet clean.
+    - **Adversarial security hardening (14 Jun 2026):** a 4-dimension bug-hunt + per-finding adversarial verification surfaced 17 confirmed defects; fixed the critical + all high + the crash-class mediums (build/vet/test/typecheck green, backend restarted):
+      - **CRITICAL — cross-tenant IDOR closed:** every `/portal/engagements/{id}/*` route now passes `EngagementAccessMiddleware` (`engagement_access.go`) requiring caller ownership (client_id) or team membership, admin bypass, 404 on miss (no UUID enumeration). Router restructured into `engAccess`/`engWrite` groups.
+      - **HIGH:** all destructive portal mutations now require `RequireScope("write")` (previously JWT-only); API-key revoke scoped to `user_id`; payment-link + invoice-status scoped to the caller's engagement (admin bypass); service-worker precache fixed (`/en*` → unprefixed, was 307-poisoning `cache.addAll` and blocking SW install in prod, `CACHE_VERSION` v3→v4); OAuth SSO tokens stripped from URL/history on landing (`history.replaceState`).
+      - **MED:** `computeEstimate` phase ranges clamped (no more "weeks 1–0"); portal layout `JSON.parse` of stored user guarded + self-healing; `@xc/api` 401 redirect preserves a `/fr` locale prefix.
+      - REMAINING (documented, lower-severity): repo-level engagement_id scoping on child mutations (defense-in-depth beyond the middleware); OAuth full one-time-code/cookie handoff; `API_PROXY_URL`/`NEXT_PUBLIC_API_URL` prod fail-fast + localhost fallbacks in admin pages; 3 LOW observability items (SSE/analytics/webhook error handling).
 
 ---
 

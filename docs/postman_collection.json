@@ -3763,6 +3763,25 @@
           }
         },
         {
+          "name": "GET /api/v1/feed/insights",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/feed/insights",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "feed",
+                "insights"
+              ]
+            }
+          }
+        },
+        {
           "name": "GET /api/v1/glossary",
           "request": {
             "method": "GET",
