@@ -91,7 +91,7 @@ export default async function LocaleLayout({
   ];
 
   return (
-    <html lang={locale} className={`${display.variable} ${body.variable}`} suppressHydrationWarning>
+    <html lang={locale} className={`${display.variable} ${body.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0066CC" />
