@@ -51,6 +51,14 @@ export interface ApplicationsResponse {
   applications?: Entity[];
 }
 
+export interface CareerRolesResponse {
+  roles?: Entity[];
+}
+
+export interface AuditLogsResponse {
+  entries?: Entity[];
+}
+
 export interface AssignmentsResponse {
   assignments?: Entity[];
 }

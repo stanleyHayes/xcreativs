@@ -91,7 +91,7 @@ export default function Navigation() {
   const groupActive = (g: MenuGroup) => g.items.some((i) => isActive(i.href));
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 z-[70]">
       <div className="h-[3px] w-full bg-gradient-to-r from-signal via-signal/40 to-transparent" />
       <div className="border-b border-hairline bg-foundation/80 backdrop-blur-xl">
         <div className="mx-auto max-w-[1440px] px-5 lg:px-10">
@@ -254,8 +254,8 @@ export default function Navigation() {
 
       {/* Mobile panel */}
       {open && (
-        <div className="max-h-[calc(100vh-71px)] overflow-y-auto border-b border-hairline bg-foundation lg:hidden">
-          <div className="mx-auto max-w-[1440px] px-5 py-5">
+        <div className="relative z-[80] max-h-[calc(100vh-71px)] overflow-y-auto border-b border-hairline bg-foundation lg:hidden">
+          <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-5">
             <Link
               href={localizeHref("/work")}
               onClick={() => setOpen(false)}
@@ -288,26 +288,26 @@ export default function Navigation() {
                 </div>
               </div>
             ))}
-            <div className="mt-6 flex items-center justify-between gap-3 border-t border-hairline pt-5">
-              <div className="flex items-center gap-1">
+            <div className="mt-6 grid gap-4 border-t border-hairline pt-5">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => {
                     setOpen(false);
                     setSearchOpen(true);
                   }}
                   aria-label={t("search")}
-                  className="rounded-full p-2 hover:bg-soft"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-soft/70 text-gravity/70 hover:border-signal hover:text-signal"
                 >
                   <Search className="h-5 w-5" />
                 </button>
-                <button onClick={toggleTheme} aria-label="Toggle theme" className="rounded-full p-2 hover:bg-soft">
+                <button onClick={toggleTheme} aria-label="Toggle theme" className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-soft/70 text-gravity/70 hover:border-signal hover:text-signal">
                   {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                 </button>
                 <LocaleLink
                   href={pathnameWithoutLocale}
                   locale={otherLocale}
                   aria-label={`Switch language to ${otherLocale === "fr" ? "French" : "English"}`}
-                  className="rounded-full px-2 py-1 text-xs font-semibold uppercase tracking-wider text-mist"
+                  className="inline-flex h-10 items-center rounded-full border border-hairline bg-soft/70 px-3 text-xs font-semibold uppercase tracking-wider text-gravity/60 hover:border-signal hover:text-signal"
                 >
                   {otherLocale}
                 </LocaleLink>
@@ -315,29 +315,31 @@ export default function Navigation() {
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
                   aria-label="Currency"
-                  className="cursor-pointer rounded-full bg-transparent px-2 py-1 text-xs font-medium text-mist focus:outline-none"
+                  className="h-10 cursor-pointer rounded-full border border-hairline bg-soft/70 px-3 py-1 text-xs font-semibold text-gravity/60 focus:outline-none"
                 >
                   <option value="USD">USD</option>
                   <option value="GHS">GHS</option>
                   <option value="EUR">EUR</option>
                 </select>
               </div>
-              <Link
-                href={localizeHref("/login")}
-                onClick={() => setOpen(false)}
-                className="inline-flex items-center justify-center gap-1.5 rounded-full border border-hairline px-4 py-2.5 text-sm font-medium text-gravity transition-colors hover:border-signal hover:text-signal"
-              >
-                <LogIn className="h-4 w-4" />
-                {t("signIn")}
-              </Link>
-              <Link
-                href={localizeHref("/contact")}
-                onClick={() => setOpen(false)}
-                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gravity px-4 py-2.5 text-sm font-semibold text-foundation"
-              >
-                {t("contact")}
-                <ArrowUpRight className="h-4 w-4" />
-              </Link>
+              <div className="grid grid-cols-2 gap-3">
+                <Link
+                  href={localizeHref("/login")}
+                  onClick={() => setOpen(false)}
+                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-hairline px-4 py-2.5 text-sm font-semibold text-gravity transition-colors hover:border-signal hover:text-signal"
+                >
+                  <LogIn className="h-4 w-4" />
+                  {t("signIn")}
+                </Link>
+                <Link
+                  href={localizeHref("/contact")}
+                  onClick={() => setOpen(false)}
+                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-gravity px-4 py-2.5 text-sm font-semibold text-foundation"
+                >
+                  {t("contact")}
+                  <ArrowUpRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>

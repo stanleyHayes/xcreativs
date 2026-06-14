@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import { useState } from "react";
 import { api } from "@xc/api";
 import { FileUpload } from "@xc/ui/FileUpload";
@@ -33,13 +35,28 @@ export default function AdminThemesPage() {
   }
 
   return (
-    <div className="space-y-8 max-w-2xl">
-      <div className="flex items-center gap-2">
-        <Palette className="w-5 h-5 text-signal" />
-        <h1 className="font-display text-3xl font-semibold tracking-tight">Client Theme Management</h1>
-      </div>
+    <div className="max-w-5xl space-y-8">
+      <section className="portal-admin-header-x">
+        <div className="flex items-start gap-4">
+          <span className="portal-admin-icon-x">
+            <Palette className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="portal-meta-x text-signal">White-label</p>
+            <h1 className="font-display mt-2 text-4xl font-semibold leading-none">Client theme management</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/56">
+              Configure engagement-specific brand identity for client portal rooms, including name, primary color, and logo.
+            </p>
+          </div>
+        </div>
+      </section>
 
+      <div className="grid gap-6 lg:grid-cols-[1fr_24rem]">
       <form onSubmit={handleSave} className="portal-panel-x space-y-5 p-6">
+        <div>
+          <p className="portal-meta-x">Theme details</p>
+          <h2 className="font-display mt-2 text-2xl font-semibold">Workspace branding</h2>
+        </div>
         <div>
           <label className="block text-sm font-medium mb-1">Engagement ID *</label>
           <input
@@ -104,9 +121,10 @@ export default function AdminThemesPage() {
       </form>
 
       <div className="portal-panel-x p-6">
-        <h2 className="font-semibold mb-3">Preview</h2>
+        <p className="portal-meta-x">Preview</p>
+        <h2 className="font-display mt-2 text-2xl font-semibold">Portal identity</h2>
         <div
-          className="portal-card-x p-4"
+          className="portal-card-x mt-5 p-4"
           style={{ borderLeftWidth: "4px", borderLeftColor: primaryColor }}
         >
           {logoUrl ? (
@@ -118,6 +136,7 @@ export default function AdminThemesPage() {
           )}
           <p className="text-xs text-white/40 mt-1">Primary: {primaryColor}</p>
         </div>
+      </div>
       </div>
     </div>
   );

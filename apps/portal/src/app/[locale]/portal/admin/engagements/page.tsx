@@ -23,12 +23,12 @@ interface Engagement {
 }
 
 const stageColors: Record<string, string> = {
-  discovery: "text-blue-400 bg-blue-400/10",
-  scoping: "text-purple-400 bg-purple-400/10",
-  active: "text-green-400 bg-green-400/10",
-  paused: "text-yellow-400 bg-yellow-400/10",
-  completed: "text-signal bg-signal/10",
-  archived: "text-white/30 bg-white/5",
+  discovery: "text-blue-300 bg-blue-400/10 border-blue-400/20",
+  scoping: "text-purple-300 bg-purple-400/10 border-purple-400/20",
+  active: "text-green-300 bg-green-400/10 border-green-400/20",
+  paused: "text-yellow-200 bg-yellow-400/10 border-yellow-400/20",
+  completed: "text-signal bg-signal/10 border-signal/20",
+  archived: "text-white/36 bg-white/5 border-white/10",
 };
 
 export default function AdminEngagementsPage() {
@@ -108,34 +108,49 @@ export default function AdminEngagementsPage() {
   }
 
   if (loading) {
-    return <div className="text-white/60">Loading engagements...</div>;
+    return (
+      <div className="space-y-6">
+        <div className="portal-skeleton-x h-36" />
+        <div className="portal-skeleton-x h-72" />
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Briefcase className="w-5 h-5 text-signal" />
-          <h1 className="font-display text-3xl font-semibold tracking-tight">Engagements</h1>
+      <section className="portal-admin-header-x">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex items-start gap-4">
+            <span className="portal-admin-icon-x">
+              <Briefcase className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="portal-meta-x text-signal">Admin</p>
+              <h1 className="font-display mt-2 text-4xl font-semibold leading-none">Engagements</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/56">
+                Create client workspaces, manage stage metadata, and prepare white-label portal configuration.
+              </p>
+            </div>
+          </div>
+          <button onClick={() => setCreating(!creating)} className="portal-btn-x">
+            <Plus className="w-4 h-4" />
+            New engagement
+          </button>
         </div>
-        <button
-          onClick={() => setCreating(!creating)}
-          className="portal-btn-x"
-        >
-          <Plus className="w-4 h-4" />
-          New Engagement
-        </button>
-      </div>
+      </section>
 
       {creating && (
-        <div className="portal-panel-x space-y-4 p-5">
+        <div className="portal-panel-x space-y-5 p-5 sm:p-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold">Create Engagement</h2>
-            <button onClick={() => setCreating(false)} className="text-white/50 hover:text-white">
+            <div>
+              <p className="portal-meta-x">New workspace</p>
+              <h2 className="font-display mt-2 text-2xl font-semibold">Create engagement</h2>
+            </div>
+            <button onClick={() => setCreating(false)} className="portal-admin-action-x" aria-label="Close form">
               <X className="w-4 h-4" />
             </button>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="block text-xs text-white/50 mb-1">Slug *</label>
               <input
@@ -233,7 +248,7 @@ export default function AdminEngagementsPage() {
                 <option value="EUR">EUR</option>
               </select>
             </div>
-            <div className="col-span-2">
+            <div className="md:col-span-2">
               <label className="block text-xs text-white/50 mb-1">Description</label>
               <textarea
                 value={form.description}
@@ -242,7 +257,7 @@ export default function AdminEngagementsPage() {
                 placeholder="Brief description of the engagement scope..."
               />
             </div>
-            <div className="col-span-2 flex items-center gap-4">
+            <div className="md:col-span-2 flex flex-col gap-3 sm:flex-row sm:items-center">
               <label className="flex items-center gap-2 text-sm text-white/70">
                 <input
                   type="checkbox"
@@ -283,29 +298,30 @@ export default function AdminEngagementsPage() {
 
       {engagements.length === 0 ? (
         <div className="portal-panel-x p-8 text-center text-white/40">
-          <Briefcase className="w-8 h-8 mx-auto mb-3 opacity-50" />
-          <p>No engagements found.</p>
+          <Briefcase className="mx-auto mb-3 h-8 w-8 opacity-50" />
+          <h2 className="font-display text-xl font-semibold text-white/72">No engagements found</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">Create the first engagement to unlock dashboards, milestones, deliverables, and client portal rooms.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {engagements.map((e) => (
             <div key={e.ID} className="portal-card-x p-5">
-              <div className="flex items-start justify-between">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${stageColors[e.Stage] || ""}`}>
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <span className={`portal-chip-x border capitalize ${stageColors[e.Stage] || "border-white/10 bg-white/5 text-white/50"}`}>
                       {e.Stage}
                     </span>
                     <span className="text-xs text-white/30 font-mono">/{e.Slug}</span>
                     {e.IsWhiteLabel && (
-                      <span className="text-xs text-white/30 flex items-center gap-1">
+                      <span className="portal-chip-x">
                         <Globe className="w-3 h-3" />
                         {e.WhiteLabelDomain}
                       </span>
                     )}
                   </div>
-                  <p className="font-medium">{e.Title}</p>
-                  <div className="flex items-center gap-2 mt-1">
+                  <p className="font-display text-xl font-semibold">{e.Title}</p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-white/40" />
                     <span className="text-sm text-white/50">{e.ClientName}</span>
                     <span className="text-white/20">·</span>
@@ -316,7 +332,7 @@ export default function AdminEngagementsPage() {
                   {e.Description && (
                     <p className="text-xs text-white/40 mt-2 line-clamp-2">{e.Description}</p>
                   )}
-                  <div className="flex gap-3 mt-2 text-xs text-white/30">
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs text-white/34">
                     {e.StartDate && <span>Started: {new Date(e.StartDate).toLocaleDateString()}</span>}
                     {e.TargetEndDate && <span>Target: {new Date(e.TargetEndDate).toLocaleDateString()}</span>}
                     {e.BudgetTotalUSD && <span>Budget: ${e.BudgetTotalUSD.toLocaleString()}</span>}

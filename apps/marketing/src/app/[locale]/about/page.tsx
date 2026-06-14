@@ -234,21 +234,21 @@ export default async function AboutPage() {
       </main>
 
       {/* CTA */}
-      <section className="relative overflow-hidden bg-gravity text-foundation">
+      <section className="relative overflow-hidden bg-[#08090d] text-white">
         <div
           aria-hidden
-          className="animate-drift-slow pointer-events-none absolute -left-[8%] bottom-[-50%] h-[36vmax] w-[36vmax] rounded-full bg-signal/25 blur-[130px]"
+          className="animate-drift-slow pointer-events-none absolute -left-[8%] bottom-[-50%] h-[36vmax] w-[36vmax] rounded-full bg-[#5b93ff]/25 blur-[130px]"
         />
         <div className="shell-x relative py-24 lg:py-32">
           <h2 className="font-display max-w-3xl text-3xl font-semibold tracking-tight lg:text-5xl">
             Build something institutions depend on.
           </h2>
-          <p className="mt-4 max-w-xl text-foundation/65">
+          <p className="mt-4 max-w-xl text-white/68">
             Serious prospects only. Begin with the engagement readiness diagnostic.
           </p>
           <Link
             href="/contact"
-            className="btn-x group mt-8"
+            className="group mt-8 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#08090d] transition-transform hover:-translate-y-0.5 hover:bg-[#5b93ff] hover:text-white"
           >
             Start the conversation
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { FileSignature, Send, CheckCircle, Clock, XCircle, Eye, Loader2, X, Download } from "lucide-react";
@@ -115,39 +117,50 @@ export default function AdminSignaturesPage() {
   }
 
   if (loading) {
-    return <div className="text-white/60">Loading signature requests...</div>;
+    return (
+      <div className="space-y-6">
+        <div className="portal-skeleton-x h-36" />
+        <div className="portal-skeleton-x h-72" />
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <FileSignature className="w-5 h-5 text-signal" />
-          <h1 className="font-display text-3xl font-semibold tracking-tight">Signature Requests</h1>
+      <section className="portal-admin-header-x">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex items-start gap-4">
+            <span className="portal-admin-icon-x">
+              <FileSignature className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="portal-meta-x text-signal">Documents</p>
+              <h1 className="font-display mt-2 text-4xl font-semibold leading-none">Signature requests</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/56">
+                Draft, send, inspect, and download signature requests for NDAs, MoUs, statements of work, and amendments.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <select value={filter} onChange={(e) => setFilter(e.target.value)} className="portal-field-x sm:w-44">
+              <option value="">All statuses</option>
+              {Object.keys(statusLabels).map((s) => (
+                <option key={s} value={s}>{statusLabels[s]}</option>
+              ))}
+            </select>
+            <button onClick={() => setShowForm((s) => !s)} className="portal-btn-x">
+              {showForm ? "Close form" : "New request"}
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="portal-field-x"
-          >
-            <option value="">All statuses</option>
-            {Object.keys(statusLabels).map((s) => (
-              <option key={s} value={s}>{statusLabels[s]}</option>
-            ))}
-          </select>
-          <button
-            onClick={() => setShowForm((s) => !s)}
-            className="portal-btn-x"
-          >
-            {showForm ? "Cancel" : "New Request"}
-          </button>
-        </div>
-      </div>
+      </section>
 
       {showForm && (
         <form onSubmit={handleCreate} className="portal-panel-x space-y-4 p-6">
-          <h2 className="font-semibold">Create Signature Request</h2>
+          <div>
+            <p className="portal-meta-x">New signature packet</p>
+            <h2 className="font-display mt-2 text-2xl font-semibold">Create signature request</h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Document Type</label>
@@ -220,27 +233,28 @@ export default function AdminSignaturesPage() {
 
       {requests.length === 0 ? (
         <div className="portal-panel-x p-8 text-center text-white/40">
-          <Clock className="w-8 h-8 mx-auto mb-3 opacity-50" />
-          <p>No signature requests found.</p>
+          <Clock className="mx-auto mb-3 h-8 w-8 opacity-50" />
+          <h2 className="font-display text-xl font-semibold text-white/72">No signature requests found</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">Create a draft request to send documents for review and signature.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {requests.map((req) => (
             <div key={req.id} className="portal-card-x p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${statusColors[req.status] || ""}`}>
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="min-w-0 flex-1">
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <span className={`portal-chip-x ${statusColors[req.status] || ""}`}>
                       {statusLabels[req.status] || req.status}
                     </span>
                     <span className="text-xs text-white/30 uppercase">{req.document_type}</span>
                   </div>
-                  <p className="font-medium">{req.document_title}</p>
+                  <p className="font-display text-xl font-semibold">{req.document_title}</p>
                   <p className="text-sm text-white/50">
                     {req.recipient_name || req.recipient_email} · {req.recipient_org || "No org"}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 flex-wrap items-center gap-2">
                   {req.status === "draft" && (
                     <button
                       onClick={() => handleSend(req.id)}
@@ -264,7 +278,7 @@ export default function AdminSignaturesPage() {
                   {req.status === "signed" && (
                     <button
                       onClick={() => setViewing(req)}
-                      className="flex items-center gap-1 bg-green-500/10 text-green-400 px-3 py-1.5 rounded text-xs font-medium hover:bg-green-500/20 transition-colors"
+                      className="portal-admin-action-x border-green-400/30 bg-green-400/15 text-green-300 hover:bg-green-400/25"
                     >
                       <CheckCircle className="w-3 h-3" /> View Signature
                     </button>

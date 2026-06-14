@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { ClipboardList, CheckCircle, XCircle, Clock, Search } from "lucide-react";
+import { CheckCircle, ClipboardList, Clock, ListFilter, RefreshCw, Search, X, XCircle } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface PartnerApplication {
   ID: string;
@@ -34,6 +35,7 @@ const statusConfig: Record<string, { color: string; bg: string; icon: React.Reac
 export default function AdminPartnerApplicationsPage() {
   const [applications, setApplications] = useState<PartnerApplication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [filter, setFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [selected, setSelected] = useState<PartnerApplication | null>(null);
@@ -41,13 +43,18 @@ export default function AdminPartnerApplicationsPage() {
   const [actionLoading, setActionLoading] = useState(false);
 
   const load = useCallback(() => {
-    api.listPartnerApplications(statusFilter)
+    api.listPartnerApplications()
       .then((d) => {
+        setLoadError("");
         setApplications((d.applications as unknown as PartnerApplication[]) || []);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
-  }, [statusFilter]);
+      .catch((err) => {
+        setLoadError(err instanceof Error ? err.message : "Failed to load partner applications");
+        setApplications([]);
+        setLoading(false);
+      });
+  }, []);
 
   useEffect(() => { load(); }, [load]);
 
@@ -66,46 +73,100 @@ export default function AdminPartnerApplicationsPage() {
   };
 
   const filtered = applications.filter((a) => {
-    const q = filter.toLowerCase();
-    return (
-      !q ||
+    const q = filter.trim().toLowerCase();
+    const matchesSearch = !q ||
       a.OrgName?.toLowerCase().includes(q) ||
       a.ContactName?.toLowerCase().includes(q) ||
       a.ContactEmail?.toLowerCase().includes(q) ||
-      a.PartnerType?.toLowerCase().includes(q)
-    );
+      a.PartnerType?.toLowerCase().includes(q);
+    const matchesStatus = !statusFilter || a.Status === statusFilter;
+    return matchesSearch && matchesStatus;
   });
+  const hasFilters = Boolean(filter.trim() || statusFilter);
+  const clearFilters = () => {
+    setFilter("");
+    setStatusFilter("");
+  };
 
-  if (loading) return <div className="text-white/60">Loading applications...</div>;
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="portal-skeleton-x h-36" />
+        <div className="portal-skeleton-x h-80" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="flex items-center gap-2 font-display text-3xl font-semibold tracking-tight"><ClipboardList className="w-5 h-5 text-signal" /> Partner Applications</h1>
-        <div className="flex items-center gap-2">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="portal-field-x"
-          >
-            <option value="">All Statuses</option>
-            <option value="applied">Applied</option>
-            <option value="under_review">Under Review</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
-          </select>
+      <section className="portal-admin-header-x">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex items-start gap-4">
+            <span className="portal-admin-icon-x">
+              <ClipboardList className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="portal-meta-x text-signal">Partner intake</p>
+              <h1 className="font-display mt-2 text-4xl font-semibold leading-none">Partner applications</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/56">
+                Triage partner submissions, inspect market fit, capture notes, and move qualified relationships through review.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="portal-field-x sm:w-48">
+              <option value="">All statuses</option>
+              <option value="applied">Applied</option>
+              <option value="under_review">Under Review</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <button onClick={load} className="portal-btn-secondary-x" type="button">
+              <RefreshCw className="h-4 w-4" />
+              Refresh
+            </button>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="flex items-center gap-2">
-        <Search className="w-4 h-4 text-white/30" />
-        <input
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          placeholder="Search by org, contact, or type..."
-          className="flex-1 bg-transparent text-sm focus:outline-none placeholder:text-white/30"
-        />
-      </div>
+      {loadError && (
+        <div className="rounded-lg border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-200">
+          {loadError}
+        </div>
+      )}
+
+      <section className="portal-panel-x p-4">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <label className="relative min-w-0 flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30" />
+            <input
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              placeholder="Search by organisation, contact, email, or type"
+              className="portal-field-x portal-field-icon-x pr-4"
+            />
+          </label>
+          <div className="flex flex-wrap items-center gap-2">
+            <button type="button" onClick={() => setFilter(filter.trim())} className="portal-btn-secondary-x">
+              <Search className="h-4 w-4" />
+              Search
+            </button>
+            {hasFilters && (
+              <button type="button" onClick={clearFilters} className="portal-admin-action-x">
+                <X className="h-4 w-4" />
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-white/42">
+          <ListFilter className="h-3.5 w-3.5 text-signal" />
+          <span>
+            Showing {filtered.length} of {applications.length} partner applications
+            {statusFilter ? ` · ${statusFilter.replace("_", " ")}` : ""}
+          </span>
+        </div>
+      </section>
 
       {/* Summary stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -113,18 +174,18 @@ export default function AdminPartnerApplicationsPage() {
           <button
             key={s}
             onClick={() => setStatusFilter(statusFilter === s ? "" : s)}
-            className={`border rounded-lg p-3 text-left transition-colors ${statusFilter === s ? "border-signal bg-signal/5" : "border-white/10 hover:border-white/20"}`}
+            className={`portal-card-x min-h-[5.75rem] p-3 text-left transition-colors ${statusFilter === s ? "border-signal/60 bg-signal/10" : "hover:border-white/20"}`}
           >
-            <p className="font-display text-3xl font-semibold tracking-tight">{applications.filter((a) => a.Status === s).length}</p>
-            <p className="text-xs text-white/50 capitalize">{s.replace("_", " ")}</p>
+            <p className="font-display text-3xl font-semibold">{applications.filter((a) => a.Status === s).length}</p>
+            <p className="text-xs capitalize leading-tight text-white/50">{s.replace("_", " ")}</p>
           </button>
         ))}
       </div>
 
       {/* Applications table */}
-      <div className="portal-panel-x overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-white/5 text-white/50 text-xs uppercase">
+      <div className="portal-panel-x portal-scrollbar-x overflow-x-auto">
+        <table className="portal-admin-table-x min-w-[760px]">
+          <thead>
             <tr>
               <th className="text-left px-4 py-3">Organisation</th>
               <th className="text-left px-4 py-3 hidden md:table-cell">Contact</th>
@@ -139,27 +200,27 @@ export default function AdminPartnerApplicationsPage() {
               const cfg = statusConfig[app.Status] || statusConfig.applied;
               return (
                 <tr key={app.ID} className="hover:bg-white/5 transition-colors">
-                  <td className="px-4 py-3">
+                  <td>
                     <p className="font-medium">{app.OrgName}</p>
                     {app.OrgWebsite && <p className="text-xs text-white/40">{app.OrgWebsite.replace("https://", "")}</p>}
                   </td>
-                  <td className="px-4 py-3 hidden md:table-cell">
+                  <td className="hidden md:table-cell">
                     <p>{app.ContactName}</p>
                     <p className="text-xs text-white/40">{app.ContactEmail}</p>
                   </td>
-                  <td className="px-4 py-3">
+                  <td>
                     <span className="text-xs capitalize">{app.PartnerType?.replace("_", " ")}</span>
                   </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded uppercase font-medium ${cfg.color} ${cfg.bg}`}>
+                  <td>
+                    <span className={`portal-chip-x uppercase ${cfg.color} ${cfg.bg}`}>
                       {cfg.icon} {cfg.label}
                     </span>
                   </td>
-                  <td className="px-4 py-3 hidden md:table-cell text-white/40">
+                  <td className="hidden text-white/40 md:table-cell">
                     {new Date(app.CreatedAt).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3 text-right">
-                    <button onClick={() => { setSelected(app); setNotes(app.Notes || ""); }} className="text-xs text-signal hover:underline">
+                  <td className="text-right">
+                    <button onClick={() => { setSelected(app); setNotes(app.Notes || ""); }} className="portal-admin-action-x">
                       Review
                     </button>
                   </td>
@@ -168,13 +229,29 @@ export default function AdminPartnerApplicationsPage() {
             })}
           </tbody>
         </table>
-        {filtered.length === 0 && <p className="text-center text-white/40 py-8 text-sm">No applications found.</p>}
+        {filtered.length === 0 && (
+          <div className="p-4">
+            <PortalEmptyState
+              compact
+              icon={ClipboardList}
+              title="No applications found"
+              description={hasFilters ? "Clear the search or status filter to return to the full partner intake list." : "Partner applications will appear here as submissions arrive."}
+              action={
+                hasFilters ? (
+                  <button type="button" onClick={clearFilters} className="portal-btn-secondary-x">
+                    Clear filters
+                  </button>
+                ) : undefined
+              }
+            />
+          </div>
+        )}
       </div>
 
       {/* Detail / action modal */}
       {selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="portal-panel-x w-full max-w-2xl max-h-[90vh] overflow-auto">
+          <div className="portal-panel-x portal-scrollbar-x max-h-[90vh] w-full max-w-2xl overflow-auto">
             <div className="p-6 space-y-5">
               <div className="flex items-start justify-between">
                 <div>
@@ -185,19 +262,19 @@ export default function AdminPartnerApplicationsPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="bg-white/5 rounded p-3">
+                <div className="rounded-lg bg-white/5 p-3">
                   <p className="text-xs text-white/40 uppercase">Type</p>
                   <p className="capitalize">{selected.PartnerType?.replace("_", " ")}</p>
                 </div>
-                <div className="bg-white/5 rounded p-3">
+                <div className="rounded-lg bg-white/5 p-3">
                   <p className="text-xs text-white/40 uppercase">Phone</p>
                   <p>{selected.ContactPhone || "—"}</p>
                 </div>
-                <div className="bg-white/5 rounded p-3">
+                <div className="rounded-lg bg-white/5 p-3">
                   <p className="text-xs text-white/40 uppercase">Website</p>
                   <p>{selected.OrgWebsite || "—"}</p>
                 </div>
-                <div className="bg-white/5 rounded p-3">
+                <div className="rounded-lg bg-white/5 p-3">
                   <p className="text-xs text-white/40 uppercase">Markets</p>
                   <p>{selected.TargetMarkets?.join(", ") || "—"}</p>
                 </div>
@@ -245,27 +322,27 @@ export default function AdminPartnerApplicationsPage() {
                 />
               </div>
 
-              <div className="flex gap-3 pt-2">
+              <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
                 <button
                   onClick={() => handleAction(selected.ID, "approved")}
                   disabled={actionLoading || selected.Status === "approved"}
-                  className="flex-1 bg-green-400/20 text-green-400 border border-green-400/30 px-4 py-2 rounded text-sm font-medium hover:bg-green-400/30 disabled:opacity-40 transition-colors"
+                  className="portal-admin-action-x border-green-400/30 bg-green-400/15 text-green-300 hover:bg-green-400/25 disabled:opacity-40"
                 >
-                  <CheckCircle className="w-4 h-4 inline mr-1" /> Approve
+                  <CheckCircle className="h-4 w-4" /> Approve
                 </button>
                 <button
                   onClick={() => handleAction(selected.ID, "under_review")}
                   disabled={actionLoading}
-                  className="flex-1 bg-yellow-400/20 text-yellow-400 border border-yellow-400/30 px-4 py-2 rounded text-sm font-medium hover:bg-yellow-400/30 disabled:opacity-40 transition-colors"
+                  className="portal-admin-action-x border-yellow-400/30 bg-yellow-400/15 text-yellow-200 hover:bg-yellow-400/25 disabled:opacity-40"
                 >
-                  <Clock className="w-4 h-4 inline mr-1" /> Under Review
+                  <Clock className="h-4 w-4" /> Under review
                 </button>
                 <button
                   onClick={() => handleAction(selected.ID, "rejected")}
                   disabled={actionLoading || selected.Status === "rejected"}
-                  className="flex-1 bg-red-400/20 text-red-400 border border-red-400/30 px-4 py-2 rounded text-sm font-medium hover:bg-red-400/30 disabled:opacity-40 transition-colors"
+                  className="portal-admin-action-x portal-admin-action-danger-x disabled:opacity-40"
                 >
-                  <XCircle className="w-4 h-4 inline mr-1" /> Reject
+                  <XCircle className="h-4 w-4" /> Reject
                 </button>
               </div>
             </div>

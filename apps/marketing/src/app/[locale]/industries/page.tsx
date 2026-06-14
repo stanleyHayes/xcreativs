@@ -1,6 +1,18 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Building2 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import {
+  Banknote,
+  Building2,
+  Factory,
+  GraduationCap,
+  HeartPulse,
+  Landmark,
+  Leaf,
+  Network,
+  ShieldCheck,
+  Truck,
+} from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
 
 export const metadata: Metadata = {
@@ -17,6 +29,23 @@ interface Industry {
 
 interface IndustriesResponse {
   industries?: Industry[];
+}
+
+const industryIcons: Array<{ match: RegExp; icon: LucideIcon }> = [
+  { match: /government|public|civic|ministry|municipal/i, icon: Landmark },
+  { match: /financ|bank|insurance|capital|payments/i, icon: Banknote },
+  { match: /health|care|hospital|clinic|medical/i, icon: HeartPulse },
+  { match: /agric|food|farm|crop|land/i, icon: Leaf },
+  { match: /education|school|university|learning/i, icon: GraduationCap },
+  { match: /manufact|industrial|factory/i, icon: Factory },
+  { match: /logistics|transport|supply|mobility/i, icon: Truck },
+  { match: /security|defence|risk|compliance/i, icon: ShieldCheck },
+  { match: /telecom|network|infrastructure/i, icon: Network },
+];
+
+function getIndustryIcon(industry: Industry): LucideIcon {
+  const haystack = `${industry.Slug || ""} ${industry.Title || ""} ${industry.Description || ""}`;
+  return industryIcons.find((entry) => entry.match.test(haystack))?.icon || Building2;
 }
 
 async function getIndustries(): Promise<IndustriesResponse> {
@@ -46,19 +75,24 @@ export default async function IndustriesPage() {
         {industries.length === 0 && (
           <p className="text-center text-gravity/40 py-12 col-span-full">No industry pages available yet.</p>
         )}
-        {industries.map((ind: Industry) => (
-          <Link
-            key={ind.Slug}
-            href={`/industries/${ind.Slug}`}
-            className="group card-x p-8"
-          >
-            <Building2 className="w-5 h-5 text-signal mb-4" />
-            <h2 className="text-xl font-semibold group-hover:text-signal transition-colors">
-              {ind.Title}
-            </h2>
-            <p className="mt-2 text-gravity/60">{ind.Description}</p>
-          </Link>
-        ))}
+        {industries.map((ind: Industry) => {
+          const Icon = getIndustryIcon(ind);
+          return (
+            <Link
+              key={ind.Slug}
+              href={`/industries/${ind.Slug}`}
+              className="group card-x p-8"
+            >
+              <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg border border-signal/20 bg-signal/8 text-signal transition-colors group-hover:border-signal/45 group-hover:bg-signal/12">
+                <Icon className="h-5 w-5" />
+              </span>
+              <h2 className="text-xl font-semibold transition-colors group-hover:text-signal">
+                {ind.Title}
+              </h2>
+              <p className="mt-2 text-gravity/60">{ind.Description}</p>
+            </Link>
+          );
+        })}
         </div>
       </main>
     </>

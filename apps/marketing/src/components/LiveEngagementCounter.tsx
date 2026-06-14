@@ -52,20 +52,27 @@ export default function LiveEngagementCounter() {
   if (!data) return null;
 
   return (
-    <section className="py-16 bg-gravity text-foundation">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center gap-2 mb-8">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          <p className="text-xs uppercase tracking-widest text-white/50 font-medium">Live Firm Intelligence</p>
+    <section className="relative overflow-hidden bg-[#08090d] py-16 text-white">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(91,147,255,0.22),transparent_34rem)]"
+      />
+      <div className="relative mx-auto max-w-6xl px-6">
+        <div className="mb-8 flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-green-400 shadow-[0_0_24px_rgba(74,222,128,0.7)]" />
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">Live Firm Intelligence</p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
           {items.map((item) => (
-            <div key={item.key} className="border border-white/10 rounded-lg p-4 text-center">
-              <item.icon className="w-5 h-5 text-signal mx-auto mb-3" />
-              <p className="text-3xl font-bold tracking-tight">
+            <div
+              key={item.key}
+              className="rounded-lg border border-white/12 bg-white/[0.045] p-4 text-center shadow-[0_22px_70px_-54px_rgba(91,147,255,0.8)]"
+            >
+              <item.icon className="mx-auto mb-3 h-5 w-5 text-[#78a6ff]" />
+              <p className="font-display text-3xl font-semibold tracking-tight text-white">
                 <AnimatedNumber value={data[item.key]} />
               </p>
-              <p className="text-xs text-white/50 mt-1">{item.label}</p>
+              <p className="mt-1 text-xs leading-tight text-white/58">{item.label}</p>
             </div>
           ))}
         </div>

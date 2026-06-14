@@ -79,39 +79,52 @@ export default function AdminRFPsPage() {
   }
 
   if (loading) {
-    return <div className="text-white/60">Loading RFPs...</div>;
+    return (
+      <div className="space-y-6">
+        <div className="portal-skeleton-x h-36" />
+        <div className="portal-skeleton-x h-72" />
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <FileText className="w-5 h-5 text-signal" />
-          <h1 className="font-display text-3xl font-semibold tracking-tight">RFP Submissions</h1>
+      <section className="portal-admin-header-x">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex items-start gap-4">
+            <span className="portal-admin-icon-x">
+              <FileText className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="portal-meta-x text-signal">Intake</p>
+              <h1 className="font-display mt-2 text-4xl font-semibold leading-none">RFP submissions</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/56">
+                Review tender requests, requirements, deadlines, documents, and the evaluation status for incoming opportunities.
+              </p>
+            </div>
+          </div>
+          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="portal-field-x sm:w-48">
+            <option value="">All statuses</option>
+            {statusOptions.map((s) => (
+              <option key={s} value={s}>{statusLabels[s]}</option>
+            ))}
+          </select>
         </div>
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="portal-field-x"
-        >
-          <option value="">All statuses</option>
-          {statusOptions.map((s) => (
-            <option key={s} value={s}>{statusLabels[s]}</option>
-          ))}
-        </select>
-      </div>
+      </section>
 
       {rfps.length === 0 ? (
         <div className="portal-panel-x p-8 text-center text-white/40">
-          <Clock className="w-8 h-8 mx-auto mb-3 opacity-50" />
-          <p>No RFP submissions found.</p>
+          <Clock className="mx-auto mb-3 h-8 w-8 opacity-50" />
+          <h2 className="font-display text-xl font-semibold text-white/72">No RFP submissions found</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">New submitted RFPs will appear here with their scope, criteria, requirements, and document link.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {rfps.map((rfp) => (
             <div key={rfp.id} className="portal-card-x overflow-hidden">
-              <div
-                className="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-white/5 transition-colors"
+              <button
+                type="button"
+                className="flex w-full cursor-pointer flex-col gap-4 px-5 py-4 text-left transition-colors hover:bg-white/5 sm:flex-row sm:items-center sm:justify-between"
                 onClick={() => setExpandedId(expandedId === rfp.id ? null : rfp.id)}
               >
                 <div className="flex items-center gap-4">
@@ -121,12 +134,12 @@ export default function AdminRFPsPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${statusColors[rfp.status] || "text-white/50 bg-white/5"}`}>
+                  <span className={`portal-chip-x ${statusColors[rfp.status] || "text-white/50 bg-white/5"}`}>
                     {statusLabels[rfp.status] || rfp.status}
                   </span>
                   {expandedId === rfp.id ? <ChevronUp className="w-4 h-4 text-white/40" /> : <ChevronDown className="w-4 h-4 text-white/40" />}
                 </div>
-              </div>
+              </button>
 
               {expandedId === rfp.id && (
                 <div className="px-5 pb-5 border-t border-white/5">
@@ -163,17 +176,17 @@ export default function AdminRFPsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-white/5 flex items-center gap-3">
+                  <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-white/5 pt-4">
                     <span className="text-xs text-white/40">Update status:</span>
                     {statusOptions.map((s) => (
                       <button
                         key={s}
                         onClick={() => updateStatus(rfp.id, s)}
                         disabled={updating === rfp.id || rfp.status === s}
-                        className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                        className={`portal-admin-action-x ${
                           rfp.status === s
                             ? statusColors[s]
-                            : "border border-white/10 text-white/60 hover:border-signal hover:text-signal"
+                            : ""
                         } disabled:opacity-50`}
                       >
                         {updating === rfp.id && rfp.status !== s ? "..." : statusLabels[s]}

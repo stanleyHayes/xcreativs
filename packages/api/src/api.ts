@@ -3,6 +3,7 @@ import type {
   APIKeysResponse,
   ApplicationsResponse,
   ApprovalWorkflowsResponse,
+  AuditLogsResponse,
   AssessmentSessionResponse,
   AudioBriefsResponse,
   AssessmentTemplateResponse,
@@ -10,6 +11,7 @@ import type {
   BookingResponse,
   BudgetLinesResponse,
   CandidateChallengeResponse,
+  CareerRolesResponse,
   CapabilityDeliveriesResponse,
   ChallengesResponse,
   CommentsResponse,
@@ -286,6 +288,13 @@ export const api = {
   listInterviews: (id: string) => fetchAPI<InterviewsResponse>(`/api/v1/admin/applications/${id}/interviews`),
   scheduleInterview: (id: string, data: Record<string, unknown>) => fetchAPI(`/api/v1/admin/applications/${id}/interviews`, { method: "POST", body: JSON.stringify(data) }),
   updateInterview: (iid: string, data: Record<string, unknown>) => fetchAPI(`/api/v1/admin/interviews/${iid}`, { method: "PATCH", body: JSON.stringify(data) }),
+  listCareerRolesAdmin: () => fetchAPI<CareerRolesResponse>("/api/v1/admin/careers/roles"),
+  createCareerRoleAdmin: (data: Record<string, unknown>) => fetchAPI<Entity>("/api/v1/admin/careers/roles", { method: "POST", body: JSON.stringify(data) }),
+  updateCareerRoleAdmin: (id: string, data: Record<string, unknown>) => fetchAPI<Entity>(`/api/v1/admin/careers/roles/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  listAuditLogsAdmin: (filters?: Record<string, string>) => {
+    const qs = filters ? "?" + new URLSearchParams(filters).toString() : "";
+    return fetchAPI<AuditLogsResponse>(`/api/v1/admin/audit-logs${qs}`);
+  },
   getRFPSubmissionAdmin: (id: string) => fetchAPI<Entity>(`/api/v1/admin/rfps/${id}`),
   updateRFPSubmissionAdmin: (id: string, data: Record<string, unknown>) => fetchAPI(`/api/v1/admin/rfps/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   extractDocument: (text: string) => fetchAPI("/api/v1/document-intelligence/extract", { method: "POST", body: JSON.stringify({ text }) }),

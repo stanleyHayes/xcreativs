@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { Mail, CheckCircle, Clock, Plus, X, Loader2, Trash2 } from "lucide-react";
 import type { TeamMembersResponse } from "@xc/api/types";
@@ -32,7 +32,8 @@ export default function TeamPage() {
     is_xcreativs: false,
   });
 
-  async function fetchMembers() {
+  const fetchMembers = useCallback(async () => {
+    if (!id) return;
     try {
       const res = (await api.listTeamMembers(id as string)) as TeamMembersResponse;
       setMembers((res.team_members as TeamMember[] | undefined) || []);
@@ -41,14 +42,14 @@ export default function TeamPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
     void (async () => {
       await fetchMembers();
     })();
-  }, [id]);
+  }, [id, fetchMembers]);
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();

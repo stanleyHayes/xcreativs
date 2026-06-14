@@ -1,209 +1,568 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { api } from "@xc/api";
-import { Key, Plus, X, Copy, Check, Trash2, Shield, Clock } from "lucide-react";
+import {
+  AlertTriangle,
+  Check,
+  Clock,
+  Copy,
+  Fingerprint,
+  KeyRound,
+  Plus,
+  RefreshCw,
+  ShieldCheck,
+  Trash2,
+  X,
+} from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 const scopeLabels: Record<string, string> = {
-  engagement_read: "Read Engagements",
-  engagement_write: "Write Engagements",
-  portal_read: "Read Portal",
-  portal_write: "Write Portal",
-  partner_read: "Read Partner",
-  admin: "Admin",
+  engagement_read: "Read engagements",
+  engagement_write: "Write engagements",
+  portal_read: "Read portal",
+  portal_write: "Write portal",
+  partner_read: "Read partner data",
+  admin: "Admin access",
+};
+
+const scopeDescriptions: Record<string, string> = {
+  engagement_read: "Pull engagement, milestone, and delivery records.",
+  engagement_write: "Create or update engagement workflow data.",
+  portal_read: "Read workspace profile and portal metadata.",
+  portal_write: "Update portal-owned resources and preferences.",
+  partner_read: "Read partner referrals, orders, and products.",
+  admin: "Full administrative API access for trusted systems.",
+};
+
+const defaultForm = {
+  name: "",
+  scopes: ["engagement_read"],
+  expires: "never",
 };
 
 interface APIKey {
   id: string;
   name: string;
   prefix: string;
-  scopes?: string[];
+  scopes: string[];
   is_active: boolean;
   created_at: string;
   last_used_at?: string | null;
   expires_at?: string | null;
 }
 
+type APIKeyForm = typeof defaultForm;
+
 const asString = (v: unknown): string => (typeof v === "string" ? v : "");
 const asOptionalString = (v: unknown): string | null =>
   typeof v === "string" ? v : null;
+const asBoolean = (v: unknown, fallback = false): boolean =>
+  typeof v === "boolean" ? v : fallback;
 
-const toAPIKey = (entity: Record<string, unknown>): APIKey => ({
-  id: asString(entity.id),
-  name: asString(entity.name),
-  prefix: asString(entity.prefix),
-  scopes: Array.isArray(entity.scopes)
-    ? entity.scopes.filter((s): s is string => typeof s === "string")
-    : undefined,
-  is_active: entity.is_active === true,
-  created_at: asString(entity.created_at),
-  last_used_at: asOptionalString(entity.last_used_at),
-  expires_at: asOptionalString(entity.expires_at),
-});
+const getValue = (entity: Record<string, unknown>, keys: string[]): unknown =>
+  keys.map((key) => entity[key]).find((value) => value !== undefined && value !== null);
+
+const getTime = (value?: string | null): number => {
+  if (!value) return 0;
+  const time = new Date(value).getTime();
+  return Number.isNaN(time) ? 0 : time;
+};
+
+const formatDate = (value?: string | null): string => {
+  const time = getTime(value);
+  if (!time) return "Never";
+  return new Date(time).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+const getExpirationValue = (value: string): string => {
+  const days = value === "30d" ? 30 : value === "90d" ? 90 : 0;
+  if (!days) return "never";
+  return new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+};
+
+const toAPIKey = (entity: Record<string, unknown>): APIKey => {
+  const rawScopes = getValue(entity, ["scopes", "Scopes"]);
+  const scopes = Array.isArray(rawScopes)
+    ? rawScopes.filter((scope): scope is string => typeof scope === "string")
+    : [];
+
+  return {
+    id: asString(getValue(entity, ["id", "ID"])),
+    name: asString(getValue(entity, ["name", "Name"])) || "Untitled key",
+    prefix:
+      asString(getValue(entity, ["prefix", "key_prefix", "KeyPrefix"])) ||
+      "xc_unknown",
+    scopes,
+    is_active: asBoolean(getValue(entity, ["is_active", "IsActive"]), true),
+    created_at: asString(getValue(entity, ["created_at", "CreatedAt"])),
+    last_used_at: asOptionalString(getValue(entity, ["last_used_at", "LastUsedAt"])),
+    expires_at: asOptionalString(getValue(entity, ["expires_at", "ExpiresAt"])),
+  };
+};
 
 export default function APIKeysPage() {
   const [keys, setKeys] = useState<APIKey[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", scopes: ["engagement_read"], expires: "never" });
+  const [form, setForm] = useState<APIKeyForm>(defaultForm);
   const [submitting, setSubmitting] = useState(false);
+  const [revokingId, setRevokingId] = useState<string | null>(null);
   const [newKey, setNewKey] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
-  const load = () => {
-    api.listAPIKeys()
-      .then((d) => { setKeys((d.keys || []).map(toAPIKey)); setLoading(false); })
-      .catch(() => setLoading(false));
+  useEffect(() => {
+    let active = true;
+
+    void (async () => {
+      try {
+        const data = await api.listAPIKeys();
+        if (!active) return;
+        setKeys((data.keys || []).map(toAPIKey));
+        setLoadError(null);
+      } catch {
+        if (!active) return;
+        setLoadError("API keys could not be loaded. Refresh the page or try again in a moment.");
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const sortedKeys = useMemo(
+    () => [...keys].sort((a, b) => getTime(b.created_at) - getTime(a.created_at)),
+    [keys],
+  );
+
+  const activeKeys = useMemo(
+    () => keys.filter((key) => key.is_active).length,
+    [keys],
+  );
+
+  const uniqueScopeCount = useMemo(
+    () => new Set(keys.flatMap((key) => key.scopes)).size,
+    [keys],
+  );
+
+  const refreshKeys = async () => {
+    setRefreshing(true);
+    setLoadError(null);
+    try {
+      const data = await api.listAPIKeys();
+      setKeys((data.keys || []).map(toAPIKey));
+    } catch {
+      setLoadError("API keys could not be refreshed. Try again in a moment.");
+    } finally {
+      setRefreshing(false);
+    }
   };
 
-  useEffect(() => { load(); }, []);
+  const updateScope = (scope: string, checked: boolean) => {
+    setForm((current) => ({
+      ...current,
+      scopes: checked
+        ? Array.from(new Set([...current.scopes, scope]))
+        : current.scopes.filter((item) => item !== scope),
+    }));
+  };
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const resetForm = () => {
+    setForm(defaultForm);
+    setActionError(null);
+  };
+
+  const handleCreate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setActionError(null);
+
+    if (!form.name.trim()) {
+      setActionError("Give the key a name before creating it.");
+      return;
+    }
+
+    if (form.scopes.length === 0) {
+      setActionError("Select at least one scope for this key.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const res = await api.createAPIKey({
-        name: form.name,
+        name: form.name.trim(),
         scopes: form.scopes,
-        expires: form.expires === "never" ? "never" : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        expires: getExpirationValue(form.expires),
       });
+
       setNewKey(res.key);
       setShowForm(false);
-      setForm({ name: "", scopes: ["engagement_read"], expires: "never" });
-      load();
+      resetForm();
+      await refreshKeys();
     } catch {
-      alert("Failed to create API key");
+      setActionError("Failed to create API key. Check your permissions and try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleRevoke = async (id: string) => {
+    if (!id) return;
     if (!confirm("Revoke this API key? This cannot be undone.")) return;
+
+    setActionError(null);
+    setRevokingId(id);
     try {
       await api.revokeAPIKey(id);
-      load();
+      setKeys((current) =>
+        current.map((key) => (key.id === id ? { ...key, is_active: false } : key)),
+      );
+      await refreshKeys();
     } catch {
-      alert("Failed to revoke key");
+      setActionError("Failed to revoke API key. Refresh and try again.");
+    } finally {
+      setRevokingId(null);
     }
   };
 
-  const copyKey = () => {
-    if (newKey) {
-      navigator.clipboard.writeText(newKey);
+  const copyKey = async () => {
+    if (!newKey) return;
+
+    try {
+      await navigator.clipboard.writeText(newKey);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setActionError("Could not copy the key automatically. Select the key and copy it manually.");
     }
   };
 
-  if (loading) return <div className="text-white/60">Loading API keys...</div>;
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="portal-admin-header-x animate-pulse">
+          <div className="h-5 w-24 rounded bg-white/10" />
+          <div className="mt-4 h-9 w-64 max-w-full rounded bg-white/10" />
+          <div className="mt-3 h-4 w-full max-w-xl rounded bg-white/10" />
+        </div>
+        <div className="grid gap-3 md:grid-cols-3">
+          {[0, 1, 2].map((item) => (
+            <div key={item} className="portal-card-x h-28 animate-pulse p-4">
+              <div className="h-4 w-20 rounded bg-white/10" />
+              <div className="mt-8 h-8 w-16 rounded bg-white/10" />
+            </div>
+          ))}
+        </div>
+        <div className="portal-panel-x h-56 animate-pulse" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="flex items-center gap-2 font-display text-3xl font-semibold tracking-tight"><Key className="w-5 h-5 text-signal" /> API Keys</h1>
-        <button onClick={() => { setShowForm(!showForm); setNewKey(null); }} className={showForm ? "portal-btn-secondary-x" : "portal-btn-x"}>
-          {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />} {showForm ? "Cancel" : "New Key"}
-        </button>
-      </div>
+      <section className="portal-admin-header-x">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex min-w-0 items-start gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-signal/30 bg-signal/10 text-signal">
+              <KeyRound className="h-5 w-5" />
+            </span>
+            <div className="min-w-0">
+              <p className="portal-meta-x text-signal">Developer access</p>
+              <h1 className="font-display mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                API keys
+              </h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/55">
+                Create scoped keys for trusted integrations, reporting pipelines, and internal tools.
+                Treat every key like a password because it can access workspace data.
+              </p>
+            </div>
+          </div>
 
-      <p className="text-sm text-white/50 max-w-xl">
-        Scoped API keys let you pull engagement data into your own systems. 
-        Treat keys like passwords — they grant access to your workspace data.
-      </p>
-
-      {/* New key reveal */}
-      {newKey && (
-        <div className="rounded-2xl border border-green-400/30 bg-green-400/5 p-4">
-          <p className="text-sm font-medium text-green-400 mb-2 flex items-center gap-1"><Shield className="w-4 h-4" /> Copy this key now — you won&apos;t see it again</p>
-          <div className="flex gap-2">
-            <code className="flex-1 bg-black/30 rounded px-3 py-2 text-sm font-mono text-white/90 break-all">{newKey}</code>
-            <button onClick={copyKey} className="px-3 py-2 bg-green-400/20 text-green-400 rounded hover:bg-green-400/30 transition-colors">
-              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+          <div className="flex flex-wrap items-center gap-2">
+            <button type="button" onClick={refreshKeys} className="portal-btn-secondary-x" disabled={refreshing}>
+              <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
+              Refresh
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setShowForm((value) => !value);
+                setNewKey(null);
+                setActionError(null);
+              }}
+              className={showForm ? "portal-btn-secondary-x" : "portal-btn-x"}
+            >
+              {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+              {showForm ? "Cancel" : "New key"}
             </button>
           </div>
         </div>
+      </section>
+
+      <div className="grid gap-3 md:grid-cols-3">
+        <div className="portal-card-x portal-stat-x p-4">
+          <div className="flex items-center justify-between gap-3 text-sm text-white/55">
+            <span>Total keys</span>
+            <Fingerprint className="h-4 w-4 text-signal" />
+          </div>
+          <p className="font-display text-3xl font-semibold text-white">{keys.length}</p>
+        </div>
+        <div className="portal-card-x portal-stat-x p-4">
+          <div className="flex items-center justify-between gap-3 text-sm text-white/55">
+            <span>Active keys</span>
+            <ShieldCheck className="h-4 w-4 text-green-300" />
+          </div>
+          <p className="font-display text-3xl font-semibold text-white">{activeKeys}</p>
+        </div>
+        <div className="portal-card-x portal-stat-x p-4">
+          <div className="flex items-center justify-between gap-3 text-sm text-white/55">
+            <span>Scopes in use</span>
+            <Clock className="h-4 w-4 text-signal" />
+          </div>
+          <p className="font-display text-3xl font-semibold text-white">
+            {uniqueScopeCount}
+          </p>
+        </div>
+      </div>
+
+      {(loadError || actionError) && (
+        <div className="portal-panel-x flex flex-col gap-3 p-4 text-sm text-red-100 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-red-300" />
+            <p>{actionError || loadError}</p>
+          </div>
+          {loadError && (
+            <button type="button" onClick={refreshKeys} className="portal-btn-secondary-x text-xs" disabled={refreshing}>
+              Try again
+            </button>
+          )}
+        </div>
       )}
 
-      {/* Create form */}
-      {showForm && (
-        <form onSubmit={handleCreate} className="portal-panel-x space-y-4 p-5">
-          <h3 className="font-semibold">Create New API Key</h3>
-          <div>
-            <label className="block text-sm text-white/60 mb-1">Key Name *</label>
-            <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g., Production Integration" className="portal-field-x w-full" />
-          </div>
-          <div>
-            <label className="block text-sm text-white/60 mb-2">Scopes</label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {Object.entries(scopeLabels).map(([value, label]) => (
-                <label key={value} className="portal-chip-x cursor-pointer hover:border-signal hover:text-white">
-                  <input
-                    type="checkbox"
-                    checked={form.scopes.includes(value)}
-                    onChange={(e) => {
-                      if (e.target.checked) setForm({ ...form, scopes: [...form.scopes, value] });
-                      else setForm({ ...form, scopes: form.scopes.filter((s) => s !== value) });
-                    }}
-                    className="accent-signal"
-                  />
-                  {label}
-                </label>
-              ))}
+      {newKey && (
+        <section className="portal-panel-x space-y-4 p-5 sm:p-6">
+          <div className="flex items-start gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-green-300/25 bg-green-300/10 text-green-300">
+              <ShieldCheck className="h-4 w-4" />
+            </span>
+            <div>
+              <h2 className="text-base font-semibold text-white">Copy this key now</h2>
+              <p className="mt-1 text-sm text-white/50">
+                This is the only time the full secret will be shown. Store it in a secure vault.
+              </p>
             </div>
           </div>
-          <div>
-            <label className="block text-sm text-white/60 mb-1">Expiration</label>
-            <select value={form.expires} onChange={(e) => setForm({ ...form, expires: e.target.value })} className="portal-field-x">
-              <option value="never">Never</option>
-              <option value="30d">30 days</option>
-            </select>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <code className="min-w-0 flex-1 overflow-x-auto rounded-lg border border-white/10 bg-black/30 px-3 py-2 font-mono text-sm text-white/85">
+              {newKey}
+            </code>
+            <button type="button" onClick={copyKey} className="portal-btn-secondary-x sm:self-start">
+              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              {copied ? "Copied" : "Copy"}
+            </button>
           </div>
-          <button type="submit" disabled={submitting} className="portal-btn-x disabled:opacity-50">{submitting ? "Creating..." : "Create Key"}</button>
+        </section>
+      )}
+
+      {showForm && (
+        <form onSubmit={handleCreate} className="portal-panel-x space-y-5 p-5 sm:p-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="portal-meta-x text-signal">New credential</p>
+              <h2 className="mt-2 text-lg font-semibold text-white">Create API key</h2>
+            </div>
+            <p className="max-w-md text-sm leading-relaxed text-white/50">
+              Start narrow. Add only the scopes this integration needs.
+            </p>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-white/65">Key name</span>
+              <input
+                required
+                value={form.name}
+                onChange={(e) => setForm((current) => ({ ...current, name: e.target.value }))}
+                placeholder="Production reporting pipeline"
+                className="portal-field-x w-full"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-white/65">Expiration</span>
+              <select
+                value={form.expires}
+                onChange={(e) => setForm((current) => ({ ...current, expires: e.target.value }))}
+                className="portal-field-x w-full"
+              >
+                <option value="never">Never</option>
+                <option value="30d">30 days</option>
+                <option value="90d">90 days</option>
+              </select>
+            </label>
+          </div>
+
+          <fieldset>
+            <legend className="mb-3 text-sm font-medium text-white/65">Scopes</legend>
+            <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+              {Object.entries(scopeLabels).map(([value, label]) => {
+                const checked = form.scopes.includes(value);
+                return (
+                  <label
+                    key={value}
+                    className={`flex min-h-[5.5rem] cursor-pointer items-start gap-3 rounded-lg border p-3 text-sm transition-colors ${
+                      checked
+                        ? "border-signal/70 bg-signal/10 text-white"
+                        : "border-white/10 bg-white/[0.03] text-white/60 hover:border-signal/45 hover:bg-white/[0.05] hover:text-white/80"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) => updateScope(value, e.target.checked)}
+                      className="mt-1 accent-signal"
+                    />
+                    <span>
+                      <span className="block font-semibold">{label}</span>
+                      <span className="mt-1 block text-xs leading-relaxed text-white/45">
+                        {scopeDescriptions[value]}
+                      </span>
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="submit"
+              disabled={submitting || !form.name.trim() || form.scopes.length === 0}
+              className="portal-btn-x disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {submitting ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+              {submitting ? "Creating" : "Create key"}
+            </button>
+            <button type="button" onClick={resetForm} className="portal-btn-secondary-x">
+              Reset
+            </button>
+          </div>
         </form>
       )}
 
-      {/* Keys list */}
-      <div className="space-y-3">
-        {keys.map((k) => (
-          <div key={k.id} className={`portal-card-x p-4 ${k.is_active ? "" : "opacity-50"}`}>
-            <div className="flex items-start justify-between">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-white/5 rounded">
-                  <Key className="w-4 h-4 text-signal" />
-                </div>
-                <div>
-                  <p className="font-medium text-sm">{k.name}</p>
-                  <p className="text-xs text-white/40 font-mono">{k.prefix}••••••••</p>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {k.scopes?.map((s: string) => (
-                      <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-white/50 uppercase">{scopeLabels[s] || s}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                {k.is_active ? (
-                  <span className="text-xs px-2 py-0.5 rounded bg-green-400/10 text-green-400">Active</span>
-                ) : (
-                  <span className="text-xs px-2 py-0.5 rounded bg-white/5 text-white/40">Revoked</span>
-                )}
-                {k.is_active && (
-                  <button onClick={() => handleRevoke(k.id)} className="p-1.5 text-white/30 hover:text-red-400 transition-colors" title="Revoke">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-4 mt-3 text-xs text-white/40">
-              <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Created {new Date(k.created_at).toLocaleDateString()}</span>
-              {k.last_used_at && <span className="flex items-center gap-1">Last used {new Date(k.last_used_at).toLocaleDateString()}</span>}
-              {k.expires_at && <span className="flex items-center gap-1 text-yellow-400">Expires {new Date(k.expires_at).toLocaleDateString()}</span>}
-            </div>
+      <section className="space-y-3">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="portal-meta-x text-white/35">Credential inventory</p>
+            <h2 className="mt-1 text-lg font-semibold text-white">Workspace keys</h2>
           </div>
-        ))}
-        {keys.length === 0 && <p className="text-white/40">No API keys yet. Create your first key to access the API programmatically.</p>}
-      </div>
+          {keys.length > 0 && (
+            <p className="text-sm text-white/45">
+              {activeKeys} active of {keys.length}
+            </p>
+          )}
+        </div>
+
+        {sortedKeys.length === 0 ? (
+          <PortalEmptyState
+            icon={KeyRound}
+            eyebrow="No credentials"
+            title="No API keys yet"
+            description="Create a scoped key when an integration needs programmatic access to this workspace."
+            action={
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForm(true);
+                  setNewKey(null);
+                  setActionError(null);
+                }}
+                className="portal-btn-x"
+              >
+                <Plus className="h-4 w-4" />
+                Create key
+              </button>
+            }
+          />
+        ) : (
+          <div className="grid gap-3">
+            {sortedKeys.map((key) => (
+              <article key={key.id || key.prefix} className={`portal-card-x p-4 sm:p-5 ${key.is_active ? "" : "opacity-60"}`}>
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="flex min-w-0 items-start gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.05] text-signal">
+                      <KeyRound className="h-4 w-4" />
+                    </span>
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="max-w-full truncate text-sm font-semibold text-white">{key.name}</h3>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                            key.is_active
+                              ? "bg-green-300/10 text-green-300"
+                              : "bg-white/5 text-white/40"
+                          }`}
+                        >
+                          {key.is_active ? "Active" : "Revoked"}
+                        </span>
+                      </div>
+                      <p className="mt-1 break-all font-mono text-xs text-white/40">{key.prefix}************</p>
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {key.scopes.length > 0 ? (
+                          key.scopes.map((scope) => (
+                            <span key={scope} className="portal-chip-x">
+                              {scopeLabels[scope] || scope}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="portal-chip-x">No scopes recorded</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {key.is_active && (
+                    <button
+                      type="button"
+                      onClick={() => handleRevoke(key.id)}
+                      disabled={!key.id || revokingId === key.id}
+                      className="portal-admin-action-x self-start text-red-200 hover:text-red-100 disabled:cursor-not-allowed disabled:opacity-45"
+                      title={key.id ? "Revoke key" : "Missing key identifier"}
+                    >
+                      {revokingId === key.id ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                      Revoke
+                    </button>
+                  )}
+                </div>
+
+                <dl className="mt-4 grid gap-3 border-t border-white/10 pt-4 text-xs text-white/45 sm:grid-cols-3">
+                  <div>
+                    <dt className="text-white/30">Created</dt>
+                    <dd className="mt-1 text-white/60">{formatDate(key.created_at)}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-white/30">Last used</dt>
+                    <dd className="mt-1 text-white/60">{formatDate(key.last_used_at)}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-white/30">Expires</dt>
+                    <dd className="mt-1 text-white/60">{formatDate(key.expires_at)}</dd>
+                  </div>
+                </dl>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

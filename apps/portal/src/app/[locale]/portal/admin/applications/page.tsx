@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { Briefcase, Calendar, ChevronDown, ChevronUp, ExternalLink, CheckCircle } from "lucide-react";
+import { Briefcase, Calendar, ChevronDown, ChevronUp, ExternalLink, CheckCircle, Plus } from "lucide-react";
 
 const statusColors: Record<string, string> = {
   received: "text-yellow-400 bg-yellow-400/10",
@@ -35,6 +37,9 @@ interface Assessment {
 }
 
 export default function AdminApplicationsPage() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const roleAdminHref = locale === "en" ? "/portal/admin/career-opportunities" : `/${locale}/portal/admin/career-opportunities`;
   const [apps, setApps] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
@@ -108,24 +113,60 @@ export default function AdminApplicationsPage() {
     } catch { alert("Failed to schedule interview"); }
   }
 
-  if (loading) return <div className="text-white/60 p-8">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="portal-skeleton-x h-36" />
+        <div className="portal-skeleton-x h-80" />
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 lg:p-8 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="flex items-center gap-2 font-display text-2xl font-semibold tracking-tight"><Briefcase className="w-5 h-5 text-signal" /> Applicant Tracking</h1>
-        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="portal-field-x">
-          <option value="">All statuses</option>
-          {statusOptions.map((s) => <option key={s} value={s}>{statusLabels[s]}</option>)}
-        </select>
-      </div>
+    <div className="space-y-6">
+      <section className="portal-admin-header-x">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex items-start gap-4">
+            <span className="portal-admin-icon-x">
+              <Briefcase className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="portal-meta-x text-signal">Talent</p>
+              <h1 className="font-display mt-2 text-4xl font-semibold leading-none">Applicant tracking</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/56">
+                Review applications, schedule interviews, assign assessments, and move candidates through the hiring pipeline.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href={`${roleAdminHref}?new=1`} className="portal-btn-x">
+              <Plus className="h-4 w-4" />
+              New role
+            </Link>
+            <Link href={roleAdminHref} className="portal-btn-secondary-x">
+              <Briefcase className="h-4 w-4" />
+              Manage roles
+            </Link>
+            <select value={filter} onChange={(e) => setFilter(e.target.value)} className="portal-field-x sm:w-48">
+              <option value="">All statuses</option>
+              {statusOptions.map((s) => <option key={s} value={s}>{statusLabels[s]}</option>)}
+            </select>
+          </div>
+        </div>
+      </section>
 
-      {apps.length === 0 && <p className="text-white/40 text-sm py-8 text-center">No applications.</p>}
+      {apps.length === 0 && (
+        <div className="portal-panel-x p-8 text-center text-white/40">
+          <Briefcase className="mx-auto mb-3 h-8 w-8 opacity-50" />
+          <h2 className="font-display text-xl font-semibold text-white/72">No applications found</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">Applications will appear here once candidates submit role forms.</p>
+        </div>
+      )}
 
       <div className="space-y-3">
         {apps.map((a) => (
           <div key={a.id} className="portal-card-x">
-            <div className="flex items-center gap-4 p-4">
+            <div className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center">
               <button onClick={() => toggle(a.id)} className="text-white/40 hover:text-white/70">
                 {expandedId === a.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
@@ -137,8 +178,8 @@ export default function AdminApplicationsPage() {
                 </div>
                 <p className="text-xs text-white/40">{a.applicant_email}</p>
               </div>
-              <span className={`text-xs px-2 py-0.5 rounded-full ${statusColors[a.status] || ""}`}>{statusLabels[a.status] || a.status}</span>
-              <select value={a.status} disabled={updating === a.id} onChange={(e) => updateStatus(a.id, e.target.value)} className="portal-field-x text-xs">
+              <span className={`portal-chip-x ${statusColors[a.status] || ""}`}>{statusLabels[a.status] || a.status}</span>
+              <select value={a.status} disabled={updating === a.id} onChange={(e) => updateStatus(a.id, e.target.value)} className="portal-field-x text-xs lg:w-44">
                 {statusOptions.map((s) => <option key={s} value={s}>{statusLabels[s]}</option>)}
               </select>
             </div>
@@ -156,7 +197,7 @@ export default function AdminApplicationsPage() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="text-xs uppercase tracking-wider text-white/40">Interviews</h4>
-                    <button onClick={() => setShowSchedule(showSchedule === a.id ? null : a.id)} className="text-xs text-signal hover:underline">+ Schedule</button>
+                      <button onClick={() => setShowSchedule(showSchedule === a.id ? null : a.id)} className="portal-admin-action-x">Schedule</button>
                   </div>
                   {(interviews[a.id] || []).map((i) => (
                     <div key={i.id} className="portal-card-x mb-1.5 flex items-center gap-3 px-3 py-2 text-xs">
@@ -164,7 +205,7 @@ export default function AdminApplicationsPage() {
                       <span className="text-white/50">{new Date(i.scheduled_at).toLocaleString()}</span>
                       <span className="text-white/40">{i.duration_minutes}m</span>
                       {i.interviewer_names?.length > 0 && <span className="text-white/40">{i.interviewer_names.join(", ")}</span>}
-                      <span className={`ml-auto px-2 py-0.5 rounded-full ${i.status === "completed" ? "text-green-400 bg-green-400/10" : i.status === "cancelled" ? "text-red-400 bg-red-400/10" : "text-purple-400 bg-purple-400/10"}`}>{i.status}</span>
+                      <span className={`ml-auto portal-chip-x ${i.status === "completed" ? "text-green-400 bg-green-400/10" : i.status === "cancelled" ? "text-red-400 bg-red-400/10" : "text-purple-400 bg-purple-400/10"}`}>{i.status}</span>
                       {i.status === "scheduled" && (
                         <button onClick={async () => { await api.updateInterview(i.id, { status: "completed" }); loadInterviews(a.id); }} className="text-white/40 hover:text-green-400" title="Mark complete"><CheckCircle className="w-3.5 h-3.5" /></button>
                       )}
@@ -195,14 +236,14 @@ export default function AdminApplicationsPage() {
                           <option value="">Assign challenge…</option>
                           {challenges.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
                         </select>
-                        <button onClick={() => assign(a.id)} disabled={!assignChoice[a.id]} className="text-xs text-signal hover:underline disabled:opacity-40">Assign</button>
+                        <button onClick={() => assign(a.id)} disabled={!assignChoice[a.id]} className="portal-admin-action-x disabled:opacity-40">Assign</button>
                       </div>
                     )}
                   </div>
                   {(assessments[a.id] || []).map((as) => (
                     <div key={as.id} className="portal-card-x mb-1.5 flex items-center gap-3 px-3 py-2 text-xs">
                       <span className="font-medium">{as.challenge_title}</span>
-                      <span className={`px-2 py-0.5 rounded-full ${as.status === "reviewed" ? "text-green-400 bg-green-400/10" : as.status === "submitted" ? "text-blue-400 bg-blue-400/10" : "text-yellow-400 bg-yellow-400/10"}`}>{as.status}</span>
+                      <span className={`portal-chip-x ${as.status === "reviewed" ? "text-green-400 bg-green-400/10" : as.status === "submitted" ? "text-blue-400 bg-blue-400/10" : "text-yellow-400 bg-yellow-400/10"}`}>{as.status}</span>
                       {as.submission_url && <a href={as.submission_url} target="_blank" rel="noopener noreferrer" className="text-signal hover:underline">submission</a>}
                       {as.score != null && <span className="text-white/50">score {as.score}</span>}
                       <span className="ml-auto text-white/30">{as.due_at ? `due ${new Date(as.due_at).toLocaleDateString()}` : ""}</span>

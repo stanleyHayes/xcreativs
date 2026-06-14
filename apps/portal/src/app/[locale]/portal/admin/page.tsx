@@ -10,18 +10,21 @@ import {
   ClipboardList,
   PenLine,
   Palette,
+  ScrollText,
   Webhook,
   ArrowUpRight,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-type Section = { slug: string; label: string; desc: string; icon: LucideIcon };
+type Section = { slug: string; label: string; desc: string; icon: LucideIcon; shortLabel?: string };
 
 const SECTIONS: Section[] = [
   { slug: "analytics", label: "Analytics", desc: "Traffic, conversions, and portal activity.", icon: BarChart3 },
+  { slug: "audit-logs", label: "Audit Logs", desc: "Review authenticated reads, writes, IPs, and export trails.", icon: ScrollText },
   { slug: "engagements", label: "Engagements", desc: "Create and manage client engagements.", icon: Briefcase },
   { slug: "applications", label: "Applications", desc: "Career applications and ATS pipeline.", icon: Users },
-  { slug: "partner-applications", label: "Partner Applications", desc: "Review and approve partner intake.", icon: Handshake },
+  { slug: "career-opportunities", label: "Career Opportunities", shortLabel: "Roles", desc: "Create and publish open roles on the public careers site.", icon: Briefcase },
+  { slug: "partner-applications", label: "Partner Applications", shortLabel: "Partners", desc: "Review and approve partner intake.", icon: Handshake },
   { slug: "rfps", label: "RFPs", desc: "Tender and RFP submissions.", icon: ClipboardList },
   { slug: "bookings", label: "Bookings", desc: "Consultation bookings.", icon: CalendarDays },
   { slug: "signatures", label: "Signatures", desc: "Document signature requests.", icon: PenLine },
@@ -32,16 +35,38 @@ const SECTIONS: Section[] = [
 
 export default async function AdminHome() {
   const locale = await getLocale();
+  const prioritySections = SECTIONS.slice(0, 4);
 
   return (
-    <div>
-      <div className="mb-8">
-        <p className="mb-1 text-xs font-medium uppercase tracking-wider text-gravity/40">Admin</p>
-        <h1 className="font-display text-2xl font-semibold tracking-tight lg:text-3xl">Control room</h1>
-        <p className="mt-2 max-w-xl text-gravity/60">
-          Manage content, engagements, intake, and platform configuration.
-        </p>
-      </div>
+    <div className="space-y-8">
+      <section className="portal-admin-header-x">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="portal-meta-x text-signal">Admin</p>
+            <h1 className="font-display mt-3 text-4xl font-semibold leading-none">Control room</h1>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/58">
+              Manage content, engagements, intake, partner operations, signatures, client themes, analytics, and platform delivery hooks.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:w-[30rem]">
+            {prioritySections.map((section) => {
+              const Icon = section.icon;
+              return (
+                <Link
+                  key={section.slug}
+                  href={`/${locale}/portal/admin/${section.slug}`}
+                  className="portal-card-x min-w-0 p-3 hover:border-signal/45"
+                  title={section.label}
+                  aria-label={section.label}
+                >
+                  <Icon className="h-4 w-4 text-signal" />
+                  <p className="mt-3 truncate text-xs font-semibold text-white/68">{section.shortLabel || section.label}</p>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {SECTIONS.map((s) => {
@@ -50,16 +75,16 @@ export default async function AdminHome() {
             <Link
               key={s.slug}
               href={`/${locale}/portal/admin/${s.slug}`}
-              className="group card-x p-5"
+              className="portal-card-x group p-5 hover:border-signal/50"
             >
               <div className="flex items-start justify-between">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-hairline bg-foundation text-signal">
+                <span className="portal-admin-icon-x">
                   <Icon className="h-5 w-5" />
                 </span>
-                <ArrowUpRight className="h-4 w-4 text-gravity/30 transition-colors group-hover:text-signal" />
+                <ArrowUpRight className="h-4 w-4 text-white/22 transition-colors group-hover:text-signal" />
               </div>
               <h2 className="mt-4 font-semibold">{s.label}</h2>
-              <p className="mt-1 text-sm leading-relaxed text-gravity/55">{s.desc}</p>
+              <p className="mt-1 text-sm leading-relaxed text-white/48">{s.desc}</p>
             </Link>
           );
         })}

@@ -19,11 +19,26 @@ export function useTheme() {
 }
 
 export default function ThemeProvider({ children, defaultTheme = "light" }: { children: React.ReactNode; defaultTheme?: Theme }) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === "undefined") return defaultTheme;
-    const stored = localStorage.getItem("xc-theme") as Theme | null;
-    return stored ?? defaultTheme;
-  });
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [storageReady, setStorageReady] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    void (async () => {
+      await Promise.resolve();
+      const stored = localStorage.getItem("xc-theme") as Theme | null;
+      if (!active) return;
+      if (stored === "light" || stored === "dark") {
+        setTheme(stored);
+      }
+      setStorageReady(true);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -32,8 +47,10 @@ export default function ThemeProvider({ children, defaultTheme = "light" }: { ch
     } else {
       root.classList.remove("dark");
     }
-    localStorage.setItem("xc-theme", theme);
-  }, [theme]);
+    if (storageReady) {
+      localStorage.setItem("xc-theme", theme);
+    }
+  }, [theme, storageReady]);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));

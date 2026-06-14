@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { api } from "@xc/api";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   CheckCircle2,
@@ -19,28 +19,37 @@ import {
 const API_URL = ""; // relative -> same-origin /api proxy
 const MFA_HELP_TEXT = "Enter the 6-digit code from your authenticator app.";
 const INPUT_CLASS =
-  "w-full rounded-2xl border border-white/10 bg-white/[0.055] px-4 py-3 text-sm text-white placeholder:text-white/25 transition-colors focus:border-signal focus:outline-none focus:ring-4 focus:ring-signal/15 disabled:opacity-50";
+  "portal-field-x portal-login-input-x text-sm placeholder:text-white/30 disabled:opacity-50";
 const SSO_BUTTON_CLASS =
-  "group flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.055] px-4 py-3 text-sm font-semibold text-white/80 transition-colors hover:border-signal/50 hover:bg-signal/10 hover:text-white";
+  "group flex min-h-11 items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.055] px-4 py-3 text-sm font-semibold text-white/80 transition-colors hover:border-signal/50 hover:bg-signal/10 hover:text-white";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginPageSkeleton />}>
+      <LoginPageContent />
+    </Suspense>
+  );
+}
+
+function LoginPageContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mfaCode, setMfaCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(() => {
-    if (typeof window === "undefined") return "";
-    const err = new URLSearchParams(window.location.search).get("sso_error");
-    return err ? `Single sign-on failed: ${err}` : "";
-  });
+  const [error, setError] = useState("");
+  const [hideSsoError, setHideSsoError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mfaRequired, setMfaRequired] = useState(false);
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const locale = (params?.locale as string) || "en";
+  const ssoError = searchParams.get("sso_error");
+  const visibleError = error || (!hideSsoError && ssoError ? `Single sign-on failed: ${ssoError}` : "");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setHideSsoError(true);
     setLoading(true);
     setError("");
 
@@ -68,7 +77,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative isolate overflow-hidden bg-gravity text-foundation">
+    <main className="portal-shell-x relative isolate overflow-hidden bg-gravity text-foundation">
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-[0.045]" />
       <div
         aria-hidden
@@ -125,7 +134,7 @@ export default function LoginPage() {
 
         <section className="mx-auto w-full max-w-md">
           <div className="portal-card-x overflow-hidden border-white/15 bg-white/[0.035] p-2 backdrop-blur-2xl">
-            <div className="rounded-[1.1rem] border border-white/10 bg-gravity/80 p-6 shadow-2xl lg:p-8">
+            <div className="rounded-lg border border-white/10 bg-gravity/80 p-5 shadow-2xl sm:p-6 lg:p-7">
               <div className="mb-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-signal">
                   Portal sign in
@@ -167,7 +176,7 @@ export default function LoginPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       disabled={mfaRequired}
-                      className={`${INPUT_CLASS} pr-12`}
+                      className={`${INPUT_CLASS} portal-login-input-x-with-action`}
                       placeholder="Enter your password"
                     />
                     <button
@@ -203,22 +212,22 @@ export default function LoginPage() {
                   </div>
                 )}
 
-                {error && (
+                {visibleError && (
                   <div
                     className={`rounded-2xl border px-4 py-3 text-sm ${
-                      error === MFA_HELP_TEXT
+                      visibleError === MFA_HELP_TEXT
                         ? "border-signal/25 bg-signal/10 text-signal"
                         : "border-red-400/25 bg-red-400/10 text-red-200"
                     }`}
                   >
-                    {error}
+                    {visibleError}
                   </div>
                 )}
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-signal px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-signal/25 transition-transform hover:-translate-y-0.5 hover:bg-signal-ink disabled:translate-y-0 disabled:opacity-50"
+                  className="group flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-signal px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-signal/25 transition-transform hover:-translate-y-0.5 hover:bg-signal-ink disabled:translate-y-0 disabled:opacity-50"
                 >
                   {loading ? "Signing in..." : mfaRequired ? "Verify & Sign In" : "Sign In"}
                   {!loading && <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />}
@@ -253,7 +262,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="mt-8 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-xs leading-relaxed text-white/40">
+              <div className="mt-8 flex items-start gap-3 rounded-lg border border-white/10 bg-white/[0.035] p-4 text-xs leading-relaxed text-white/45">
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-signal" />
                 <p>
                   Access is provisioned per engagement. If your organisation uses SSO, choose your provider and we&apos;ll route you through the secure handshake.
@@ -262,6 +271,17 @@ export default function LoginPage() {
             </div>
           </div>
         </section>
+      </div>
+    </main>
+  );
+}
+
+function LoginPageSkeleton() {
+  return (
+    <main className="portal-shell-x grid min-h-[calc(100vh-72px)] place-items-center bg-gravity text-foundation">
+      <div className="portal-card-x w-full max-w-md p-6 text-center">
+        <div className="mx-auto h-10 w-10 animate-pulse rounded-full bg-signal/20" />
+        <p className="mt-4 text-sm font-semibold text-white/70">Preparing secure sign in...</p>
       </div>
     </main>
   );

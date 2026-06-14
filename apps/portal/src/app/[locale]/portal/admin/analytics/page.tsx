@@ -54,8 +54,31 @@ export default function AnalyticsDashboardPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="text-white/60">Loading analytics...</div>;
-  if (!data) return <div className="text-white/60">Failed to load analytics.</div>;
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="portal-skeleton-x h-36" />
+        <div className="grid gap-4 md:grid-cols-4">
+          {[0, 1, 2, 3].map((item) => <div key={item} className="portal-skeleton-x h-28" />)}
+        </div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="portal-skeleton-x h-72" />
+          <div className="portal-skeleton-x h-72" />
+        </div>
+      </div>
+    );
+  }
+  if (!data) {
+    return (
+      <div className="portal-panel-x p-8">
+        <p className="portal-meta-x">Analytics</p>
+        <h1 className="font-display mt-2 text-3xl font-semibold">Analytics unavailable</h1>
+        <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/56">
+          We could not load admin analytics. Check the API service and refresh this workspace.
+        </p>
+      </div>
+    );
+  }
 
   const { metrics, daily_views, top_pages, funnel } = data;
 
@@ -63,13 +86,23 @@ export default function AnalyticsDashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-2">
-        <BarChart3 className="w-5 h-5 text-signal" />
-        <h1 className="font-display text-3xl font-semibold tracking-tight">Analytics Dashboard</h1>
-      </div>
+      <section className="portal-admin-header-x">
+        <div className="flex items-start gap-4">
+          <span className="portal-admin-icon-x">
+            <BarChart3 className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="portal-meta-x text-signal">Admin analytics</p>
+            <h1 className="font-display mt-2 text-4xl font-semibold leading-none">Analytics dashboard</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/56">
+              Monitor acquisition, diagnostic starts, RFP intake, portal activity, applications, and partner demand across the last 30 days.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Key metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <MetricCard icon={Globe} label="Visitors (30d)" value={metrics?.visitors_30d || 0} color="text-signal" />
         <MetricCard icon={MousePointerClick} label="Page Views (30d)" value={metrics?.page_views_30d || 0} color="text-blue-400" />
         <MetricCard icon={Activity} label="Diagnostics Started" value={metrics?.diagnostics_started_30d || 0} color="text-purple-400" />
@@ -81,8 +114,14 @@ export default function AnalyticsDashboardPage() {
       </div>
 
       {/* Conversion funnel */}
-      <div className="portal-card-x p-5">
-        <h2 className="font-semibold mb-4">Conversion Funnel (30 days)</h2>
+      <div className="portal-panel-x p-5 sm:p-6">
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <div>
+            <p className="portal-meta-x">Conversion</p>
+            <h2 className="font-display mt-2 text-2xl font-semibold">Funnel health</h2>
+          </div>
+          <span className="portal-chip-x">30 days</span>
+        </div>
         <div className="space-y-3">
           {[
             { label: "Unique Visitors", value: funnel?.visitors || 0, max: funnel?.visitors || 1 },
@@ -92,11 +131,11 @@ export default function AnalyticsDashboardPage() {
           ].map((step) => {
             const pct = Math.round((step.value / step.max) * 100);
             return (
-              <div key={step.label} className="flex items-center gap-4">
-                <div className="w-36 text-sm text-white/60">{step.label}</div>
-                <div className="flex-1 h-8 bg-white/5 rounded overflow-hidden relative">
+              <div key={step.label} className="grid gap-2 sm:grid-cols-[10rem_1fr] sm:items-center">
+                <div className="text-sm text-white/60">{step.label}</div>
+                <div className="relative h-9 overflow-hidden rounded-lg bg-white/5">
                   <div
-                    className="h-full bg-signal/30 rounded transition-all"
+                    className="h-full rounded-lg bg-signal/35 transition-all"
                     style={{ width: `${pct}%` }}
                   />
                   <span className="absolute inset-0 flex items-center px-3 text-sm font-medium">
@@ -109,19 +148,22 @@ export default function AnalyticsDashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Daily views chart */}
         <div className="portal-card-x p-5">
-          <h2 className="font-semibold mb-4">Daily Page Views (30 days)</h2>
-          <div className="flex items-end gap-1 h-40">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <h2 className="font-display text-xl font-semibold">Daily page views</h2>
+            <span className="portal-chip-x">30 days</span>
+          </div>
+          <div className="flex h-44 items-end gap-1">
             {(daily_views || []).map((d: DailyView) => (
               <div
                 key={d.day}
-                className="flex-1 bg-signal/40 hover:bg-signal/60 rounded-t transition-colors relative group"
+                className="group relative flex-1 rounded-t bg-signal/40 transition-colors hover:bg-signal/60"
                 style={{ height: `${(d.views / maxViews) * 100}%` }}
                 title={`${d.day}: ${d.views} views`}
               >
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gravity border border-white/10 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                <div className="absolute -top-8 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg border border-white/10 bg-gravity px-2 py-1 text-xs opacity-0 transition-opacity group-hover:opacity-100">
                   {d.views}
                 </div>
               </div>
@@ -139,7 +181,10 @@ export default function AnalyticsDashboardPage() {
 
         {/* Top pages */}
         <div className="portal-card-x p-5">
-          <h2 className="font-semibold mb-4">Top Pages (30 days)</h2>
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <h2 className="font-display text-xl font-semibold">Top pages</h2>
+            <span className="portal-chip-x">{top_pages?.length || 0} paths</span>
+          </div>
           <div className="space-y-2">
             {(top_pages || []).map((p: TopPage, i: number) => (
               <div key={p.path} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
@@ -155,7 +200,7 @@ export default function AnalyticsDashboardPage() {
       </div>
 
       {/* Firm stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <div className="portal-card-x p-4 text-center">
           <p className="text-3xl font-bold text-signal">{metrics?.active_engagements || 0}</p>
           <p className="text-xs text-white/50 mt-1">Active Engagements</p>
@@ -173,7 +218,7 @@ function MetricCard({ icon: Icon, label, value, color }: { icon: LucideIcon; lab
   return (
     <div className="portal-card-x p-4">
       <Icon className={`w-4 h-4 ${color} mb-2`} />
-      <p className="font-display text-3xl font-semibold tracking-tight">{value.toLocaleString()}</p>
+      <p className="font-display text-3xl font-semibold">{value.toLocaleString()}</p>
       <p className="text-xs text-white/50">{label}</p>
     </div>
   );

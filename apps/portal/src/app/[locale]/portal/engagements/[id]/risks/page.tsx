@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { AlertTriangle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import ThreadedComments from "@/components/portal/ThreadedComments";
@@ -46,7 +46,7 @@ export default function RisksPage() {
   const [submitting, setSubmitting] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (!id) return;
     setLoading(true);
     try {
@@ -58,7 +58,7 @@ export default function RisksPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     let active = true;
@@ -68,7 +68,7 @@ export default function RisksPage() {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [id, load]);
 
   const resetForm = () => {
     setForm({ title: "", description: "", mitigation_plan: "", residual_rating: "", severity: "medium", escalation_status: "none", status: "open", linked_decision_id: null });

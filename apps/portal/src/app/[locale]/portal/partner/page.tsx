@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Briefcase, FileText, Users, ShoppingCart, TrendingUp, ArrowRight, Globe, Percent } from "lucide-react";
+import { AlertTriangle, ArrowRight, Briefcase, FileText, Globe, Handshake, Percent, ShoppingCart, Sparkles, TrendingUp, Users } from "lucide-react";
 import { useCurrency } from "@xc/ui/CurrencyProvider";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 import type { Entity } from "@xc/api/types";
 
 interface PartnerInfo {
@@ -54,56 +55,140 @@ export default function PartnerDashboardPage() {
   useEffect(() => {
     api.getPartnerDashboard()
       .then((d) => { setData(d as PartnerDashboardData); setLoading(false); })
-      .catch((e) => { setError(e.message || "Failed to load partner data"); setLoading(false); });
+      .catch((e) => {
+        const message = e instanceof Error ? e.message : "Failed to load partner data";
+        if (message.includes("no partner association") || message.includes("HTTP 404")) {
+          setData({ products: [], agreements: [], referrals: [], orders: [] });
+        } else {
+          setError(message);
+        }
+        setLoading(false);
+      });
   }, []);
 
-  if (loading) return <div className="text-white/60">Loading partner dashboard...</div>;
-  if (error) return <div className="text-red-400">{error}</div>;
-  if (!data?.partner) return <div className="text-white/60">No partner association found.</div>;
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="portal-skeleton-x h-48" />
+        <div className="grid gap-4 md:grid-cols-4">
+          {[0, 1, 2, 3].map((item) => <div key={item} className="portal-skeleton-x h-28" />)}
+        </div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="portal-skeleton-x h-64" />
+          <div className="portal-skeleton-x h-64" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <PortalEmptyState
+        icon={AlertTriangle}
+        eyebrow="Partner desk"
+        title="Partner data could not load"
+        description={error}
+      />
+    );
+  }
+
+  if (!data?.partner) {
+    return (
+      <PortalEmptyState
+        icon={Handshake}
+        eyebrow="Partner desk"
+        title="No partner workspace yet"
+        description="Partner products, agreements, referrals, and orders will appear here when your account is linked to a partner organisation."
+      />
+    );
+  }
 
   const { partner, products, agreements, referrals, orders } = data;
-  const convertedReferrals = referrals?.filter((r: ReferralItem) => r.Status === "converted") || [];
-  const totalCommission = orders?.reduce((sum: number, o: OrderItem) => sum + (o.CommissionAmount || 0), 0) || 0;
-  const totalOrderValue = orders?.reduce((sum: number, o: OrderItem) => sum + (o.TotalValue || 0), 0) || 0;
+  const productList = products || [];
+  const agreementList = agreements || [];
+  const referralList = referrals || [];
+  const orderList = orders || [];
+  const convertedReferrals = referralList.filter((r: ReferralItem) => r.Status === "converted");
+  const totalCommission = orderList.reduce((sum: number, o: OrderItem) => sum + (o.CommissionAmount || 0), 0);
+  const totalOrderValue = orderList.reduce((sum: number, o: OrderItem) => sum + (o.TotalValue || 0), 0);
 
   const cards = [
-    { label: "Products", value: products?.length || 0, icon: Briefcase, href: `/${locale}/portal/partner/products`, color: "text-signal" },
-    { label: "Agreements", value: agreements?.length || 0, icon: FileText, href: `/${locale}/portal/partner/agreements`, color: "text-yellow-400" },
-    { label: "Referrals", value: referrals?.length || 0, icon: Users, href: `/${locale}/portal/partner/referrals`, color: "text-green-400" },
-    { label: "Orders", value: orders?.length || 0, icon: ShoppingCart, href: `/${locale}/portal/partner/orders`, color: "text-purple-400" },
+    { label: "Products", value: productList.length, icon: Briefcase, href: `/${locale}/portal/partner/products`, color: "text-signal", text: "Co-owned catalogue" },
+    { label: "Agreements", value: agreementList.length, icon: FileText, href: `/${locale}/portal/partner/agreements`, color: "text-yellow-300", text: "Signed terms" },
+    { label: "Referrals", value: referralList.length, icon: Users, href: `/${locale}/portal/partner/referrals`, color: "text-green-300", text: "Pipeline activity" },
+    { label: "Orders", value: orderList.length, icon: ShoppingCart, href: `/${locale}/portal/partner/orders`, color: "text-purple-300", text: "Distribution sales" },
   ];
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="portal-panel-x p-6">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-signal/10 rounded">
-            <Briefcase className="w-5 h-5 text-signal" />
-          </div>
+      <section className="portal-admin-header-x">
+        <div className="grid gap-6 lg:grid-cols-[1fr_22rem] lg:items-end">
           <div>
-            <h1 className="font-display text-3xl font-semibold tracking-tight">{partner.OrgName}</h1>
-            <p className="text-sm text-white/50 capitalize">{partner.Tier} · {partner.PartnerType?.replace("_", " ")}</p>
+            <div className="flex items-center gap-3">
+              <span className="portal-admin-icon-x">
+                <Handshake className="h-5 w-5" />
+              </span>
+              <p className="portal-meta-x text-signal">Partner workspace</p>
+            </div>
+            <h1 className="font-display mt-4 text-4xl font-semibold leading-none tracking-tight sm:text-5xl">
+              {partner.OrgName}
+            </h1>
+            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/58 sm:text-base">
+              {partner.Description || "Manage partner agreements, products, referrals, orders, and commission visibility in one secure workspace."}
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {partner.Tier && <span className="portal-chip-x capitalize">{partner.Tier} tier</span>}
+              {partner.PartnerType && <span className="portal-chip-x capitalize">{partner.PartnerType.replace("_", " ")}</span>}
+              {partner.RevenueSharePct && <span className="portal-chip-x">{partner.RevenueSharePct}% revenue share</span>}
+            </div>
+          </div>
+
+          <div className="portal-card-x p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="portal-meta-x">Commercial pulse</p>
+                <h2 className="font-display mt-2 text-3xl font-semibold">{format(totalCommission)}</h2>
+              </div>
+              <Sparkles className="h-5 w-5 text-signal" />
+            </div>
+            <p className="mt-2 text-sm text-white/48">Total commission tracked across partner orders.</p>
+            <div className="mt-5 space-y-2 text-sm text-white/52">
+              {partner.OrgWebsite && (
+                <p className="flex items-center gap-2">
+                  <Globe className="h-3.5 w-3.5 text-signal" />
+                  {partner.OrgWebsite.replace("https://", "")}
+                </p>
+              )}
+              {partner.ContactName && (
+                <p className="flex items-center gap-2">
+                  <Users className="h-3.5 w-3.5 text-signal" />
+                  {partner.ContactName}
+                </p>
+              )}
+              {partner.RevenueSharePct && (
+                <p className="flex items-center gap-2">
+                  <Percent className="h-3.5 w-3.5 text-signal" />
+                  {partner.RevenueSharePct}% revenue share
+                </p>
+              )}
+            </div>
           </div>
         </div>
-        <p className="text-white/60 mt-2 max-w-2xl">{partner.Description}</p>
-        <div className="flex flex-wrap gap-4 mt-4 text-sm text-white/50">
-          <span className="flex items-center gap-1"><Globe className="w-3.5 h-3.5" /> {partner.OrgWebsite?.replace("https://", "")}</span>
-          <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" /> {partner.ContactName}</span>
-          {partner.RevenueSharePct && <span className="flex items-center gap-1"><Percent className="w-3.5 h-3.5" /> {partner.RevenueSharePct}% revenue share</span>}
-        </div>
-      </div>
+      </section>
 
       {/* Stats cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {cards.map((card) => (
-          <Link key={card.label} href={card.href} className="portal-card-x group p-4 transition-colors hover:border-signal/30">
+          <Link key={card.label} href={card.href} className="portal-card-x portal-stat-x group p-5 transition-colors hover:border-signal/30">
             <div className="flex items-center justify-between mb-3">
               <card.icon className={`w-5 h-5 ${card.color}`} />
               <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-signal transition-colors" />
             </div>
-            <p className="font-display text-3xl font-semibold tracking-tight">{card.value}</p>
-            <p className="text-sm text-white/50">{card.label}</p>
+            <div>
+              <p className="font-display text-4xl font-semibold tracking-tight">{card.value}</p>
+              <p className="text-sm font-medium text-white/72">{card.label}</p>
+              <p className="mt-1 text-xs text-white/42">{card.text}</p>
+            </div>
           </Link>
         ))}
       </div>
@@ -132,9 +217,16 @@ export default function PartnerDashboardPage() {
             <h2 className="font-semibold flex items-center gap-2"><ShoppingCart className="w-4 h-4 text-signal" /> Recent Orders</h2>
             <Link href={`/${locale}/portal/partner/orders`} className="text-xs text-signal hover:underline">View all</Link>
           </div>
-          {orders?.length === 0 && <p className="text-sm text-white/40">No orders yet.</p>}
+          {orderList.length === 0 && (
+            <PortalEmptyState
+              compact
+              icon={ShoppingCart}
+              title="No orders yet"
+              description="Distribution orders and commission movement will appear here once customers begin purchasing through the partner channel."
+            />
+          )}
           <div className="space-y-3">
-            {orders?.slice(0, 3).map((order: OrderItem) => (
+            {orderList.slice(0, 3).map((order: OrderItem) => (
               <div key={order.ID} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                 <div>
                   <p className="text-sm font-medium">{order.OrderRef}</p>
@@ -155,9 +247,16 @@ export default function PartnerDashboardPage() {
             <h2 className="font-semibold flex items-center gap-2"><TrendingUp className="w-4 h-4 text-green-400" /> Recent Referrals</h2>
             <Link href={`/${locale}/portal/partner/referrals`} className="text-xs text-signal hover:underline">View all</Link>
           </div>
-          {referrals?.length === 0 && <p className="text-sm text-white/40">No referrals yet.</p>}
+          {referralList.length === 0 && (
+            <PortalEmptyState
+              compact
+              icon={TrendingUp}
+              title="No referrals yet"
+              description="Qualified opportunities, conversion status, and potential commission will appear here as referrals are submitted."
+            />
+          )}
           <div className="space-y-3">
-            {referrals?.slice(0, 3).map((ref: ReferralItem) => (
+            {referralList.slice(0, 3).map((ref: ReferralItem) => (
               <div key={ref.ID} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                 <div>
                   <p className="text-sm font-medium">{ref.ReferredOrgName}</p>

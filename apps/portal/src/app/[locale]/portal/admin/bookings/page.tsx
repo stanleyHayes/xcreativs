@@ -79,41 +79,53 @@ export default function AdminBookingsPage() {
     [b.first_name, b.last_name].filter(Boolean).join(" ") || "Unknown";
 
   if (loading) {
-    return <div className="text-white/60">Loading bookings...</div>;
+    return (
+      <div className="space-y-6">
+        <div className="portal-skeleton-x h-36" />
+        <div className="portal-skeleton-x h-72" />
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-signal" />
-          <h1 className="font-display text-3xl font-semibold tracking-tight">Consultation Bookings</h1>
+      <section className="portal-admin-header-x">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex items-start gap-4">
+            <span className="portal-admin-icon-x">
+              <Calendar className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="portal-meta-x text-signal">Scheduling</p>
+              <h1 className="font-display mt-2 text-4xl font-semibold leading-none">Consultation bookings</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/56">
+                Confirm requested consultations, complete scheduled sessions, and keep booking context visible.
+              </p>
+            </div>
+          </div>
+          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="portal-field-x sm:w-48">
+            <option value="">All statuses</option>
+            {Object.keys(statusLabels).map((s) => (
+              <option key={s} value={s}>{statusLabels[s]}</option>
+            ))}
+          </select>
         </div>
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="portal-field-x"
-        >
-          <option value="">All statuses</option>
-          {Object.keys(statusLabels).map((s) => (
-            <option key={s} value={s}>{statusLabels[s]}</option>
-          ))}
-        </select>
-      </div>
+      </section>
 
       {bookings.length === 0 ? (
         <div className="portal-panel-x p-8 text-center text-white/40">
-          <Clock className="w-8 h-8 mx-auto mb-3 opacity-50" />
-          <p>No bookings found.</p>
+          <Clock className="mx-auto mb-3 h-8 w-8 opacity-50" />
+          <h2 className="font-display text-xl font-semibold text-white/72">No bookings found</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">New consultation requests will appear here with preferred dates, topic, and contact details.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {bookings.map((b) => (
             <div key={b.id} className="portal-card-x p-5">
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${statusColors[b.status] || ""}`}>
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="min-w-0 flex-1">
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <span className={`portal-chip-x ${statusColors[b.status] || ""}`}>
                       {statusLabels[b.status] || b.status}
                     </span>
                     <span className="text-xs text-white/30 uppercase">{b.topic}</span>
@@ -132,13 +144,13 @@ export default function AdminBookingsPage() {
                   </p>
                   {b.notes && <p className="text-xs text-white/30 mt-1">{b.notes}</p>}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 flex-wrap items-center gap-2">
                   {b.status === "requested" && (
                     <>
                       <button
                         onClick={() => handleUpdateStatus(b.id, "confirmed")}
                         disabled={updating === b.id}
-                        className="flex items-center gap-1 bg-green-500/20 text-green-400 px-3 py-1.5 rounded text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+                        className="portal-admin-action-x border-green-400/30 bg-green-400/15 text-green-300 hover:bg-green-400/25 disabled:opacity-50"
                       >
                         {updating === b.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
                         Confirm
@@ -146,7 +158,7 @@ export default function AdminBookingsPage() {
                       <button
                         onClick={() => handleUpdateStatus(b.id, "cancelled")}
                         disabled={updating === b.id}
-                        className="flex items-center gap-1 bg-red-500/20 text-red-400 px-3 py-1.5 rounded text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+                        className="portal-admin-action-x portal-admin-action-danger-x disabled:opacity-50"
                       >
                         <XCircle className="w-3 h-3" />
                         Cancel
@@ -157,7 +169,7 @@ export default function AdminBookingsPage() {
                     <button
                       onClick={() => handleUpdateStatus(b.id, "completed")}
                       disabled={updating === b.id}
-                      className="flex items-center gap-1 bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+                      className="portal-admin-action-x border-blue-400/30 bg-blue-400/15 text-blue-300 hover:bg-blue-400/25 disabled:opacity-50"
                     >
                       {updating === b.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
                       Complete

@@ -110,35 +110,47 @@ export default function AdminWebhooksPage() {
   }
 
   if (loading) {
-    return <div className="text-white/60">Loading webhooks...</div>;
+    return (
+      <div className="space-y-6">
+        <div className="portal-skeleton-x h-36" />
+        <div className="portal-skeleton-x h-72" />
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Webhook className="w-5 h-5 text-signal" />
-          <h1 className="font-display text-3xl font-semibold tracking-tight">Webhooks</h1>
+      <section className="portal-admin-header-x">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex items-start gap-4">
+            <span className="portal-admin-icon-x">
+              <Webhook className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="portal-meta-x text-signal">Integrations</p>
+              <h1 className="font-display mt-2 text-4xl font-semibold leading-none">Webhooks</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/56">
+                Manage outbound webhook subscriptions and inspect delivery attempts for operational events.
+              </p>
+            </div>
+          </div>
+          <button onClick={() => setCreating(!creating)} className="portal-btn-x">
+            <Plus className="w-4 h-4" />
+            New webhook
+          </button>
         </div>
-        <button
-          onClick={() => setCreating(!creating)}
-          className="portal-btn-x"
-        >
-          <Plus className="w-4 h-4" />
-          New Webhook
-        </button>
-      </div>
+      </section>
 
-      <div className="flex gap-4 border-b border-white/10">
+      <div className="portal-admin-tabs-x portal-scrollbar-x">
         <button
           onClick={() => setActiveTab("subscriptions")}
-          className={`pb-2 text-sm font-medium ${activeTab === "subscriptions" ? "text-signal border-b-2 border-signal" : "text-white/50 hover:text-white"}`}
+          className={`portal-admin-tab-x ${activeTab === "subscriptions" ? "portal-admin-tab-x-active" : ""}`}
         >
           Subscriptions ({webhooks.length})
         </button>
         <button
           onClick={() => setActiveTab("deliveries")}
-          className={`pb-2 text-sm font-medium ${activeTab === "deliveries" ? "text-signal border-b-2 border-signal" : "text-white/50 hover:text-white"}`}
+          className={`portal-admin-tab-x ${activeTab === "deliveries" ? "portal-admin-tab-x-active" : ""}`}
         >
           Delivery Log ({deliveries.length})
         </button>
@@ -146,7 +158,10 @@ export default function AdminWebhooksPage() {
 
       {creating && (
         <form onSubmit={handleCreate} className="portal-panel-x space-y-4 p-5">
-          <h2 className="font-semibold">Create Webhook Subscription</h2>
+          <div>
+            <p className="portal-meta-x">New subscription</p>
+            <h2 className="font-display mt-2 text-2xl font-semibold">Create webhook subscription</h2>
+          </div>
           <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-xs text-white/50 mb-1">Name *</label>
@@ -205,17 +220,18 @@ export default function AdminWebhooksPage() {
         <>
           {webhooks.length === 0 ? (
             <div className="portal-panel-x p-8 text-center text-white/40">
-              <Webhook className="w-8 h-8 mx-auto mb-3 opacity-50" />
-              <p>No webhook subscriptions yet.</p>
+              <Webhook className="mx-auto mb-3 h-8 w-8 opacity-50" />
+              <h2 className="font-display text-xl font-semibold text-white/72">No webhook subscriptions yet</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">Create a subscription to notify external systems about portal events.</p>
             </div>
           ) : (
             <div className="space-y-3">
               {webhooks.map((wh) => (
                 <div key={wh.id} className="portal-card-x p-5">
-                  <div className="flex items-start justify-between">
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${wh.is_active ? "text-green-400 bg-green-400/10" : "text-red-400 bg-red-400/10"}`}>
+                        <span className={`portal-chip-x ${wh.is_active ? "text-green-400 bg-green-400/10" : "text-red-400 bg-red-400/10"}`}>
                           {wh.is_active ? "Active" : "Inactive"}
                         </span>
                         <span className="text-xs text-white/30">{wh.events.join(", ")}</span>
@@ -229,7 +245,7 @@ export default function AdminWebhooksPage() {
                     <button
                       onClick={() => handleDelete(wh.id)}
                       disabled={deleting === wh.id}
-                      className="flex items-center gap-1 bg-red-500/10 text-red-400 px-3 py-1.5 rounded text-xs font-medium hover:bg-red-500/20 transition-colors disabled:opacity-50 ml-4"
+                      className="portal-admin-action-x portal-admin-action-danger-x shrink-0 disabled:opacity-50 lg:ml-4"
                     >
                       {deleting === wh.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
                       Delete
@@ -246,14 +262,15 @@ export default function AdminWebhooksPage() {
         <>
           {deliveries.length === 0 ? (
             <div className="portal-panel-x p-8 text-center text-white/40">
-              <Clock className="w-8 h-8 mx-auto mb-3 opacity-50" />
-              <p>No deliveries yet. Events will appear here when triggered.</p>
+              <Clock className="mx-auto mb-3 h-8 w-8 opacity-50" />
+              <h2 className="font-display text-xl font-semibold text-white/72">No deliveries yet</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">Events will appear here after outbound webhook attempts are triggered.</p>
             </div>
           ) : (
             <div className="space-y-3">
               {deliveries.map((d) => (
                 <div key={d.id} className="portal-card-x p-5">
-                  <div className="flex items-start justify-between">
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         {d.response_status >= 200 && d.response_status < 300 ? (
@@ -265,7 +282,7 @@ export default function AdminWebhooksPage() {
                         )}
                         <span className="text-xs font-medium text-white/70">{d.event}</span>
                         {d.response_status > 0 && (
-                          <span className={`text-xs px-1.5 py-0.5 rounded ${d.response_status >= 200 && d.response_status < 300 ? "bg-green-400/10 text-green-400" : "bg-red-400/10 text-red-400"}`}>
+                          <span className={`portal-chip-x ${d.response_status >= 200 && d.response_status < 300 ? "bg-green-400/10 text-green-400" : "bg-red-400/10 text-red-400"}`}>
                             {d.response_status}
                           </span>
                         )}
