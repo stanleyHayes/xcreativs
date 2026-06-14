@@ -43,7 +43,7 @@ export default async function LabsPage() {
         description="The IP arm of XCreativs. Mandate → Build → License → Spin out. Real products, real platforms, real ownership."
         crumbs={[{ label: "Home", href: "/" }, { label: "XCreativs Labs" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         <div className="mt-12 space-y-8">
         {products.length === 0 && (
           <p className="text-center text-gravity/40 py-12">No lab products available yet.</p>

@@ -46,7 +46,9 @@ export default function ChatWidget() {
 
   const startSession = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/concierge/sessions`, {
+      // Relative URL -> hits the app origin and proxies via the Next rewrite
+      // (`/api/* -> backend`), so no CORS. This widget is always client-side.
+      const res = await fetch(`/api/v1/concierge/sessions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ visitor_id: createVisitorId(), source: "public" }),
@@ -83,7 +85,7 @@ export default function ChatWidget() {
       if (token) headers["Authorization"] = `Bearer ${token}`;
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/concierge/sessions/${sessionId}/messages`,
+        `/api/v1/concierge/sessions/${sessionId}/messages`,
         { method: "POST", headers, body: JSON.stringify({ content: userMsg.content }) }
       );
       const data = (await res.json()) as MessageResponse;

@@ -43,7 +43,7 @@ export default async function CareersPage() {
         description="Not a job board. A serious-firm recruiting tool for senior practitioners and emerging talent who want to work on national-scale systems."
         crumbs={[{ label: "Home", href: "/" }, { label: "Careers" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         <div className="mt-12 space-y-6">
         {roles.length === 0 && (
           <p className="text-center text-gravity/40 py-12">No open roles at the moment.</p>

@@ -54,7 +54,7 @@ export default function ReadingListPage() {
         description="Curated readings from the edges of digital systems, governance, and platform economics — annotated by the XCreativs team."
         crumbs={[{ label: "Home", href: "/" }, { label: "Annotated Bibliography" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         {/* Category filters */}
       <div className="mt-8 flex flex-wrap gap-2">
         <button

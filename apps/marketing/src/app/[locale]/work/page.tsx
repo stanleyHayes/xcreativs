@@ -40,7 +40,7 @@ export default async function WorkPage() {
         description="Selected case dossiers. Not a portfolio — a record of what happens when capability meets mandate."
         crumbs={[{ label: "Home", href: "/" }, { label: "Work" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         <div className="mt-12 space-y-8">
         {items.length === 0 && (
           <p className="text-center text-gravity/40 py-12">No case studies available yet.</p>

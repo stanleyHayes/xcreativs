@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 
 // Disable the service worker on localhost. In development a caching SW serves
 // stale built chunks and fights Next.js HMR, causing infinite hard-reload loops.
@@ -9,15 +9,17 @@ const PAGE_CACHE = `xcreatives-pages-${CACHE_VERSION}`;
 const API_CACHE = `xcreatives-api-${CACHE_VERSION}`;
 const IMAGE_CACHE = `xcreatives-images-${CACHE_VERSION}`;
 
+// Under next-intl localePrefix:"as-needed" the default locale (en) is served
+// UNPREFIXED — '/en*' URLs 307-redirect, which fails the atomic cache.addAll and
+// blocks SW install. List the real served URLs (unprefixed en + prefixed fr).
 const PRECACHE_PAGES = [
   '/',
-  '/en',
   '/fr',
   '/offline',
-  '/en/services',
-  '/en/work',
-  '/en/insights',
-  '/en/contact',
+  '/services',
+  '/work',
+  '/insights',
+  '/contact',
 ];
 
 const PRECACHE_ASSETS = [

@@ -122,10 +122,11 @@ export default function HoldingVisualiserPage() {
 
   return (
     <main>
-      <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16 lg:py-20">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">§ 07 · Interactive Tool</p>
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight flex items-center gap-3">
+      <section className="relative overflow-hidden border-b border-hairline bg-soft">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <div className="shell-x relative py-16 lg:py-20">
+          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <Network className="w-8 h-8 text-blue-400" />
             Holding Company Visualiser
           </h1>
@@ -136,17 +137,17 @@ export default function HoldingVisualiserPage() {
         </div>
       </section>
 
-      <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-12">
+      <section className="border-b border-hairline">
+        <div className="shell-x py-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Tree */}
             <div className="lg:col-span-2">
-              <div className="bg-foundation border border-hairline rounded-lg p-6">
+              <div className="panel-x p-6">
                 {/* Parent */}
                 <button
                   onClick={() => setActiveNode("parent")}
-                  className={`w-full flex items-center gap-3 p-4 rounded-lg border transition-colors ${
-                    activeNode === "parent" ? "border-signal bg-signal/5" : "border-hairline hover:border-gravity/30"
+                  className={`w-full flex items-center gap-3 rounded-2xl border p-4 transition-colors ${
+                    activeNode === "parent" ? "border-signal bg-signal/10" : "border-hairline hover:border-signal/40"
                   }`}
                 >
                   <div className="p-2 bg-gravity text-foundation rounded">{nodes.parent.icon}</div>
@@ -164,8 +165,8 @@ export default function HoldingVisualiserPage() {
                       <button
                         key={childId}
                         onClick={() => setActiveNode(childId)}
-                        className={`flex flex-col items-center gap-2 p-3 rounded-lg border transition-colors ${
-                          activeNode === childId ? "border-signal bg-signal/5" : "border-hairline hover:border-gravity/30"
+                        className={`flex flex-col items-center gap-2 rounded-2xl border p-3 transition-colors ${
+                          activeNode === childId ? "border-signal bg-signal/10" : "border-hairline hover:border-signal/40"
                         }`}
                       >
                         <div className={`p-2 rounded ${activeNode === childId ? "bg-signal/20 text-signal" : "bg-soft text-gravity/60"}`}>
@@ -187,8 +188,8 @@ export default function HoldingVisualiserPage() {
                           <button
                             key={unitId}
                             onClick={() => setActiveNode(unitId)}
-                            className={`w-full flex items-center gap-2 p-2 rounded border text-left transition-colors ${
-                              activeNode === unitId ? "border-signal bg-signal/5" : "border-hairline hover:border-gravity/30"
+                            className={`w-full flex items-center gap-2 rounded-xl border p-2 text-left transition-colors ${
+                              activeNode === unitId ? "border-signal bg-signal/10" : "border-hairline hover:border-signal/40"
                             }`}
                           >
                             <span className={activeNode === unitId ? "text-signal" : "text-gravity/40"}>{unit.icon}</span>
@@ -202,7 +203,7 @@ export default function HoldingVisualiserPage() {
               </div>
 
               {/* Value flow */}
-              <div className="mt-6 bg-foundation border border-hairline rounded-lg p-6">
+              <div className="panel-x mt-6 p-6">
                 <h3 className="font-semibold mb-4 flex items-center gap-2"><ArrowRight className="w-4 h-4 text-signal" /> Value Flow</h3>
                 <div className="flex items-center justify-between text-sm">
                   <div className="text-center flex-1">
@@ -234,7 +235,7 @@ export default function HoldingVisualiserPage() {
 
             {/* Detail panel */}
             <div className="lg:col-span-1">
-              <div className="bg-foundation border border-hairline rounded-lg p-6 sticky top-24">
+              <div className="panel-x sticky top-24 p-6">
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 ${activeNode === "parent" ? "bg-gravity text-foundation" : "bg-signal/10 text-signal"}`}>
                   {node.icon}
                 </div>
@@ -255,7 +256,7 @@ export default function HoldingVisualiserPage() {
                 {node.link && (
                   <a
                     href={node.link}
-                    className="mt-6 inline-flex items-center gap-2 bg-signal text-white px-5 py-2.5 rounded text-sm font-medium hover:opacity-90 transition-opacity"
+                    className="btn-x mt-6"
                   >
                     Explore {node.label} <ArrowUpRight className="w-4 h-4" />
                   </a>

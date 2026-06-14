@@ -46,13 +46,13 @@ export default function NotAFitPage() {
   return (
     <main>
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20 lg:py-28">
+        <div className="shell-x py-20 lg:py-28">
           <div className="max-w-2xl">
             <div className="flex items-center gap-2 mb-6">
               <Heart className="w-5 h-5 text-signal" />
               <p className="text-xs font-medium uppercase tracking-wider text-gravity/40">Thank you for considering us</p>
             </div>
-            <h1 className="text-3xl lg:text-5xl font-bold leading-tight tracking-tight">
+            <h1 className="font-display text-3xl font-semibold leading-tight tracking-tight lg:text-5xl">
               We may not be the right fit — and that is okay
             </h1>
             <p className="mt-6 text-lg text-gravity/70 leading-relaxed">
@@ -65,14 +65,14 @@ export default function NotAFitPage() {
       </section>
 
       <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
-          <h2 className="text-xl font-semibold mb-8">Alternative paths forward</h2>
+        <div className="shell-x py-16">
+          <h2 className="font-display text-2xl font-semibold tracking-tight mb-8">Alternative paths forward</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {alternatives.map((alt) => (
               <Link
                 key={alt.title}
                 href={`/${locale}${alt.href}`}
-                className="group bg-foundation border border-hairline rounded-lg p-6 hover:border-signal transition-colors"
+                className="card-x group p-6"
               >
                 <alt.icon className="w-5 h-5 text-signal mb-4" />
                 <h3 className="font-semibold group-hover:text-signal transition-colors">{alt.title}</h3>
@@ -87,10 +87,10 @@ export default function NotAFitPage() {
       </section>
 
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+        <div className="shell-x py-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div>
-              <h2 className="text-xl font-semibold mb-4">When to re-engage</h2>
+            <div className="panel-x-soft p-6 lg:p-8">
+              <h2 className="font-display text-2xl font-semibold tracking-tight mb-4">When to re-engage</h2>
               <ul className="space-y-3 text-gravity/70">
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-signal shrink-0 mt-0.5" />
@@ -111,7 +111,7 @@ export default function NotAFitPage() {
               </ul>
             </div>
 
-            <div className="border border-hairline rounded-lg p-6 bg-foundation">
+            <div className="panel-x p-6 lg:p-8">
               <div className="flex items-center gap-2 mb-4">
                 <Mail className="w-4 h-4 text-signal" />
                 <h2 className="font-semibold">Stay in the loop</h2>
@@ -132,16 +132,16 @@ export default function NotAFitPage() {
                     type="email"
                     required
                     placeholder="you@organisation.com"
-                    className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal"
+                    className="field-x"
                   />
                   <input
                     name="first_name"
                     placeholder="First name (optional)"
-                    className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal"
+                    className="field-x"
                   />
                   <button
                     type="submit"
-                    className="bg-signal text-white px-5 py-2.5 rounded text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+                    className="btn-x"
                   >
                     Subscribe <ArrowRight className="w-4 h-4" />
                   </button>
@@ -153,7 +153,7 @@ export default function NotAFitPage() {
       </section>
 
       <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-12 text-center">
+        <div className="shell-x py-12 text-center">
           <p className="text-gravity/50 text-sm">
             Still unsure?{" "}
             <Link href={`/${locale}/contact`} className="text-signal hover:underline">

@@ -61,10 +61,11 @@ export default function CostCalculatorPage() {
 
   return (
     <main>
-      <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16 lg:py-20">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">§ 07 · Interactive Tool</p>
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight flex items-center gap-3">
+      <section className="relative overflow-hidden border-b border-hairline bg-soft">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <div className="shell-x relative py-16 lg:py-20">
+          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <DollarSign className="w-8 h-8 text-green-400" />
             Engagement Cost Calculator
           </h1>
@@ -75,11 +76,11 @@ export default function CostCalculatorPage() {
         </div>
       </section>
 
-      <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-12">
+      <section className="border-b border-hairline">
+        <div className="shell-x py-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Controls */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="panel-x space-y-7 p-6 lg:col-span-2 lg:p-8">
               {/* Scope */}
               <div>
                 <label className="block text-sm font-medium mb-3">Engagement Scope</label>
@@ -94,8 +95,8 @@ export default function CostCalculatorPage() {
                     <button
                       key={s.key}
                       onClick={() => setScope(s.key)}
-                      className={`text-left border rounded-lg p-3 transition-colors ${
-                        scope === s.key ? "border-signal bg-signal/5" : "border-hairline bg-foundation hover:border-gravity/30"
+                      className={`text-left border rounded-2xl p-4 transition-colors ${
+                        scope === s.key ? "border-signal bg-signal/10 shadow-[0_12px_30px_-24px_var(--color-signal)]" : "border-hairline bg-foundation hover:border-signal/40"
                       }`}
                     >
                       <p className={`text-sm font-medium ${scope === s.key ? "text-signal" : "text-gravity"}`}>{s.label}</p>
@@ -117,8 +118,8 @@ export default function CostCalculatorPage() {
                     <button
                       key={c.key}
                       onClick={() => setComplexity(c.key)}
-                      className={`flex-1 border rounded px-3 py-2 text-sm transition-colors ${
-                        complexity === c.key ? "border-signal bg-signal/5 text-signal font-medium" : "border-hairline bg-foundation text-gravity/70 hover:border-gravity/30"
+                      className={`flex-1 border rounded-full px-3 py-2 text-sm transition-colors ${
+                        complexity === c.key ? "border-signal bg-signal/10 text-signal font-medium" : "border-hairline bg-foundation text-gravity/70 hover:border-signal/40"
                       }`}
                     >
                       {c.label}
@@ -139,8 +140,8 @@ export default function CostCalculatorPage() {
                     <button
                       key={u.key}
                       onClick={() => setUrgency(u.key)}
-                      className={`flex-1 border rounded px-3 py-2 text-sm transition-colors ${
-                        urgency === u.key ? "border-signal bg-signal/5 text-signal font-medium" : "border-hairline bg-foundation text-gravity/70 hover:border-gravity/30"
+                      className={`flex-1 border rounded-full px-3 py-2 text-sm transition-colors ${
+                        urgency === u.key ? "border-signal bg-signal/10 text-signal font-medium" : "border-hairline bg-foundation text-gravity/70 hover:border-signal/40"
                       }`}
                     >
                       {u.label}
@@ -161,8 +162,8 @@ export default function CostCalculatorPage() {
                     <button
                       key={t.key}
                       onClick={() => setTeam(t.key)}
-                      className={`flex-1 border rounded px-3 py-2 text-sm transition-colors ${
-                        team === t.key ? "border-signal bg-signal/5 text-signal font-medium" : "border-hairline bg-foundation text-gravity/70 hover:border-gravity/30"
+                      className={`flex-1 border rounded-full px-3 py-2 text-sm transition-colors ${
+                        team === t.key ? "border-signal bg-signal/10 text-signal font-medium" : "border-hairline bg-foundation text-gravity/70 hover:border-signal/40"
                       }`}
                     >
                       {t.label}
@@ -183,8 +184,8 @@ export default function CostCalculatorPage() {
                     <button
                       key={s.key}
                       onClick={() => setSovereignty(s.key)}
-                      className={`flex-1 border rounded px-3 py-2 text-sm transition-colors ${
-                        sovereignty === s.key ? "border-signal bg-signal/5 text-signal font-medium" : "border-hairline bg-foundation text-gravity/70 hover:border-gravity/30"
+                      className={`flex-1 border rounded-full px-3 py-2 text-sm transition-colors ${
+                        sovereignty === s.key ? "border-signal bg-signal/10 text-signal font-medium" : "border-hairline bg-foundation text-gravity/70 hover:border-signal/40"
                       }`}
                     >
                       {s.label}
@@ -196,8 +197,8 @@ export default function CostCalculatorPage() {
 
             {/* Estimate panel */}
             <div className="lg:col-span-1">
-              <div className="bg-foundation border border-hairline rounded-lg p-6 sticky top-24">
-                <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">Estimated Investment</p>
+              <div className="panel-x sticky top-24 p-6">
+                <p className="kicker-x mb-4">Estimated Investment</p>
                 <div className="mb-6">
                   <p className="text-4xl font-bold text-signal">
                     {formatCurrency(estimate.min)} — {formatCurrency(estimate.max)}
@@ -225,7 +226,7 @@ export default function CostCalculatorPage() {
 
                 <Link
                   href="/contact"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-signal text-white px-5 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity"
+                  className="btn-x w-full"
                 >
                   Request Detailed Proposal <ArrowRight className="w-4 h-4" />
                 </Link>

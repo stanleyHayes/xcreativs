@@ -9,11 +9,12 @@ test("home renders brand + nav", async ({ page }) => {
   await expect(page.getByRole("link", { name: /XCreativs/i }).first()).toBeVisible();
 });
 
-test("login shows form + SSO options", async ({ page }) => {
-  await page.goto("/login");
-  await expect(page.getByRole("button", { name: /Sign In/i })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Google/i })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Microsoft/i })).toBeVisible();
+test("login redirects to the portal app", async ({ request }) => {
+  // Auth lives in the separate portal app; marketing /login forwards there.
+  // Assert the redirect without following it (the portal isn't up in this job).
+  const res = await request.get("/login", { maxRedirects: 0 });
+  expect(res.status()).toBe(307);
+  expect(res.headers()["location"]).toContain("/login");
 });
 
 test("careers talent-network form is reachable", async ({ page }) => {

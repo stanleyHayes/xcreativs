@@ -36,7 +36,7 @@ export default function FAQPage() {
         description="Real questions grouped by category. A working reference, not a marketing FAQ."
         crumbs={[{ label: "Home", href: "/" }, { label: "FAQ" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         <div className="mt-12 space-y-12">
           {categories.map((cat) => (
             <section key={cat}>

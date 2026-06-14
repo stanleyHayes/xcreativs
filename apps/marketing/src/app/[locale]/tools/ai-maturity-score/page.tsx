@@ -131,7 +131,7 @@ export default function AIMaturityScorePage() {
 
   if (loading) {
     return (
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
+      <main className="shell-x py-20">
         <p className="text-gravity/60">Loading assessment...</p>
       </main>
     );
@@ -139,20 +139,20 @@ export default function AIMaturityScorePage() {
 
   if (error && step === "intro") {
     return (
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
+      <main className="shell-x py-20">
         <p className="text-red-500">{error}</p>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
+    <main className="shell-x py-20">
       <div className="max-w-3xl">
         <div className="flex items-center gap-2 mb-4">
           <Brain className="w-5 h-5 text-signal" />
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40">§ 07 · Interactive Tool</p>
+          <p className="kicker-x">§ 07 · Interactive Tool</p>
         </div>
-        <h1 className="text-3xl lg:text-4xl font-bold">{template?.title || "AI Maturity Score"}</h1>
+        <h1 className="font-display text-4xl font-semibold tracking-tight lg:text-5xl">{template?.title || "AI Maturity Score"}</h1>
         <p className="mt-4 text-lg text-gravity/60">{template?.description}</p>
       </div>
 
@@ -199,7 +199,7 @@ function IntroStep({
 }) {
   return (
     <div className="space-y-6">
-      <div className="border border-hairline rounded-lg p-6 bg-soft">
+      <div className="panel-x-soft p-6">
         <h2 className="font-semibold mb-4">Before we begin</h2>
         <div className="space-y-4">
           <div>
@@ -209,7 +209,7 @@ function IntroStep({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@organisation.com"
-              className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal"
+              className="field-x"
             />
           </div>
           <div>
@@ -218,7 +218,7 @@ function IntroStep({
               value={organization}
               onChange={(e) => setOrganization(e.target.value)}
               placeholder="Your organisation"
-              className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal"
+              className="field-x"
             />
           </div>
         </div>
@@ -230,7 +230,7 @@ function IntroStep({
       <button
         onClick={onStart}
         disabled={!email}
-        className="bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+        className="btn-x disabled:opacity-50"
       >
         Start Assessment <ArrowRight className="w-4 h-4" />
       </button>
@@ -267,17 +267,17 @@ function QuestionStep({
         <div className="h-full bg-signal transition-all" style={{ width: `${progress}%` }} />
       </div>
 
-      <div className="border border-hairline rounded-lg p-6 bg-foundation">
+      <div className="panel-x p-6">
         <h2 className="text-lg font-semibold leading-relaxed">{q.question_text}</h2>
         <div className="mt-6 space-y-3">
           {q.options.map((opt: QuestionOption) => (
             <button
               key={opt.value}
               onClick={() => onSelect(opt.value)}
-              className={`w-full text-left px-4 py-3 rounded border transition-colors text-sm ${
+              className={`w-full rounded-2xl border px-4 py-3 text-left text-sm transition-colors ${
                 selected === opt.value
                   ? "border-signal bg-signal/10"
-                  : "border-hairline hover:border-signal/50"
+                  : "border-hairline bg-foundation hover:border-signal/50"
               }`}
             >
               {opt.label}
@@ -289,7 +289,7 @@ function QuestionStep({
       <button
         onClick={onNext}
         disabled={selected === undefined || submitting}
-        className="bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+        className="btn-x disabled:opacity-50"
       >
         {currentQIndex === questions.length - 1 ? (submitting ? "Calculating..." : "Finish") : "Next"}
         <ArrowRight className="w-4 h-4" />
@@ -326,7 +326,7 @@ function ResultsStep({ results, questions, onReset }: { results: AssessmentResul
 
   return (
     <div className="space-y-8">
-      <div className="border border-hairline rounded-lg p-8 bg-soft text-center">
+      <div className="panel-x-soft p-8 text-center">
         <p className="text-sm text-gravity/50 uppercase tracking-wider">AI Maturity Score</p>
         <div className="mt-4 flex items-center justify-center gap-4">
           <div className="text-5xl font-bold">{percentage}%</div>
@@ -344,7 +344,7 @@ function ResultsStep({ results, questions, onReset }: { results: AssessmentResul
           const Icon = dimensionIcons[dim] || Target;
           const tier = getTier(data.pct);
           return (
-            <div key={dim} className="border border-hairline rounded-lg p-5 bg-foundation">
+            <div key={dim} className="card-x p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Icon className="w-4 h-4 text-gravity/40" />
                 <span className="text-sm font-medium">{dimensionLabels[dim] || dim}</span>
@@ -359,7 +359,7 @@ function ResultsStep({ results, questions, onReset }: { results: AssessmentResul
         })}
       </div>
 
-      <div className="border border-hairline rounded-lg p-6 bg-foundation">
+      <div className="panel-x p-6">
         <h3 className="font-semibold mb-3">Recommendation</h3>
         <p className="text-gravity/70 leading-relaxed">{recommendation_summary}</p>
       </div>
@@ -368,7 +368,7 @@ function ResultsStep({ results, questions, onReset }: { results: AssessmentResul
         <button onClick={onReset} className="flex items-center gap-2 text-sm text-signal hover:underline">
           <RotateCcw className="w-4 h-4" /> Retake assessment
         </button>
-        <Link href="/contact" className="flex items-center gap-2 bg-signal text-white px-5 py-2.5 rounded text-sm font-medium hover:opacity-90 transition-opacity">
+        <Link href="/contact" className="btn-x">
           <TrendingUp className="w-4 h-4" /> Discuss your results
         </Link>
       </div>

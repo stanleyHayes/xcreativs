@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <main className="relative isolate flex min-h-[82vh] items-center overflow-hidden border-b border-hairline">
       <HeroBackdrop />
-      <div className="relative mx-auto w-full max-w-[1440px] px-6 py-24 text-center lg:px-12">
+      <div className="shell-x relative py-24 text-center">
         <span className="animate-rise mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-hairline bg-foundation/70 text-signal shadow-sm backdrop-blur">
           <SatelliteDish className="h-7 w-7" />
         </span>
@@ -32,21 +32,21 @@ export default function NotFound() {
         >
           <Link
             href="/"
-            className="group inline-flex items-center gap-2 rounded-full bg-signal px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-signal/25 transition-transform hover:-translate-y-0.5"
+            className="btn-x group"
           >
             <Home className="h-4 w-4" />
             Back home
           </Link>
           <Link
             href="/services"
-            className="inline-flex items-center gap-2 rounded-full border border-gravity/20 px-5 py-3 text-sm font-semibold transition-colors hover:border-gravity hover:bg-gravity hover:text-foundation"
+            className="btn-x-secondary"
           >
             <Compass className="h-4 w-4" />
             Explore services
           </Link>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 rounded-full border border-gravity/20 px-5 py-3 text-sm font-semibold transition-colors hover:border-gravity hover:bg-gravity hover:text-foundation"
+            className="btn-x-secondary"
           >
             <LifeBuoy className="h-4 w-4" />
             Contact us

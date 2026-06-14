@@ -87,10 +87,11 @@ export default function CapabilityLatticePage() {
 
   return (
     <main>
-      <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16 lg:py-20">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">§ 07 · Interactive Tool</p>
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight flex items-center gap-3">
+      <section className="relative overflow-hidden border-b border-hairline bg-soft">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <div className="shell-x relative py-16 lg:py-20">
+          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <Grid3X3 className="w-8 h-8 text-signal" />
             Capability Lattice Explorer
           </h1>
@@ -101,10 +102,10 @@ export default function CapabilityLatticePage() {
         </div>
       </section>
 
-      <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-12">
+      <section className="border-b border-hairline">
+        <div className="shell-x py-12">
           {/* Legend */}
-          <div className="flex flex-wrap gap-3 mb-8">
+          <div className="panel-x mb-8 flex flex-wrap gap-3 p-4">
             {Object.entries(depthConfig).map(([key, cfg]) => (
               <div key={key} className="flex items-center gap-2 text-sm">
                 <span className={`w-2.5 h-2.5 rounded-full ${cfg.dot}`} />
@@ -114,7 +115,7 @@ export default function CapabilityLatticePage() {
           </div>
 
           {/* Grid */}
-          <div className="overflow-x-auto">
+          <div className="panel-x overflow-x-auto p-4">
             <div className="min-w-[800px]">
               {/* Header row */}
               <div className="grid grid-cols-[180px_repeat(8,1fr)] gap-1">
@@ -138,8 +139,8 @@ export default function CapabilityLatticePage() {
                       <button
                         key={cap}
                         onClick={() => setSelected({ sector, capability: cap })}
-                        className={`h-12 rounded flex items-center justify-center transition-all ${
-                          isActive ? "ring-2 ring-signal ring-offset-2 ring-offset-soft" : "hover:opacity-80"
+                        className={`flex h-12 items-center justify-center rounded-xl transition-all ${
+                          isActive ? "bg-signal/10 ring-2 ring-signal ring-offset-2 ring-offset-foundation" : "hover:bg-soft"
                         }`}
                         title={`${sector} × ${cap}`}
                       >
@@ -157,8 +158,8 @@ export default function CapabilityLatticePage() {
       {/* Detail panel */}
       {selected && activeIntersection && (
         <section className="border-b border-hairline">
-          <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-12">
-            <div className="bg-foundation border border-hairline rounded-lg p-6 relative">
+          <div className="shell-x py-12">
+            <div className="panel-x relative p-6 lg:p-8">
               <button onClick={() => setSelected(null)} className="absolute top-4 right-4 p-1 text-gravity/30 hover:text-gravity transition-colors">
                 <X className="w-5 h-5" />
               </button>
@@ -179,7 +180,7 @@ export default function CapabilityLatticePage() {
               <div className="mt-6">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 bg-signal text-white px-5 py-2.5 rounded text-sm font-medium hover:opacity-90 transition-opacity"
+                  className="btn-x"
                 >
                   Discuss this intersection <ArrowUpRight className="w-4 h-4" />
                 </Link>

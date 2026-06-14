@@ -15,6 +15,8 @@
   --color-hairline: #e4e7ec;      /* cool grey hairline */
   --color-soft: #f4f6fa;          /* cool light panel */
   --color-mist: #697086;          /* cool secondary text */
+  --shadow-soft: 0 24px 70px -44px color-mix(in oklab, var(--color-gravity) 42%, transparent);
+  --shadow-signal: 0 22px 50px -30px color-mix(in oklab, var(--color-signal) 65%, transparent);
 }
 
 .dark {
@@ -48,15 +50,48 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(circle at 10% -10%, color-mix(in oklab, var(--color-signal) 8%, transparent), transparent 34rem),
+    radial-gradient(circle at 90% 8%, color-mix(in oklab, var(--color-signal) 5%, transparent), transparent 30rem),
+    var(--color-foundation);
+  color: var(--color-gravity);
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-signal) 22%, transparent);
+  color: var(--color-gravity);
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-signal) 75%, transparent);
+  outline-offset: 3px;
+}
+
+input,
+select,
+textarea {
   background-color: var(--color-foundation);
   color: var(--color-gravity);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: color-mix(in oklab, var(--color-mist) 72%, transparent);
 }
 
 /* Display face — used for the wordmark and editorial headings */
 .font-display {
   font-family: var(--font-display);
   font-optical-sizing: auto;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 /* ----- Atmosphere: fine engineering grid + grain for depth ----- */
@@ -200,6 +235,366 @@ body {
   color: transparent;
 }
 
+/* Shared surface and action primitives for route-level polish. */
+.shell-x {
+  width: min(100%, 1440px);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+@media (min-width: 1024px) {
+  .shell-x {
+    padding-inline: 3rem;
+  }
+}
+
+.kicker-x {
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-gravity) 42%, transparent);
+}
+
+.panel-x {
+  position: relative;
+  border: 1px solid var(--color-hairline);
+  border-radius: 1.25rem;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--color-foundation) 94%, transparent), var(--color-foundation)),
+    radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--color-signal) 7%, transparent), transparent 58%);
+  box-shadow: var(--shadow-soft);
+}
+
+.panel-x-soft {
+  border: 1px solid var(--color-hairline);
+  border-radius: 1.25rem;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--color-soft) 92%, var(--color-foundation)), var(--color-soft)),
+    radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--color-signal) 7%, transparent), transparent 58%);
+}
+
+.btn-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-signal);
+  color: white;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  box-shadow: var(--shadow-signal);
+  transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-x:hover {
+  transform: translateY(-2px);
+  background: var(--color-signal-ink);
+}
+.btn-x-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in oklab, var(--color-gravity) 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-foundation) 78%, transparent);
+  color: var(--color-gravity);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  backdrop-filter: blur(16px);
+  transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+}
+.btn-x-secondary:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-signal);
+  color: var(--color-signal);
+}
+
+.field-x {
+  width: 100%;
+  border: 1px solid var(--color-hairline);
+  border-radius: 0.875rem;
+  background: color-mix(in oklab, var(--color-foundation) 94%, transparent);
+  padding: 0.7rem 0.9rem;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.field-x:focus {
+  border-color: var(--color-signal);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-signal) 14%, transparent);
+  outline: none;
+}
+
+.chip-x {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--color-hairline);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-soft) 75%, var(--color-foundation));
+  color: color-mix(in oklab, var(--color-gravity) 68%, transparent);
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.prose-x {
+  color: color-mix(in oklab, var(--color-gravity) 72%, transparent);
+  line-height: 1.8;
+}
+.prose-x p + p {
+  margin-top: 1rem;
+}
+
+.legal-page-x {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-hairline);
+}
+.legal-page-x::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 100% 0%, color-mix(in oklab, var(--color-signal) 9%, transparent), transparent 34rem),
+    linear-gradient(to right, color-mix(in oklab, var(--color-gravity) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-gravity) 5%, transparent) 1px, transparent 1px);
+  background-size: auto, 56px 56px, 56px 56px;
+  opacity: 0.85;
+  -webkit-mask-image: linear-gradient(#000, transparent 72%);
+  mask-image: linear-gradient(#000, transparent 72%);
+}
+
+.legal-copy-x {
+  position: relative;
+  border: 1px solid var(--color-hairline);
+  border-radius: 1.5rem;
+  background: color-mix(in oklab, var(--color-foundation) 94%, transparent);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+}
+@media (min-width: 1024px) {
+  .legal-copy-x {
+    padding: 2rem;
+  }
+}
+.legal-copy-x h1,
+.legal-copy-x h2,
+.legal-copy-x h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+.legal-copy-x h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.02;
+}
+.legal-copy-x h2 {
+  margin-top: 2.5rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+.legal-copy-x p,
+.legal-copy-x li {
+  color: color-mix(in oklab, var(--color-gravity) 68%, transparent);
+  line-height: 1.8;
+}
+
+.portal-card-x {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--color-foundation) 13%, transparent);
+  border-radius: 0.5rem;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--color-foundation) 8%, transparent), color-mix(in oklab, var(--color-foundation) 3%, transparent)),
+    radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--color-signal) 15%, transparent), transparent 56%);
+  box-shadow: 0 28px 70px -50px color-mix(in oklab, var(--color-signal) 60%, transparent);
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.portal-card-x:hover {
+  box-shadow: 0 28px 70px -46px color-mix(in oklab, var(--color-signal) 72%, transparent);
+}
+
+.portal-panel-x {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--color-foundation) 12%, transparent);
+  border-radius: 0.5rem;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--color-foundation) 6%, transparent), color-mix(in oklab, var(--color-foundation) 2.5%, transparent)),
+    radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--color-signal) 11%, transparent), transparent 58%);
+}
+
+.portal-field-x {
+  width: 100%;
+  border: 1px solid color-mix(in oklab, var(--color-foundation) 12%, transparent);
+  border-radius: 0.5rem;
+  background: color-mix(in oklab, var(--color-foundation) 5%, transparent);
+  color: var(--color-foundation);
+  padding: 0.7rem 0.85rem;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.portal-field-x:focus {
+  border-color: var(--color-signal);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-signal) 16%, transparent);
+  outline: none;
+}
+.portal-field-x:hover {
+  border-color: color-mix(in oklab, var(--color-foundation) 22%, transparent);
+  background: color-mix(in oklab, var(--color-foundation) 6.5%, transparent);
+}
+.portal-field-x::placeholder {
+  color: color-mix(in oklab, var(--color-foundation) 32%, transparent);
+}
+.portal-field-icon-x {
+  padding-left: 2.5rem;
+}
+.portal-field-x.w-48 {
+  width: 12rem;
+}
+.portal-field-x.flex-1 {
+  flex: 1 1 0%;
+  width: auto;
+  min-width: 0;
+}
+.portal-field-x.text-xs {
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.75rem;
+}
+
+.portal-btn-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.5rem;
+  border-radius: 0.5rem;
+  background: var(--color-signal);
+  color: white;
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  box-shadow: 0 18px 40px -28px color-mix(in oklab, var(--color-signal) 80%, transparent);
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.portal-btn-x:hover {
+  transform: translateY(-1px);
+  background: var(--color-signal-ink);
+  box-shadow: 0 22px 46px -28px color-mix(in oklab, var(--color-signal) 90%, transparent);
+}
+.portal-btn-x.text-xs {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+.portal-btn-secondary-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px solid color-mix(in oklab, var(--color-foundation) 13%, transparent);
+  min-height: 2.5rem;
+  border-radius: 0.5rem;
+  background: color-mix(in oklab, var(--color-foundation) 5%, transparent);
+  color: color-mix(in oklab, var(--color-foundation) 68%, transparent);
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+.portal-btn-secondary-x:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--color-signal) 60%, transparent);
+  color: var(--color-foundation);
+  background: color-mix(in oklab, var(--color-foundation) 8%, transparent);
+}
+.portal-btn-secondary-x.text-xs {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+.portal-chip-x {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid color-mix(in oklab, var(--color-foundation) 12%, transparent);
+  border-radius: 0.5rem;
+  background: color-mix(in oklab, var(--color-foundation) 5%, transparent);
+  color: color-mix(in oklab, var(--color-foundation) 62%, transparent);
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.portal-chip-x-active {
+  border-color: var(--color-signal);
+  background: var(--color-signal);
+  color: white;
+}
+
+.portal-stat-x {
+  display: grid;
+  min-height: 7rem;
+  align-content: space-between;
+  gap: 0.85rem;
+}
+
+.portal-meta-x {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-foundation) 44%, transparent);
+}
+
+.portal-divider-x {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in oklab, var(--color-foundation) 14%, transparent),
+    transparent
+  );
+}
+
+.portal-scrollbar-x {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--color-foundation) 20%, transparent) transparent;
+}
+
+.portal-scrollbar-x::-webkit-scrollbar {
+  height: 0.45rem;
+  width: 0.45rem;
+}
+
+.portal-scrollbar-x::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--color-foundation) 18%, transparent);
+  border-radius: 999px;
+}
+
+.portal-skeleton-x {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: color-mix(in oklab, var(--color-foundation) 6%, transparent);
+}
+
+.portal-skeleton-x::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--color-foundation) 10%, transparent),
+    transparent
+  );
+  animation: xc-sheen 1.5s ease-in-out infinite;
+}
+
 /* ---------------------------------------------------------------------------
    Stylish cards — signal-tinted corner wash + faded grid + lift/glow on hover.
    Swap `border border-hairline rounded ... hover:border-signal` for `card-x`.
@@ -207,7 +602,7 @@ body {
 .card-x {
   position: relative;
   overflow: hidden;
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   border: 1px solid var(--color-hairline);
   background-color: var(--color-foundation);
   background-image: radial-gradient(
@@ -215,6 +610,7 @@ body {
     color-mix(in oklab, var(--color-signal) 8%, transparent),
     transparent 55%
   );
+  box-shadow: var(--shadow-soft);
   transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.3s ease,
     box-shadow 0.35s ease;
 }

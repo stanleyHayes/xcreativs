@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight, Cpu, FlaskConical, Target } from "lucide-react";
 
 interface LabProduct {
   Name?: string;
@@ -29,49 +29,62 @@ export default function LabsDetailPage() {
   if (!product) return <div className="p-12 text-center">Product not found</div>;
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <Link href="/labs" className="inline-flex items-center gap-2 text-sm text-gravity/60 hover:text-signal mb-8">
-        <ArrowLeft className="w-4 h-4" /> All Labs Products
-      </Link>
-      <h1 className="text-3xl lg:text-5xl font-bold">{product.Name}</h1>
-      <p className="mt-2 text-xl text-signal font-medium">{product.Tagline}</p>
-
-      <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-2 space-y-10">
-          <section>
-            <h2 className="text-xl font-semibold mb-3">The Problem</h2>
-            <p className="text-gravity/70 leading-relaxed">{product.ProblemStatement}</p>
-          </section>
-          <section>
-            <h2 className="text-xl font-semibold mb-3">The Platform</h2>
-            <p className="text-gravity/70 leading-relaxed">{product.PlatformDescription}</p>
-          </section>
-          {product.TechnicalArchitectureOverview && (
-            <section>
-              <h2 className="text-xl font-semibold mb-3">Technical Architecture</h2>
-              <p className="text-gravity/70 leading-relaxed">{product.TechnicalArchitectureOverview}</p>
-            </section>
-          )}
-        </div>
-        <aside className="space-y-6">
-          <div className="border border-hairline rounded p-6">
-            <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-3">Sectors</p>
-            <div className="flex flex-wrap gap-2">
-              {product.Sectors?.map((s: string) => (
-                <span key={s} className="text-xs px-2 py-1 rounded bg-soft border border-hairline text-gravity/60">
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
-          <Link
-            href="/contact"
-            className="block text-center bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity"
-          >
-            Request Access
+    <main>
+      <section className="relative overflow-hidden border-b border-hairline bg-soft">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <div className="shell-x relative py-16 lg:py-24">
+          <Link href="/labs" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-gravity/60 transition-colors hover:text-signal">
+            <ArrowLeft className="h-4 w-4" /> All Labs Products
           </Link>
-        </aside>
-      </div>
+          <p className="kicker-x text-signal">Labs product</p>
+          <h1 className="font-display mt-3 max-w-4xl text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">
+            {product.Name}
+          </h1>
+          <p className="mt-4 max-w-2xl text-xl font-medium text-signal">{product.Tagline}</p>
+        </div>
+      </section>
+
+      <section className="border-b border-hairline">
+        <div className="shell-x grid grid-cols-1 gap-10 py-16 lg:grid-cols-3 lg:py-20">
+          <div className="space-y-6 lg:col-span-2">
+            <StoryPanel icon={Target} title="The Problem" content={product.ProblemStatement} />
+            <StoryPanel icon={FlaskConical} title="The Platform" content={product.PlatformDescription} />
+            {product.TechnicalArchitectureOverview && (
+              <StoryPanel icon={Cpu} title="Technical Architecture" content={product.TechnicalArchitectureOverview} />
+            )}
+          </div>
+
+          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+            <div className="panel-x p-6">
+              <p className="kicker-x mb-4">Sectors</p>
+              <div className="flex flex-wrap gap-2">
+                {product.Sectors?.map((s: string) => (
+                  <span key={s} className="chip-x">
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <Link href="/contact" className="btn-x w-full">
+              Request Access <ArrowRight className="h-4 w-4" />
+            </Link>
+          </aside>
+        </div>
+      </section>
     </main>
+  );
+}
+
+function StoryPanel({ icon: Icon, title, content }: { icon: React.ElementType; title: string; content?: string }) {
+  return (
+    <section className="panel-x p-6 lg:p-8">
+      <div className="flex items-center gap-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-hairline bg-foundation text-signal">
+          <Icon className="h-5 w-5" />
+        </span>
+        <h2 className="font-display text-2xl font-semibold tracking-tight">{title}</h2>
+      </div>
+      <p className="prose-x mt-5">{content}</p>
+    </section>
   );
 }

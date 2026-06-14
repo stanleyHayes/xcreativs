@@ -60,15 +60,15 @@ export default function ApplyRolePage() {
 
   if (submitted) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-foundation">
-        <div className="text-center px-6">
-          <CheckCircle className="w-12 h-12 text-signal mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Application Received</h1>
-          <p className="text-gravity/60 max-w-md mx-auto">
+      <main className="shell-x flex min-h-[80vh] items-center justify-center py-20">
+        <div className="panel-x max-w-lg p-8 text-center lg:p-10">
+          <CheckCircle className="mx-auto mb-5 h-12 w-12 text-signal" />
+          <h1 className="font-display text-3xl font-semibold tracking-tight">Application Received</h1>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-gravity/60">
             Thank you for applying to <span className="font-medium">{role.Title}</span>. Our team reviews every
             application personally and will be in touch if there is a fit.
           </p>
-          <Link href="/careers" className="mt-6 inline-block text-signal font-medium hover:underline">
+          <Link href="/careers" className="btn-x-secondary mt-7">
             Back to all roles
           </Link>
         </div>
@@ -77,17 +77,17 @@ export default function ApplyRolePage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
+    <main className="shell-x py-20">
       <Link
         href={`/careers/${role.Slug}`}
-        className="inline-flex items-center gap-2 text-sm text-gravity/60 hover:text-signal mb-8"
+        className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-gravity/60 transition-colors hover:text-signal"
       >
         <ArrowLeft className="w-4 h-4" /> Back to role
       </Link>
 
-      <div className="max-w-2xl">
+      <div className="panel-x max-w-3xl p-6 lg:p-8">
         <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-2">§ 05 · Careers</p>
-        <h1 className="text-3xl lg:text-5xl font-bold">Apply: {role.Title}</h1>
+        <h1 className="font-display text-3xl font-semibold tracking-tight lg:text-5xl">Apply: {role.Title}</h1>
         <p className="mt-2 text-gravity/60">
           {role.Department} · {role.Location || "Remote"} · {role.EmploymentType}
         </p>
@@ -98,7 +98,7 @@ export default function ApplyRolePage() {
             value={form.applicant_name}
             onChange={(e) => setForm({ ...form, applicant_name: e.target.value })}
             placeholder="Full Name *"
-            className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+            className="field-x"
           />
           <input
             required
@@ -106,13 +106,13 @@ export default function ApplyRolePage() {
             value={form.applicant_email}
             onChange={(e) => setForm({ ...form, applicant_email: e.target.value })}
             placeholder="Email *"
-            className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+            className="field-x"
           />
           <input
             value={form.applicant_phone}
             onChange={(e) => setForm({ ...form, applicant_phone: e.target.value })}
             placeholder="Phone"
-            className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+            className="field-x"
           />
           <div>
             <label className="block text-xs text-gravity/60 mb-1">Résumé / CV</label>
@@ -129,20 +129,20 @@ export default function ApplyRolePage() {
             value={form.portfolio_url}
             onChange={(e) => setForm({ ...form, portfolio_url: e.target.value })}
             placeholder="Portfolio URL"
-            className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+            className="field-x"
           />
           <input
             type="url"
             value={form.linkedin_url}
             onChange={(e) => setForm({ ...form, linkedin_url: e.target.value })}
             placeholder="LinkedIn URL"
-            className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+            className="field-x"
           />
           <textarea
             value={form.cover_letter}
             onChange={(e) => setForm({ ...form, cover_letter: e.target.value })}
             placeholder="Why this role? Tell us about relevant work you have shipped."
-            className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation h-32"
+            className="field-x h-32"
           />
 
           {error && <p className="text-sm text-red-500">{error}</p>}
@@ -150,7 +150,7 @@ export default function ApplyRolePage() {
           <button
             type="submit"
             disabled={submitting}
-            className="bg-signal text-white px-6 py-2 rounded text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="btn-x disabled:opacity-50"
           >
             {submitting ? "Submitting..." : "Submit Application"}
           </button>

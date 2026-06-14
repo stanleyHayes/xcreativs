@@ -18,7 +18,6 @@ async function slugsFrom(path: string): Promise<string[]> {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://xcreativs.com";
-  const locales = ["en", "fr"];
 
   const staticRoutes = [
     "",
@@ -67,17 +66,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const allRoutes = [...staticRoutes, ...dynamicRoutes];
 
-  const entries: MetadataRoute.Sitemap = [];
-  for (const locale of locales) {
-    for (const route of allRoutes) {
-      entries.push({
-        url: `${baseUrl}/${locale}${route}`,
-        lastModified: new Date(),
-        changeFrequency: route === "" ? "daily" : "weekly",
-        priority: route === "" ? 1.0 : 0.7,
-      });
-    }
-  }
+  // One entry per route. The default locale (en) is served UNPREFIXED under
+  // localePrefix:"as-needed", so the canonical `url` must be prefix-less — a
+  // `/en/...` url would 307-redirect. hreflang alternates link en <-> fr so
+  // crawlers index both language variants (x-default points at English).
+  const lastModified = new Date();
+  const entries: MetadataRoute.Sitemap = allRoutes.map((route) => {
+    const enUrl = `${baseUrl}${route}`;
+    const frUrl = `${baseUrl}/fr${route}`;
+    return {
+      url: enUrl,
+      lastModified,
+      changeFrequency: route === "" ? "daily" : "weekly",
+      priority: route === "" ? 1.0 : 0.7,
+      alternates: {
+        languages: {
+          en: enUrl,
+          fr: frUrl,
+          "x-default": enUrl,
+        },
+      },
+    };
+  });
 
   return entries;
 }

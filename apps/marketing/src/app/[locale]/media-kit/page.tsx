@@ -56,7 +56,7 @@ export default function MediaKitPage() {
         description="Official brand assets for press, partners, and collaborators. Download and use in accordance with our brand guidelines."
         crumbs={[{ label: "Home", href: "/" }, { label: "Media Kit" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         <div className="mt-12 space-y-10">
         {Object.entries(grouped).map(([type, items]) => (
           <section key={type}>
@@ -70,9 +70,9 @@ export default function MediaKitPage() {
                   key={asset.ID}
                   href={asset.DownloadURL}
                   download
-                  className="flex items-center gap-4 border border-hairline rounded-lg p-4 hover:border-signal transition-colors group"
+                  className="card-x group flex items-center gap-4 p-4"
                 >
-                  <div className="w-10 h-10 bg-soft rounded flex items-center justify-center text-gravity/40 group-hover:text-signal transition-colors">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-soft text-gravity/40 transition-colors group-hover:text-signal">
                     <Download className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">

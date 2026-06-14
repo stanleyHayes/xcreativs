@@ -53,7 +53,15 @@ import type {
   WebinarsResponse,
 } from "./types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
+// In the browser, use a RELATIVE base ("") so requests hit the app's own origin
+// and flow through the Next.js rewrite proxy (`/api/* -> backend`). That keeps
+// API calls same-origin — no CORS — in dev and on Vercel (the rewrite proxies
+// to the Render backend). On the server (SSR/RSC) there is no origin, so fall
+// back to the absolute backend URL.
+const API_URL =
+  typeof window === "undefined"
+    ? process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"
+    : "";
 
 function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -139,7 +147,15 @@ async function fetchAPI<T = unknown>(path: string, options?: RequestInit, retry 
         return fetchAPI<T>(path, options, false);
       } else {
         clearTokens();
-        window.location.href = "/login";
+        // Origin-aware: login lives on the portal app. On the portal,
+        // NEXT_PUBLIC_PORTAL_URL is unset → relative "/login" (same origin).
+        // On marketing it points at the portal so a 401 lands on portal login.
+        // Preserve a non-default locale segment (e.g. /fr) so a French user isn't
+        // dropped onto the English /login. Default locale (en) is unprefixed.
+        const localeMatch =
+          typeof window !== "undefined" ? window.location.pathname.match(/^\/(fr)(?:\/|$)/) : null;
+        const localePrefix = localeMatch ? `/${localeMatch[1]}` : "";
+        window.location.href = `${process.env.NEXT_PUBLIC_PORTAL_URL || ""}${localePrefix}/login`;
         throw new Error("Session expired");
       }
     } else {

@@ -26,11 +26,38 @@ const body = Hanken_Grotesk({
   variable: "--font-hanken",
 });
 
-export const metadata: Metadata = {
-  title: "XCreativs Technologies — Intelligent Digital Systems",
-  description:
-    "We build intelligent digital systems for governments and enterprises. National-scale platforms, AI integration, and strategic advisory.",
-};
+const SITE_URL = "https://xcreativs.com";
+const TITLE = "XCreativs Technologies — Intelligent Digital Systems";
+const DESCRIPTION =
+  "We build intelligent digital systems for governments and enterprises. National-scale platforms, AI integration, and strategic advisory.";
+
+// Locale-aware so OpenGraph reports the right `locale`/`alternateLocale` and
+// `metadataBase` resolves relative OG/canonical URLs. Per-route hreflang is
+// emitted by next-intl's middleware as an HTTP `Link:` header (correct for
+// every path) — we deliberately don't set `alternates.languages` here because
+// a layout can't see the pathname and would point all sub-pages at the root.
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: TITLE,
+    description: DESCRIPTION,
+    openGraph: {
+      type: "website",
+      siteName: "XCreativs Technologies",
+      title: TITLE,
+      description: DESCRIPTION,
+      url: locale === "fr" ? `${SITE_URL}/fr` : SITE_URL,
+      locale: locale === "fr" ? "fr_FR" : "en_US",
+      alternateLocale: locale === "fr" ? "en_US" : "fr_FR",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: TITLE,
+      description: DESCRIPTION,
+    },
+  };
+}
 
 export default async function LocaleLayout({
   children,

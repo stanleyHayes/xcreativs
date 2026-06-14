@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowUpRight,
@@ -34,7 +34,10 @@ type FooterColumn = { title: string; icon: LucideIcon; links: FooterLink[] };
 export default function Footer() {
   const t = useTranslations("footer");
   const n = useTranslations("nav");
+  const locale = useLocale();
   const year = new Date().getFullYear();
+  const localizeHref = (href: string) =>
+    locale === "en" ? href : `/${locale}${href === "/" ? "" : href}`;
 
   const columns: FooterColumn[] = [
     {
@@ -101,7 +104,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-x-8 gap-y-12 pb-16 pt-16 lg:grid-cols-12">
           {/* Brand block */}
           <div className="col-span-2 lg:col-span-4 lg:pr-10">
-            <Link href="/" className="group flex items-center gap-2.5">
+            <Link href={localizeHref("/")} className="group flex items-center gap-2.5">
               <Image src="/logo.svg" alt="XCreativs" width={34} height={34} className="h-[34px] w-[34px]" />
               <span className="font-display text-2xl font-semibold tracking-tight">XCreativs</span>
             </Link>
@@ -119,7 +122,7 @@ export default function Footer() {
             </div>
 
             <Link
-              href="/contact"
+              href={localizeHref("/contact")}
               className="mt-7 inline-flex items-center gap-1.5 rounded-full bg-[#f3f1ea] px-4 py-2 text-sm font-semibold text-[#0b0b0d] transition-transform hover:-translate-y-0.5 hover:bg-[#5b93ff] hover:text-white"
             >
               {t("contact")}
@@ -142,7 +145,7 @@ export default function Footer() {
                     return (
                       <li key={l.href}>
                         <Link
-                          href={l.href}
+                          href={localizeHref(l.href)}
                           className="group/link flex items-center gap-2.5 text-sm text-[#f3f1ea]/65 transition-colors hover:text-[#5b93ff]"
                         >
                           <LinkIcon className="h-4 w-4 text-[#f3f1ea]/30 transition-colors group-hover/link:text-[#5b93ff]" />

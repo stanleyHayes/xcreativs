@@ -14,6 +14,10 @@ function errorMessage(err: unknown): string | undefined {
   return undefined;
 }
 
+const FIELD_CLASS = "field-x";
+const FORM_CARD_CLASS = "panel-x max-w-xl space-y-4 p-6 lg:p-8";
+const WIDE_FORM_CARD_CLASS = "panel-x max-w-3xl space-y-5 p-6 lg:p-8";
+
 interface EstimateComponent {
   name: string;
   phase: string;
@@ -39,8 +43,8 @@ export default function ContactPage() {
         description="Engagement is by qualification, not by enquiry. Serious prospects: begin with the diagnostic."
         crumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
-      <div className="mt-10 flex gap-4 border-b border-hairline">
+      <main className="shell-x py-16">
+      <div className="panel-x mt-10 flex flex-wrap gap-2 p-2">
         {[
           { key: "diagnostic" as const, label: "Diagnostic", icon: FileText },
           { key: "estimate" as const, label: "Scope Estimator", icon: Calculator },
@@ -50,10 +54,10 @@ export default function ContactPage() {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`flex items-center gap-2 pb-3 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors ${
               tab === t.key
-                ? "border-signal text-signal"
-                : "border-transparent text-gravity/60 hover:text-gravity"
+                ? "bg-signal text-white shadow-lg shadow-signal/20"
+                : "text-gravity/60 hover:bg-soft hover:text-gravity"
             }`}
           >
             <t.icon className="w-4 h-4" />
@@ -104,7 +108,7 @@ function DiagnosticForm() {
           href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/diagnostics/${id}/summary.pdf`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-6 inline-flex items-center gap-2 bg-signal text-white px-5 py-2.5 rounded text-sm font-medium hover:opacity-90 transition-opacity"
+          className="btn-x mt-6"
         >
           Download summary (PDF)
         </a>
@@ -113,22 +117,22 @@ function DiagnosticForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-xl space-y-4">
+    <form onSubmit={handleSubmit} className={FORM_CARD_CLASS}>
       <div>
         <label className="block text-sm font-medium mb-1">Email</label>
-        <input name="email" type="email" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+        <input name="email" type="email" required className={FIELD_CLASS} />
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">Name</label>
-        <input name="name" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+        <input name="name" required className={FIELD_CLASS} />
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">Organization</label>
-        <input name="organization" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+        <input name="organization" required className={FIELD_CLASS} />
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">Sector</label>
-        <select name="sector" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal">
+        <select name="sector" required className={FIELD_CLASS}>
           <option value="">Select...</option>
           <option value="government">Government</option>
           <option value="health">Health</option>
@@ -140,7 +144,7 @@ function DiagnosticForm() {
           <option value="ngo_development">NGO & Development</option>
         </select>
       </div>
-      <button type="submit" className="bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity">
+      <button type="submit" className="btn-x">
         Start Diagnostic
       </button>
     </form>
@@ -235,23 +239,23 @@ function EstimateForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl space-y-5">
+    <form onSubmit={handleSubmit} className={WIDE_FORM_CARD_CLASS}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Email</label>
-          <input name="email" type="email" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+          <input name="email" type="email" required className={FIELD_CLASS} />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Name</label>
-          <input name="name" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+          <input name="name" required className={FIELD_CLASS} />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Organization</label>
-          <input name="organization" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+          <input name="organization" required className={FIELD_CLASS} />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Service Line</label>
-          <select name="service_line" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal">
+          <select name="service_line" required className={FIELD_CLASS}>
             <option value="">Select...</option>
             <option value="digital_systems_audit">Digital Systems Audit</option>
             <option value="enterprise_government_systems">Enterprise & Government Systems</option>
@@ -267,7 +271,7 @@ function EstimateForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Integrations</label>
-            <select name="integrations" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal">
+            <select name="integrations" className={FIELD_CLASS}>
               <option value="0">None</option>
               <option value="1">1–3</option>
               <option value="4">4–10</option>
@@ -276,7 +280,7 @@ function EstimateForm() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Data Volume</label>
-            <select name="data_volume" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal">
+            <select name="data_volume" className={FIELD_CLASS}>
               <option value="small">Small</option>
               <option value="medium">Medium</option>
               <option value="large">Large</option>
@@ -285,7 +289,7 @@ function EstimateForm() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Expected Users</label>
-            <select name="user_count" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal">
+            <select name="user_count" className={FIELD_CLASS}>
               <option value="0">&lt; 100</option>
               <option value="100">100–1,000</option>
               <option value="1000">1,000–10,000</option>
@@ -294,7 +298,7 @@ function EstimateForm() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Compliance</label>
-            <select name="compliance" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal">
+            <select name="compliance" className={FIELD_CLASS}>
               <option value="none">None</option>
               <option value="standard">Standard (SOC2)</option>
               <option value="regulatory">Regulatory (HIPAA, GDPR)</option>
@@ -303,7 +307,7 @@ function EstimateForm() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">AI Needs</label>
-            <select name="ai_needs" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal">
+            <select name="ai_needs" className={FIELD_CLASS}>
               <option value="none">None</option>
               <option value="basic">Basic (classification, search)</option>
               <option value="advanced">Advanced (LLM, generation)</option>
@@ -311,7 +315,7 @@ function EstimateForm() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Timeline Urgency</label>
-            <select name="timeline_urgency" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal">
+            <select name="timeline_urgency" className={FIELD_CLASS}>
               <option value="standard">Standard</option>
               <option value="accelerated">Accelerated</option>
               <option value="critical">Critical</option>
@@ -320,7 +324,7 @@ function EstimateForm() {
         </div>
       </div>
 
-      <button type="submit" disabled={submitting} className="bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50">
+      <button type="submit" disabled={submitting} className="btn-x disabled:opacity-50">
         {submitting ? "Calculating..." : "Get Estimate"}
       </button>
     </form>
@@ -367,28 +371,28 @@ function BookingForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-xl space-y-4">
+    <form onSubmit={handleSubmit} className={FORM_CARD_CLASS}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Email *</label>
-          <input name="email" type="email" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+          <input name="email" type="email" required className={FIELD_CLASS} />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Organization</label>
-          <input name="organization" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+          <input name="organization" className={FIELD_CLASS} />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">First Name</label>
-          <input name="first_name" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+          <input name="first_name" className={FIELD_CLASS} />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Last Name</label>
-          <input name="last_name" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+          <input name="last_name" className={FIELD_CLASS} />
         </div>
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">Topic *</label>
-        <select name="topic" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal">
+        <select name="topic" required className={FIELD_CLASS}>
           <option value="">Select...</option>
           <option value="discovery">Discovery Call (30 min)</option>
           <option value="advisory">Advisory Session (60 min)</option>
@@ -399,11 +403,11 @@ function BookingForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Preferred Date</label>
-          <input name="preferred_date" type="date" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+          <input name="preferred_date" type="date" className={FIELD_CLASS} />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Preferred Time</label>
-          <select name="preferred_time" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal">
+          <select name="preferred_time" className={FIELD_CLASS}>
             <option value="">No preference</option>
             <option value="morning">Morning (08:00–12:00 GMT)</option>
             <option value="afternoon">Afternoon (12:00–17:00 GMT)</option>
@@ -411,7 +415,7 @@ function BookingForm() {
           </select>
         </div>
       </div>
-      <button type="submit" className="bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity">
+      <button type="submit" className="btn-x">
         Request Booking
       </button>
     </form>
@@ -446,16 +450,16 @@ function NewsletterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-xl space-y-4">
+    <form onSubmit={handleSubmit} className={FORM_CARD_CLASS}>
       <div>
         <label className="block text-sm font-medium mb-1">Email</label>
-        <input name="email" type="email" required className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+        <input name="email" type="email" required className={FIELD_CLASS} />
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">First Name</label>
-        <input name="first_name" className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal" />
+        <input name="first_name" className={FIELD_CLASS} />
       </div>
-      <button type="submit" className="bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity">
+      <button type="submit" className="btn-x">
         Subscribe
       </button>
     </form>

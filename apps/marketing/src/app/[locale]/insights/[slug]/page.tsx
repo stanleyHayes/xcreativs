@@ -49,21 +49,21 @@ export default function InsightDetailPage() {
   if (!insight) return <div className="p-12 text-center">Insight not found</div>;
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
+    <main className="shell-x py-20">
       <Link href="/insights" className="inline-flex items-center gap-2 text-sm text-gravity/60 hover:text-signal mb-8">
         <ArrowLeft className="w-4 h-4" /> All Insights
       </Link>
       <p className="text-xs font-medium uppercase tracking-wider text-signal mb-2">
         {insight.ContentType}
       </p>
-      <h1 className="text-3xl lg:text-5xl font-bold max-w-4xl">{insight.Title}</h1>
+      <h1 className="font-display max-w-4xl text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">{insight.Title}</h1>
       <p className="mt-4 text-gravity/60">
         By {insight.AuthorName}{insight.AuthorTitle ? `, ${insight.AuthorTitle}` : ""}
         {insight.PublishedAt ? ` · ${new Date(insight.PublishedAt).toLocaleDateString()}` : ""}
       </p>
 
       {insight.IsGated ? (
-        <div className="mt-12 border border-hairline rounded p-12 text-center bg-soft">
+        <div className="panel-x-soft mt-12 p-8 text-center lg:p-12">
           {downloadUrl ? (
             <>
               <Download className="w-8 h-8 text-signal mx-auto mb-4" />
@@ -75,7 +75,7 @@ export default function InsightDetailPage() {
                 href={downloadUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-2 bg-signal text-white px-6 py-2 rounded text-sm font-medium hover:opacity-90 transition-opacity"
+                className="btn-x mt-6"
               >
                 <Download className="w-4 h-4" /> Download {insight.ContentType}
               </a>
@@ -93,7 +93,7 @@ export default function InsightDetailPage() {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="First name (optional)"
-                  className="w-full border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+                  className="field-x"
                 />
                 <div className="flex gap-2">
                   <input
@@ -102,12 +102,12 @@ export default function InsightDetailPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="flex-1 border border-hairline rounded px-4 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+                    className="field-x flex-1"
                   />
                   <button
                     type="submit"
                     disabled={requesting}
-                    className="bg-signal text-white px-4 py-2 rounded text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 whitespace-nowrap"
+                    className="btn-x whitespace-nowrap disabled:opacity-50"
                   >
                     {requesting ? "..." : "Request Access"}
                   </button>
@@ -118,7 +118,7 @@ export default function InsightDetailPage() {
           )}
         </div>
       ) : (
-        <article className="mt-12 max-w-3xl prose prose-lg text-gravity/80">
+        <article className="panel-x prose-x mt-12 max-w-4xl p-6 lg:p-10">
           <p className="whitespace-pre-line leading-relaxed">{insight.Body}</p>
         </article>
       )}

@@ -56,17 +56,19 @@ export default function WebinarsPage() {
         description="Live sessions and recorded briefings on platform economics, government digital readiness, and intelligent systems architecture."
         crumbs={[{ label: "Home", href: "/" }, { label: "Webinars" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         {/* Status filters */}
-      <div className="mt-8 flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2">
         {["", "upcoming", "recorded"].map((s) => {
           const cfg = s ? statusConfig[s] : { label: "All", color: "", bg: "" };
           return (
             <button
               key={s || "all"}
               onClick={() => setStatusFilter(s)}
-              className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-                statusFilter === s ? "bg-signal text-white" : "bg-soft text-gravity/60 hover:bg-hairline"
+              className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                statusFilter === s
+                  ? "border-signal bg-signal text-white shadow-lg shadow-signal/15"
+                  : "border-hairline bg-foundation text-gravity/60 hover:border-signal hover:text-signal"
               }`}
             >
               {cfg.label}
@@ -115,7 +117,7 @@ export default function WebinarsPage() {
                       href={w.RecordingURL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-signal text-white text-sm font-medium rounded hover:bg-signal/90 transition-colors"
+                      className="btn-x"
                     >
                       <Video className="w-4 h-4" /> Watch Recording
                     </a>
@@ -167,7 +169,7 @@ function RegisterButton({ slug }: { slug: string }) {
     return (
       <button
         onClick={() => setShowForm(true)}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-signal text-white text-sm font-medium rounded hover:bg-signal/90 transition-colors"
+        className="btn-x"
       >
         <Calendar className="w-4 h-4" /> Register
       </button>
@@ -175,14 +177,14 @@ function RegisterButton({ slug }: { slug: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2 w-64">
+    <form onSubmit={handleSubmit} className="panel-x w-72 space-y-3 p-4">
       <input
         type="email"
         placeholder="Email"
         required
         value={form.email}
         onChange={(e) => setForm({ ...form, email: e.target.value })}
-        className="w-full px-3 py-2 border border-hairline rounded text-sm focus:outline-none focus:border-signal"
+        className="field-x"
       />
       <div className="flex gap-2">
         <input
@@ -190,14 +192,14 @@ function RegisterButton({ slug }: { slug: string }) {
           placeholder="First name"
           value={form.first_name}
           onChange={(e) => setForm({ ...form, first_name: e.target.value })}
-          className="flex-1 px-3 py-2 border border-hairline rounded text-sm focus:outline-none focus:border-signal"
+          className="field-x min-w-0"
         />
         <input
           type="text"
           placeholder="Last name"
           value={form.last_name}
           onChange={(e) => setForm({ ...form, last_name: e.target.value })}
-          className="flex-1 px-3 py-2 border border-hairline rounded text-sm focus:outline-none focus:border-signal"
+          className="field-x min-w-0"
         />
       </div>
       <input
@@ -205,20 +207,20 @@ function RegisterButton({ slug }: { slug: string }) {
         placeholder="Organization"
         value={form.organization}
         onChange={(e) => setForm({ ...form, organization: e.target.value })}
-        className="w-full px-3 py-2 border border-hairline rounded text-sm focus:outline-none focus:border-signal"
+        className="field-x"
       />
       <div className="flex gap-2">
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 px-3 py-2 bg-signal text-white text-sm font-medium rounded hover:bg-signal/90 disabled:opacity-50 transition-colors"
+          className="btn-x flex-1 disabled:opacity-50"
         >
           {submitting ? "..." : "Confirm"}
         </button>
         <button
           type="button"
           onClick={() => setShowForm(false)}
-          className="px-3 py-2 border border-hairline rounded text-sm hover:bg-soft transition-colors"
+          className="btn-x-secondary"
         >
           Cancel
         </button>

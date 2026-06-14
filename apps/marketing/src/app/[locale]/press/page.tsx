@@ -41,7 +41,7 @@ export default function PressPage() {
         description="Press releases, media coverage, and brand assets."
         crumbs={[{ label: "Home", href: "/" }, { label: "Press & Newsroom" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
       <div className="mt-12 space-y-8">
         {press.map((p) => (
           <article key={p.Slug} className="border-b border-hairline pb-8">

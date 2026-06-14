@@ -41,7 +41,7 @@ export default async function IndustriesPage() {
         description="Sector-specific digital systems. We do not claim to serve every industry — only the ones where we have depth."
         crumbs={[{ label: "Home", href: "/" }, { label: "Industries" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {industries.length === 0 && (
           <p className="text-center text-gravity/40 py-12 col-span-full">No industry pages available yet.</p>

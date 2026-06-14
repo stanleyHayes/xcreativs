@@ -71,13 +71,13 @@ export default function AudioBriefDetailPage() {
   if (!brief) return <div className="p-12 text-center">Audio brief not found.</div>;
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
+    <main className="shell-x py-20">
       <Link href="/audio-briefs" className="inline-flex items-center gap-2 text-sm text-gravity/60 hover:text-signal transition-colors mb-8">
         <ArrowLeft className="w-4 h-4" /> Back to Audio Briefs
       </Link>
 
-      <article className="max-w-3xl">
-        <h1 className="text-3xl lg:text-4xl font-bold">{brief.Title}</h1>
+      <article className="panel-x max-w-4xl p-6 lg:p-10">
+        <h1 className="font-display text-4xl font-semibold leading-tight tracking-tight lg:text-5xl">{brief.Title}</h1>
         <p className="mt-2 text-lg text-gravity/60">{brief.Summary}</p>
         <div className="mt-4 flex items-center gap-4 text-sm text-gravity/40">
           <span className="flex items-center gap-1">
@@ -90,7 +90,7 @@ export default function AudioBriefDetailPage() {
         </div>
 
         {/* Audio Player */}
-        <div className="mt-8 bg-gravity rounded-xl p-6 text-foundation">
+        <div className="portal-card-x mt-8 rounded-2xl p-6 text-foundation">
           <audio
             ref={audioRef}
             src={brief.AudioURL}
@@ -134,7 +134,7 @@ export default function AudioBriefDetailPage() {
         {brief.Transcript && (
           <div className="mt-12">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-gravity/40 mb-4">Transcript</h2>
-            <div className="prose prose-lg max-w-none text-gravity/80 whitespace-pre-line">
+            <div className="prose-x max-w-none whitespace-pre-line">
               {brief.Transcript}
             </div>
           </div>

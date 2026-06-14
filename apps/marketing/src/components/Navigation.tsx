@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
+import { Link as LocaleLink } from "@xc/i18n/navigation";
 import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -26,6 +27,7 @@ import {
   Users,
   Handshake,
   Network,
+  LogIn,
 } from "lucide-react";
 import SearchOverlay from "./SearchOverlay";
 import { useTheme } from "@xc/ui/ThemeProvider";
@@ -81,7 +83,11 @@ export default function Navigation() {
   ];
 
   const otherLocale = locale === "en" ? "fr" : "en";
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
+  const pathnameWithoutLocale = pathname.replace(/^\/(en|fr)(?=\/|$)/, "") || "/";
+  const localizeHref = (href: string) =>
+    locale === "en" ? href : `/${locale}${href === "/" ? "" : href}`;
+  const isActive = (href: string) =>
+    pathnameWithoutLocale === href || pathnameWithoutLocale.startsWith(href + "/");
   const groupActive = (g: MenuGroup) => g.items.some((i) => isActive(i.href));
 
   return (
@@ -92,7 +98,7 @@ export default function Navigation() {
           <div className="flex h-[68px] items-center justify-between gap-6">
             {/* Wordmark */}
             <Link
-              href="/"
+              href={localizeHref("/")}
               onClick={() => setOpen(false)}
               className="group flex shrink-0 items-center gap-2.5"
             >
@@ -126,8 +132,8 @@ export default function Navigation() {
                     aria-expanded={openMenu === g.key}
                     className={`flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
                       groupActive(g) || openMenu === g.key
-                        ? "text-signal"
-                        : "text-gravity/80 hover:text-gravity"
+                        ? "bg-signal/10 text-signal"
+                        : "text-gravity/75 hover:bg-soft hover:text-gravity"
                     }`}
                   >
                     {g.label}
@@ -150,7 +156,7 @@ export default function Navigation() {
                             return (
                               <Link
                                 key={i.href}
-                                href={i.href}
+                                href={localizeHref(i.href)}
                                 onClick={() => setOpenMenu(null)}
                                 className="group/item flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-soft"
                               >
@@ -175,9 +181,9 @@ export default function Navigation() {
               ))}
 
               <Link
-                href="/work"
+                href={localizeHref("/work")}
                 className={`rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
-                  isActive("/work") ? "text-signal" : "text-gravity/80 hover:text-gravity"
+                  isActive("/work") ? "bg-signal/10 text-signal" : "text-gravity/75 hover:bg-soft hover:text-gravity"
                 }`}
               >
                 {t("work")}
@@ -210,15 +216,24 @@ export default function Navigation() {
                 <option value="GHS">GHS</option>
                 <option value="EUR">EUR</option>
               </select>
-              <a
-                href={`/${otherLocale}${pathname}`}
+              <LocaleLink
+                href={pathnameWithoutLocale}
+                locale={otherLocale}
+                aria-label={`Switch language to ${otherLocale === "fr" ? "French" : "English"}`}
                 className="rounded-full px-2 py-1 text-xs font-semibold uppercase tracking-wider text-mist transition-colors hover:text-signal"
               >
                 {otherLocale}
-              </a>
+              </LocaleLink>
               <Link
-                href="/contact"
-                className="ml-2 inline-flex items-center gap-1.5 rounded-full bg-gravity px-4 py-2 text-sm font-semibold text-foundation transition-transform hover:-translate-y-0.5 hover:bg-signal"
+                href={localizeHref("/login")}
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium text-gravity/70 transition-colors hover:text-signal"
+              >
+                <LogIn className="h-4 w-4" />
+                {t("signIn")}
+              </Link>
+              <Link
+                href={localizeHref("/contact")}
+                className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-gravity px-4 py-2 text-sm font-semibold text-foundation transition-transform hover:-translate-y-0.5 hover:bg-signal"
               >
                 {t("contact")}
                 <ArrowUpRight className="h-4 w-4" />
@@ -242,7 +257,7 @@ export default function Navigation() {
         <div className="max-h-[calc(100vh-71px)] overflow-y-auto border-b border-hairline bg-foundation lg:hidden">
           <div className="mx-auto max-w-[1440px] px-5 py-5">
             <Link
-              href="/work"
+              href={localizeHref("/work")}
               onClick={() => setOpen(false)}
               className="block rounded-xl px-3 py-3 text-base font-semibold hover:bg-soft"
             >
@@ -259,7 +274,7 @@ export default function Navigation() {
                     return (
                       <Link
                         key={i.href}
-                        href={i.href}
+                        href={localizeHref(i.href)}
                         onClick={() => setOpen(false)}
                         className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-soft"
                       >
@@ -288,17 +303,37 @@ export default function Navigation() {
                 <button onClick={toggleTheme} aria-label="Toggle theme" className="rounded-full p-2 hover:bg-soft">
                   {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                 </button>
-                <a
-                  href={`/${otherLocale}${pathname}`}
+                <LocaleLink
+                  href={pathnameWithoutLocale}
+                  locale={otherLocale}
+                  aria-label={`Switch language to ${otherLocale === "fr" ? "French" : "English"}`}
                   className="rounded-full px-2 py-1 text-xs font-semibold uppercase tracking-wider text-mist"
                 >
                   {otherLocale}
-                </a>
+                </LocaleLink>
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
+                  aria-label="Currency"
+                  className="cursor-pointer rounded-full bg-transparent px-2 py-1 text-xs font-medium text-mist focus:outline-none"
+                >
+                  <option value="USD">USD</option>
+                  <option value="GHS">GHS</option>
+                  <option value="EUR">EUR</option>
+                </select>
               </div>
               <Link
-                href="/contact"
+                href={localizeHref("/login")}
                 onClick={() => setOpen(false)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-gravity px-4 py-2.5 text-sm font-semibold text-foundation"
+                className="inline-flex items-center justify-center gap-1.5 rounded-full border border-hairline px-4 py-2.5 text-sm font-medium text-gravity transition-colors hover:border-signal hover:text-signal"
+              >
+                <LogIn className="h-4 w-4" />
+                {t("signIn")}
+              </Link>
+              <Link
+                href={localizeHref("/contact")}
+                onClick={() => setOpen(false)}
+                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gravity px-4 py-2.5 text-sm font-semibold text-foundation"
               >
                 {t("contact")}
                 <ArrowUpRight className="h-4 w-4" />

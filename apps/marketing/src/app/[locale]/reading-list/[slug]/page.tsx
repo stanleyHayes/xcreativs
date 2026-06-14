@@ -46,12 +46,12 @@ export default function ReadingListDetailPage() {
   if (!item) return <div className="p-12 text-center">Reading list item not found.</div>;
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
+    <main className="shell-x py-20">
       <Link href="/reading-list" className="inline-flex items-center gap-2 text-sm text-gravity/60 hover:text-signal transition-colors mb-8">
         <ArrowLeft className="w-4 h-4" /> Back to Reading List
       </Link>
 
-      <article className="max-w-3xl">
+      <article className="panel-x max-w-4xl p-6 lg:p-10">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-xs font-medium uppercase tracking-wider text-signal">
             {(item.Category ? categoryLabels[item.Category] : undefined) || item.Category}
@@ -63,7 +63,7 @@ export default function ReadingListDetailPage() {
           )}
         </div>
 
-        <h1 className="text-3xl lg:text-4xl font-bold">{item.Title}</h1>
+        <h1 className="font-display text-4xl font-semibold leading-tight tracking-tight lg:text-5xl">{item.Title}</h1>
         <p className="mt-2 text-lg text-gravity/60">
           By {item.Author}
           {item.SourcePublication && ` · ${item.SourcePublication}`}
@@ -88,7 +88,7 @@ export default function ReadingListDetailPage() {
             href={item.SourceURL}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-signal text-white text-sm font-medium rounded hover:bg-signal/90 transition-colors"
+            className="btn-x mt-6"
           >
             <ExternalLink className="w-4 h-4" /> Read Original Source
           </a>
@@ -101,7 +101,7 @@ export default function ReadingListDetailPage() {
           </section>
 
           {item.KeyTakeaway && (
-            <section className="bg-soft border border-hairline rounded-lg p-6">
+            <section className="panel-x-soft p-6">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-signal mb-3">Key Takeaway</h2>
               <p className="text-lg font-medium text-gravity leading-relaxed">{item.KeyTakeaway}</p>
             </section>

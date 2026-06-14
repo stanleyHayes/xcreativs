@@ -51,13 +51,13 @@ export default function AudioBriefsPage() {
         description="Short-form audio from the XCreativs team. Twelve minutes or less on architecture, policy, and platform economics."
         crumbs={[{ label: "Home", href: "/" }, { label: "Audio Briefs" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
       <div className="flex justify-end">
         <a
           href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/feed/audio`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 shrink-0 border border-hairline rounded px-4 py-2 text-sm font-medium text-gravity/70 hover:border-signal hover:text-signal transition-colors"
+          className="btn-x-secondary shrink-0"
         >
           <Rss className="w-4 h-4" /> Subscribe (RSS)
         </a>

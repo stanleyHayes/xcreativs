@@ -43,7 +43,7 @@ export default async function ServicesPage() {
         description="Five service lines, each engineered beyond brochure. Every page includes methodology, deliverables, indicative timeline, and sample dossiers."
         crumbs={[{ label: "Home", href: "/" }, { label: "Services" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {services.length === 0 && (
           <p className="text-center text-gravity/40 py-12 col-span-full">No services published yet.</p>

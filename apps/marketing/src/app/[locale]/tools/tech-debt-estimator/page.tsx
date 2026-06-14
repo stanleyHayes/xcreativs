@@ -63,10 +63,11 @@ export default function TechDebtEstimatorPage() {
 
   return (
     <main>
-      <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16 lg:py-20">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">§ 07 · Interactive Tool</p>
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight flex items-center gap-3">
+      <section className="relative overflow-hidden border-b border-hairline bg-soft">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <div className="shell-x relative py-16 lg:py-20">
+          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <Activity className="w-8 h-8 text-yellow-400" />
             Tech Debt Estimator
           </h1>
@@ -77,11 +78,11 @@ export default function TechDebtEstimatorPage() {
         </div>
       </section>
 
-      <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-12">
+      <section className="border-b border-hairline">
+        <div className="shell-x py-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Controls */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="panel-x space-y-7 p-6 lg:col-span-2 lg:p-8">
               <DimensionSelect
                 label="System Age"
                 icon={<Gauge className="w-4 h-4" />}
@@ -163,13 +164,13 @@ export default function TechDebtEstimatorPage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowResults(true)}
-                  className="bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+                  className="btn-x"
                 >
                   Calculate Debt Score <ArrowRight className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => { setShowResults(false); setAge("two5"); setStack("mixed"); setIntegrations("moderate"); setChangeFreq("regular"); setTestCoverage("moderate"); setDocumentation("moderate"); }}
-                  className="border border-hairline px-4 py-3 rounded text-sm text-gravity/60 hover:text-gravity transition-colors"
+                  className="btn-x-secondary"
                 >
                   Reset
                 </button>
@@ -178,7 +179,7 @@ export default function TechDebtEstimatorPage() {
 
             {/* Results panel */}
             <div className="lg:col-span-1">
-              <div className="bg-foundation border border-hairline rounded-lg p-6 sticky top-24">
+              <div className="panel-x sticky top-24 p-6">
                 {showResults ? (
                   <>
                     <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">Debt Rating</p>
@@ -211,7 +212,7 @@ export default function TechDebtEstimatorPage() {
 
                     <Link
                       href="/contact"
-                      className="w-full inline-flex items-center justify-center gap-2 bg-signal text-white px-5 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity"
+                      className="btn-x w-full"
                     >
                       Book a Systems Audit <ArrowRight className="w-4 h-4" />
                     </Link>
@@ -252,8 +253,8 @@ function DimensionSelect({
           <button
             key={opt.key}
             onClick={() => onChange(opt.key)}
-            className={`text-left border rounded-lg p-3 transition-colors ${
-              value === opt.key ? "border-signal bg-signal/5" : "border-hairline bg-foundation hover:border-gravity/30"
+            className={`text-left border rounded-2xl p-3 transition-colors ${
+              value === opt.key ? "border-signal bg-signal/10" : "border-hairline bg-foundation hover:border-signal/40"
             }`}
           >
             <p className={`text-sm font-medium ${value === opt.key ? "text-signal" : "text-gravity"}`}>{opt.label}</p>

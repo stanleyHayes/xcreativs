@@ -88,7 +88,7 @@ export default function WebinarDetailPage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
+    <main className="shell-x py-20">
       <Link href="/webinars" className="inline-flex items-center gap-2 text-sm text-gravity/60 hover:text-signal mb-8">
         <ArrowLeft className="w-4 h-4" /> All Webinars
       </Link>
@@ -98,7 +98,7 @@ export default function WebinarDetailPage() {
           <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded font-medium ${cfg.color} ${cfg.bg}`}>
             {w.Status === "live" ? <Radio className="w-3.5 h-3.5" /> : <Calendar className="w-3.5 h-3.5" />} {cfg.label}
           </span>
-          <h1 className="mt-3 text-3xl lg:text-5xl font-bold">{w.Title}</h1>
+          <h1 className="font-display mt-3 text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">{w.Title}</h1>
 
           <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-gravity/50">
             <span className="flex items-center gap-1">
@@ -118,7 +118,7 @@ export default function WebinarDetailPage() {
 
           {w.CoverImageURL && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={w.CoverImageURL} alt={w.Title} className="mt-8 w-full rounded-lg border border-hairline" />
+            <img src={w.CoverImageURL} alt={w.Title} className="mt-8 w-full rounded-2xl border border-hairline shadow-[var(--shadow-soft)]" />
           )}
 
           <article className="mt-8 max-w-3xl prose prose-lg text-gravity/80">
@@ -132,7 +132,7 @@ export default function WebinarDetailPage() {
               href={w.RecordingURL}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-signal text-white text-sm font-medium rounded hover:opacity-90 transition-opacity"
+              className="btn-x w-full"
             >
               <Video className="w-4 h-4" /> Watch Recording
             </a>
@@ -141,7 +141,7 @@ export default function WebinarDetailPage() {
           {(w.Status === "upcoming" || w.Status === "live") && <RegisterForm slug={w.Slug as string} />}
 
           {w.Status !== "cancelled" && (
-            <div className="border border-hairline rounded-lg p-4">
+            <div className="panel-x p-4">
               <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-3">Add to calendar</p>
               <div className="flex flex-col gap-2">
                 <button
@@ -190,7 +190,7 @@ function RegisterForm({ slug }: { slug: string }) {
 
   if (submitted) {
     return (
-      <div className="border border-hairline rounded-lg p-4 bg-soft text-center">
+      <div className="panel-x-soft p-4 text-center">
         <CheckCircle className="w-6 h-6 text-signal mx-auto mb-2" />
         <p className="text-sm font-medium">You are registered</p>
         <p className="text-xs text-gravity/50 mt-1">We will email you the joining link.</p>
@@ -199,7 +199,7 @@ function RegisterForm({ slug }: { slug: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border border-hairline rounded-lg p-4 space-y-2">
+    <form onSubmit={handleSubmit} className="panel-x space-y-3 p-4">
       <p className="text-sm font-semibold mb-1">Register</p>
       <input
         type="email"
@@ -207,7 +207,7 @@ function RegisterForm({ slug }: { slug: string }) {
         placeholder="Email *"
         value={form.email}
         onChange={(e) => setForm({ ...form, email: e.target.value })}
-        className="w-full px-3 py-2 border border-hairline rounded text-sm focus:outline-none focus:border-signal bg-foundation"
+        className="field-x"
       />
       <div className="flex gap-2">
         <input
@@ -215,14 +215,14 @@ function RegisterForm({ slug }: { slug: string }) {
           placeholder="First name"
           value={form.first_name}
           onChange={(e) => setForm({ ...form, first_name: e.target.value })}
-          className="flex-1 min-w-0 px-3 py-2 border border-hairline rounded text-sm focus:outline-none focus:border-signal bg-foundation"
+          className="field-x min-w-0 flex-1"
         />
         <input
           type="text"
           placeholder="Last name"
           value={form.last_name}
           onChange={(e) => setForm({ ...form, last_name: e.target.value })}
-          className="flex-1 min-w-0 px-3 py-2 border border-hairline rounded text-sm focus:outline-none focus:border-signal bg-foundation"
+          className="field-x min-w-0 flex-1"
         />
       </div>
       <input
@@ -230,13 +230,13 @@ function RegisterForm({ slug }: { slug: string }) {
         placeholder="Organization"
         value={form.organization}
         onChange={(e) => setForm({ ...form, organization: e.target.value })}
-        className="w-full px-3 py-2 border border-hairline rounded text-sm focus:outline-none focus:border-signal bg-foundation"
+        className="field-x"
       />
       {error && <p className="text-xs text-red-500">{error}</p>}
       <button
         type="submit"
         disabled={submitting}
-        className="w-full px-3 py-2 bg-signal text-white text-sm font-medium rounded hover:opacity-90 disabled:opacity-50 transition-opacity"
+        className="btn-x w-full disabled:opacity-50"
       >
         {submitting ? "Registering..." : "Confirm Registration"}
       </button>

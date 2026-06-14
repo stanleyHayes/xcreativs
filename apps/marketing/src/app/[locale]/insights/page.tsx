@@ -7,6 +7,13 @@ export const metadata: Metadata = {
   title: "Insights — XCreativs Technologies",
   description:
     "Long-form writing on digital systems, governance, and platform economics. No listicles. No fluff.",
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { url: "/api/v1/feed/insights", title: "XCreativs Insights — RSS" },
+      ],
+    },
+  },
 };
 
 interface InsightSummary {
@@ -43,7 +50,7 @@ export default async function InsightsPage() {
         description="Long-form writing on digital systems, governance, and platform economics. No listicles. No fluff."
         crumbs={[{ label: "Home", href: "/" }, { label: "Insights" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         <div className="mt-12 space-y-8">
           {insights.length === 0 && (
             <p className="text-center text-gravity/40 py-12">No insights published yet.</p>

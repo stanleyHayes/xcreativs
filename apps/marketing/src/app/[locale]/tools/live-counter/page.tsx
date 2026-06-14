@@ -70,10 +70,11 @@ export default function LiveCounterPage() {
 
   return (
     <main>
-      <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16 lg:py-20">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">§ 07 · Interactive Tool</p>
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight flex items-center gap-3">
+      <section className="relative overflow-hidden border-b border-hairline bg-soft">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <div className="shell-x relative py-16 lg:py-20">
+          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <Activity className="w-8 h-8 text-orange-400" />
             Live Engagement Counter
           </h1>
@@ -83,10 +84,10 @@ export default function LiveCounterPage() {
         </div>
       </section>
 
-      <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-12">
+      <section className="border-b border-hairline">
+        <div className="shell-x py-12">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-xl font-semibold">Operational Snapshot</h2>
+            <h2 className="font-display text-2xl font-semibold tracking-tight">Operational Snapshot</h2>
             <button
               onClick={fetchData}
               className="flex items-center gap-2 text-sm text-gravity/50 hover:text-signal transition-colors"
@@ -99,7 +100,7 @@ export default function LiveCounterPage() {
           {loading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="border border-hairline rounded-lg p-6 bg-foundation animate-pulse">
+                <div key={i} className="card-x animate-pulse p-6">
                   <div className="h-4 w-20 bg-gravity/10 rounded mb-4" />
                   <div className="h-8 w-16 bg-gravity/10 rounded" />
                 </div>
@@ -108,7 +109,7 @@ export default function LiveCounterPage() {
           ) : data ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {cards.map((card) => (
-                <div key={card.label} className="border border-hairline rounded-lg p-6 bg-foundation">
+                <div key={card.label} className="card-x p-6">
                   <div className={`w-10 h-10 rounded-lg ${card.bg} flex items-center justify-center mb-4`}>
                     <card.icon className={`w-5 h-5 ${card.color}`} />
                   </div>

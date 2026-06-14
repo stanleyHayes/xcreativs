@@ -121,7 +121,7 @@ export default async function AboutPage() {
           aria-hidden
           className="animate-drift pointer-events-none absolute -right-[10%] top-[-40%] h-[40vmax] w-[40vmax] rounded-full bg-signal/10 blur-[130px]"
         />
-        <div className="relative mx-auto grid max-w-[1440px] gap-12 px-6 py-20 lg:grid-cols-12 lg:px-12 lg:py-28">
+        <div className="shell-x relative grid gap-12 py-20 lg:grid-cols-12 lg:py-28">
           <div className="lg:col-span-8">
             <Quote className="h-9 w-9 text-signal/40" />
             <p className="font-display mt-5 text-3xl font-semibold leading-[1.12] tracking-tight lg:text-5xl">
@@ -142,7 +142,7 @@ export default async function AboutPage() {
 
       {/* Stats band */}
       <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto grid max-w-[1440px] grid-cols-2 gap-px overflow-hidden px-6 py-4 lg:grid-cols-4 lg:px-12">
+        <div className="shell-x grid grid-cols-2 gap-px overflow-hidden py-4 lg:grid-cols-4">
           {STATS.map((s) => (
             <div key={s.label} className="px-2 py-8 text-center">
               <p className="font-display text-3xl font-semibold tracking-tight text-signal lg:text-4xl">
@@ -156,7 +156,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12">
+      <main className="shell-x">
         {/* The model */}
         <section className="border-b border-hairline py-20">
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">
@@ -239,7 +239,7 @@ export default async function AboutPage() {
           aria-hidden
           className="animate-drift-slow pointer-events-none absolute -left-[8%] bottom-[-50%] h-[36vmax] w-[36vmax] rounded-full bg-signal/25 blur-[130px]"
         />
-        <div className="relative mx-auto max-w-[1440px] px-6 py-24 lg:px-12 lg:py-32">
+        <div className="shell-x relative py-24 lg:py-32">
           <h2 className="font-display max-w-3xl text-3xl font-semibold tracking-tight lg:text-5xl">
             Build something institutions depend on.
           </h2>
@@ -248,7 +248,7 @@ export default async function AboutPage() {
           </p>
           <Link
             href="/contact"
-            className="group mt-8 inline-flex items-center gap-2 rounded-full bg-signal px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-signal/30 transition-transform hover:-translate-y-0.5"
+            className="btn-x group mt-8"
           >
             Start the conversation
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

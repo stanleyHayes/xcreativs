@@ -41,7 +41,7 @@ export default function SubsidiariesPage() {
         description="The companies under the XCreativs holding structure. Each is operationally distinct, with its own leadership, but shares the firm's standards for security, sovereignty, and engineering rigour."
         crumbs={[{ label: "Home", href: "/" }, { label: "Subsidiaries" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {subs.map((s) => (
           <div key={s.ID || s.Slug} className="card-x p-6">

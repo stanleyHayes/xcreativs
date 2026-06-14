@@ -37,10 +37,11 @@ export default function DocumentIntelligencePage() {
 
   return (
     <main>
-      <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16 lg:py-20">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">§ 07 · Interactive Tool</p>
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight flex items-center gap-3">
+      <section className="relative overflow-hidden border-b border-hairline bg-soft">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <div className="shell-x relative py-16 lg:py-20">
+          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <FileSearch className="w-8 h-8 text-pink-400" />
             Document Intelligence Demo
           </h1>
@@ -51,24 +52,24 @@ export default function DocumentIntelligencePage() {
         </div>
       </section>
 
-      <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-12">
+      <section className="border-b border-hairline">
+        <div className="shell-x py-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Input */}
-            <div className="space-y-4">
+            <div className="panel-x space-y-4 p-6">
               <label className="block text-sm font-medium">Document Text</label>
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Paste your document text here... Contracts, tender documents, policy briefs, or meeting minutes all work."
-                className="w-full h-80 border border-hairline rounded-lg p-4 text-sm focus:outline-none focus:border-pink-400 resize-none bg-foundation"
+                className="field-x h-80 resize-none"
               />
               <div className="flex items-center justify-between">
                 <span className="text-xs text-gravity/40">{text.length} characters</span>
                 <button
                   onClick={handleExtract}
                   disabled={loading || text.length < 50}
-                  className="bg-signal text-white px-5 py-2.5 rounded text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+                  className="btn-x disabled:opacity-50"
                 >
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
                   {loading ? "Extracting..." : "Extract Intelligence"}
@@ -80,7 +81,7 @@ export default function DocumentIntelligencePage() {
             {/* Results */}
             <div>
               {!result ? (
-                <div className="h-full border border-hairline rounded-lg bg-foundation flex items-center justify-center p-8">
+                <div className="panel-x flex h-full items-center justify-center p-8">
                   <div className="text-center">
                     <FileSearch className="w-10 h-10 text-gravity/20 mx-auto mb-3" />
                     <p className="text-sm text-gravity/40">Paste text and click Extract to see structured results.</p>
@@ -89,7 +90,7 @@ export default function DocumentIntelligencePage() {
               ) : (
                 <div className="space-y-4">
                   {/* Summary */}
-                  <div className="border border-hairline rounded-lg p-5 bg-foundation">
+                  <div className="card-x p-5">
                     <div className="flex items-center gap-2 mb-3">
                       <FileText className="w-4 h-4 text-pink-400" />
                       <h3 className="text-sm font-semibold">Summary</h3>
@@ -99,7 +100,7 @@ export default function DocumentIntelligencePage() {
 
                   {/* Dates */}
                   {result.dates.length > 0 && (
-                    <div className="border border-hairline rounded-lg p-5 bg-foundation">
+                    <div className="card-x p-5">
                       <div className="flex items-center gap-2 mb-3">
                         <Calendar className="w-4 h-4 text-blue-400" />
                         <h3 className="text-sm font-semibold">Dates ({result.dates.length})</h3>
@@ -114,7 +115,7 @@ export default function DocumentIntelligencePage() {
 
                   {/* Monetary values */}
                   {result.monetary_values.length > 0 && (
-                    <div className="border border-hairline rounded-lg p-5 bg-foundation">
+                    <div className="card-x p-5">
                       <div className="flex items-center gap-2 mb-3">
                         <DollarSign className="w-4 h-4 text-green-400" />
                         <h3 className="text-sm font-semibold">Monetary Values ({result.monetary_values.length})</h3>
@@ -129,7 +130,7 @@ export default function DocumentIntelligencePage() {
 
                   {/* Entities */}
                   {result.entities.length > 0 && (
-                    <div className="border border-hairline rounded-lg p-5 bg-foundation">
+                    <div className="card-x p-5">
                       <div className="flex items-center gap-2 mb-3">
                         <Building2 className="w-4 h-4 text-yellow-400" />
                         <h3 className="text-sm font-semibold">Entities ({result.entities.length})</h3>
@@ -147,7 +148,7 @@ export default function DocumentIntelligencePage() {
 
                   {/* Obligations */}
                   {result.obligations.length > 0 && (
-                    <div className="border border-hairline rounded-lg p-5 bg-foundation">
+                    <div className="card-x p-5">
                       <div className="flex items-center gap-2 mb-3">
                         <AlertCircle className="w-4 h-4 text-red-400" />
                         <h3 className="text-sm font-semibold">Obligations ({result.obligations.length})</h3>

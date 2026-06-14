@@ -152,26 +152,28 @@ export default function SignPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gravity">
-        <Loader2 className="w-8 h-8 animate-spin text-signal" />
+      <main className="flex min-h-screen items-center justify-center bg-gravity text-foundation">
+        <div className="portal-panel-x p-8">
+          <Loader2 className="h-8 w-8 animate-spin text-signal" />
+        </div>
       </main>
     );
   }
 
   if (completed) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gravity px-6">
-        <div className="max-w-md w-full text-center">
-          <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Signature Complete</h1>
-          <p className="text-white/60 mb-6">
+      <main className="shell-x flex min-h-screen items-center justify-center bg-gravity py-20 text-foundation">
+        <div className="portal-panel-x w-full max-w-md p-8 text-center lg:p-10">
+          <CheckCircle className="mx-auto mb-5 h-16 w-16 text-green-400" />
+          <h1 className="font-display text-3xl font-semibold tracking-tight">Signature Complete</h1>
+          <p className="mb-7 mt-3 text-sm leading-relaxed text-white/60">
             {data?.recipient_name ? `Thank you, ${data.recipient_name}.` : "Thank you."} Your signature has been recorded for <strong className="text-white">{data?.document_title}</strong>.
           </p>
           {data?.signed_document_url && (
             <a
               href={data.signed_document_url}
               download={`${data?.document_title || "document"}_signed.png`}
-              className="inline-flex items-center gap-2 bg-white/10 text-white px-5 py-2.5 rounded text-sm font-medium hover:bg-white/20 transition-colors"
+              className="portal-btn-x"
             >
               <Download className="w-4 h-4" />
               Download signed document
@@ -184,23 +186,25 @@ export default function SignPage() {
 
   if (error && !data) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gravity px-6">
-        <div className="max-w-md w-full text-center">
-          <AlertTriangle className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-          <h1 className="text-xl font-bold mb-2">Unable to load</h1>
-          <p className="text-white/60">{error}</p>
+      <main className="shell-x flex min-h-screen items-center justify-center bg-gravity py-20 text-foundation">
+        <div className="portal-panel-x w-full max-w-md p-8 text-center lg:p-10">
+          <AlertTriangle className="mx-auto mb-5 h-16 w-16 text-yellow-400" />
+          <h1 className="font-display text-3xl font-semibold tracking-tight">Unable to load</h1>
+          <p className="mt-3 text-sm leading-relaxed text-white/60">{error}</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gravity">
-      <div className="max-w-2xl mx-auto px-6 py-12">
-        <div className="flex items-center gap-3 mb-8">
-          <FileSignature className="w-8 h-8 text-signal" />
+    <main className="min-h-screen bg-gravity text-foundation">
+      <div className="shell-x max-w-3xl py-12">
+        <div className="mb-8 flex items-center gap-3">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-signal">
+            <FileSignature className="h-6 w-6" />
+          </span>
           <div>
-            <h1 className="text-2xl font-bold">{data?.document_title}</h1>
+            <h1 className="font-display text-3xl font-semibold tracking-tight">{data?.document_title}</h1>
             <p className="text-sm text-white/50">
               Requested by XCreativs Technologies
               {data?.recipient_name && ` · For ${data.recipient_name}`}
@@ -210,7 +214,7 @@ export default function SignPage() {
         </div>
 
         {/* Document body */}
-        <div className="border border-white/10 rounded-lg bg-foundation p-6 mb-8">
+        <div className="portal-panel-x mb-8 p-6">
           <div className="prose prose-invert max-w-none">
             <pre className="whitespace-pre-wrap font-sans text-sm text-white/80 leading-relaxed">
               {data?.document_body}
@@ -219,14 +223,14 @@ export default function SignPage() {
         </div>
 
         {/* Signature area */}
-        <div className="border border-white/10 rounded-lg bg-foundation p-6">
-          <h2 className="font-semibold mb-4">Sign below</h2>
+        <div className="portal-card-x p-6">
+          <h2 className="font-display text-xl font-semibold tracking-tight mb-4">Sign below</h2>
 
           <div className="flex gap-2 mb-4">
             <button
               onClick={() => setMode("draw")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-colors ${
-                mode === "draw" ? "bg-signal text-black" : "bg-white/5 text-white/60 hover:text-white"
+              className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+                mode === "draw" ? "border-signal bg-signal text-white" : "border-white/10 bg-white/5 text-white/60 hover:text-white"
               }`}
             >
               <Pen className="w-3.5 h-3.5" />
@@ -234,8 +238,8 @@ export default function SignPage() {
             </button>
             <button
               onClick={() => setMode("type")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-colors ${
-                mode === "type" ? "bg-signal text-black" : "bg-white/5 text-white/60 hover:text-white"
+              className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+                mode === "type" ? "border-signal bg-signal text-white" : "border-white/10 bg-white/5 text-white/60 hover:text-white"
               }`}
             >
               <Type className="w-3.5 h-3.5" />
@@ -273,7 +277,7 @@ export default function SignPage() {
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="mt-6 w-full flex items-center justify-center gap-2 bg-signal text-black px-5 py-3 rounded font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="portal-btn-x mt-6 w-full disabled:opacity-50"
           >
             {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileSignature className="w-4 h-4" />}
             {submitting ? "Submitting..." : "Sign Document"}

@@ -33,7 +33,7 @@ export default function GlossaryPage() {
         description="Define the language the firm uses. Outsiders learn the language; insiders become loyal."
         crumbs={[{ label: "Home", href: "/" }, { label: "Glossary of Practice" }]}
       />
-      <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+      <main className="shell-x py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {terms.map((t) => (
           <div key={t.ID} className="card-x p-6">

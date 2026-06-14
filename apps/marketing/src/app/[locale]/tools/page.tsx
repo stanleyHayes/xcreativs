@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Grid3X3, FileSearch, BarChart3, Network, TrendingUp, DollarSign, Activity, Brain, Wrench } from "lucide-react";
+import { Grid3X3, FileSearch, BarChart3, Network, TrendingUp, DollarSign, Activity, Brain, Wrench, Repeat } from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
 
 export const metadata: Metadata = {
@@ -82,6 +82,15 @@ const tools = [
     bg: "bg-orange-400/10",
     available: true,
   },
+  {
+    slug: "value-flow",
+    title: "Value Flow",
+    desc: "Animated value loop: client revenue → operations → Labs IP → subsidiaries → back to clients. Drawn from live platform figures.",
+    icon: Repeat,
+    color: "text-teal-400",
+    bg: "bg-teal-400/10",
+    available: true,
+  },
 ];
 
 export default function ToolsPage() {
@@ -96,7 +105,7 @@ export default function ToolsPage() {
       />
       <main>
         <section className="border-b border-hairline bg-soft">
-          <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-16">
+          <div className="shell-x py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {tools.map((tool) => (
               <div key={tool.slug} className={`group card-x p-6 ${tool.available ? "cursor-pointer" : "opacity-60"}`}>

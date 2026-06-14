@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight, Building2 } from "lucide-react";
 
 interface CapabilityMappingItem {
   capability?: string;
@@ -34,35 +34,46 @@ export default function IndustryDetailPage() {
   const capabilities = industry.CapabilityMapping ?? [];
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <Link href="/industries" className="inline-flex items-center gap-2 text-sm text-gravity/60 hover:text-signal mb-8">
-        <ArrowLeft className="w-4 h-4" /> All Industries
-      </Link>
-      <h1 className="text-3xl lg:text-5xl font-bold">{industry.Title}</h1>
-      <p className="mt-6 text-lg text-gravity/70 max-w-3xl">{industry.Description}</p>
-
-      {capabilities.length > 0 && (
-        <div className="mt-12">
-          <h2 className="text-xl font-semibold mb-6">Capability Mapping</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {capabilities.map((cap, i) => (
-              <div key={i} className="border border-hairline rounded p-6">
-                <h3 className="font-semibold">{cap.capability}</h3>
-                <p className="mt-1 text-sm text-gravity/60">{cap.description}</p>
-              </div>
-            ))}
-          </div>
+    <main>
+      <section className="relative overflow-hidden border-b border-hairline bg-soft">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <div className="shell-x relative py-16 lg:py-24">
+          <Link href="/industries" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-gravity/60 transition-colors hover:text-signal">
+            <ArrowLeft className="h-4 w-4" /> All Industries
+          </Link>
+          <p className="kicker-x text-signal">Industry dossier</p>
+          <h1 className="font-display mt-3 max-w-4xl text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">
+            {industry.Title}
+          </h1>
+          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gravity/70">{industry.Description}</p>
         </div>
-      )}
+      </section>
 
-      <div className="mt-12">
-        <Link
-          href="/contact"
-          className="inline-flex items-center gap-2 bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity"
-        >
-          {industry.IntakeCTAText || "Begin Engagement"}
-        </Link>
-      </div>
+      <section className="border-b border-hairline">
+        <div className="shell-x py-16 lg:py-20">
+          {capabilities.length > 0 && (
+            <>
+              <div className="max-w-2xl">
+                <p className="kicker-x">Capability Mapping</p>
+                <h2 className="font-display mt-2 text-3xl font-semibold tracking-tight">How we serve this sector</h2>
+              </div>
+              <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+                {capabilities.map((cap, i) => (
+                  <div key={i} className="card-x p-6">
+                    <Building2 className="h-5 w-5 text-signal" />
+                    <h3 className="mt-4 font-semibold">{cap.capability}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-gravity/60">{cap.description}</p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          <Link href="/contact" className="btn-x mt-10">
+            {industry.IntakeCTAText || "Begin Engagement"} <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

@@ -25,16 +25,18 @@ export default function PageBanner({
   const centered = align === "center";
 
   return (
-    <section className="relative isolate overflow-hidden border-b border-hairline bg-soft">
+    <section className="relative isolate overflow-hidden border-b border-hairline bg-soft/90">
       {/* decorative atmosphere */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="animate-drift absolute -right-[8%] -top-[55%] h-[42vmax] w-[42vmax] rounded-full bg-signal/10 blur-[120px]" />
         <div className="animate-float absolute -left-[10%] bottom-[-60%] h-[34vmax] w-[34vmax] rounded-full bg-signal/[0.06] blur-[120px]" />
         <div className="bg-grid absolute inset-0 [mask-image:radial-gradient(ellipse_at_75%_25%,black,transparent_70%)]" />
         <div className="bg-grain absolute inset-0 opacity-40" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-signal/40 to-transparent" />
+        <div className="absolute inset-y-10 left-0 hidden w-px bg-gradient-to-b from-transparent via-signal/30 to-transparent lg:block" />
         {/* corner constellation */}
         <svg
-          className="absolute right-0 top-0 h-44 w-44 text-signal/25"
+          className="absolute right-0 top-0 h-48 w-48 text-signal/25"
           viewBox="0 0 100 100"
           fill="none"
           stroke="currentColor"
@@ -82,10 +84,10 @@ export default function PageBanner({
         )}
 
         <div
-          className={`flex items-start gap-5 ${centered ? "flex-col items-center" : ""}`}
+          className={`flex items-start gap-5 ${centered ? "flex-col items-center" : "max-w-5xl"}`}
         >
           <span
-            className="animate-rise relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-hairline bg-foundation text-signal shadow-sm"
+            className="animate-rise relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-hairline bg-foundation/85 text-signal shadow-[0_18px_45px_-28px_currentColor] backdrop-blur"
             style={{ animationDelay: "0.05s" }}
           >
             <Icon className="h-7 w-7" />
@@ -97,12 +99,12 @@ export default function PageBanner({
 
           <div className={centered ? "max-w-2xl" : ""}>
             {eyebrow && (
-              <p className="animate-rise mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-signal">
+              <p className="animate-rise mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-signal">
                 {eyebrow}
               </p>
             )}
             <h1
-              className="animate-rise font-display text-4xl font-semibold leading-[1.03] tracking-tight lg:text-6xl"
+              className="animate-rise text-balance font-display text-4xl font-semibold leading-[1.03] tracking-tight lg:text-6xl"
               style={{ animationDelay: "0.08s" }}
             >
               {title}
@@ -118,6 +120,7 @@ export default function PageBanner({
           </div>
         </div>
       </div>
+      <div aria-hidden className="rule-x absolute inset-x-0 bottom-0 h-px opacity-80" />
     </section>
   );
 }

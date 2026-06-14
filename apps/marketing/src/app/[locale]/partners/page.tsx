@@ -17,8 +17,7 @@ import {
 } from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
 
-const INPUT =
-  "w-full rounded-lg border border-hairline bg-foundation px-3.5 py-2.5 text-sm transition-colors focus:border-signal focus:outline-none focus:ring-2 focus:ring-signal/15";
+const INPUT = "field-x";
 
 const PARTNER_TYPES = [
   { icon: Cpu, name: "Technology", blurb: "Integrate your platform into our solutions — AI, cloud, security, data." },
@@ -85,7 +84,7 @@ export default function PartnersPage() {
           </p>
           <Link
             href="/"
-            className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-signal px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5"
+            className="btn-x mt-6"
           >
             Return home
             <ArrowRight className="h-4 w-4" />
@@ -107,7 +106,7 @@ export default function PartnersPage() {
 
       {/* Why partner */}
       <section className="border-b border-hairline">
-        <div className="mx-auto max-w-[1440px] px-6 py-20 lg:px-12">
+        <div className="shell-x py-20">
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">
             § 01 · Why partner
           </p>
@@ -133,7 +132,7 @@ export default function PartnersPage() {
 
       {/* Partnership types */}
       <section className="border-b border-hairline bg-soft">
-        <div className="mx-auto max-w-[1440px] px-6 py-20 lg:px-12">
+        <div className="shell-x py-20">
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">
             § 02 · Tracks
           </p>
@@ -157,7 +156,7 @@ export default function PartnersPage() {
 
       {/* Application */}
       <section className="border-b border-hairline">
-        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-12 px-6 py-20 lg:grid-cols-5 lg:px-12">
+        <div className="shell-x grid grid-cols-1 gap-12 py-20 lg:grid-cols-5">
           <div className="lg:col-span-3">
             <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">
               § 03 · Apply
@@ -191,7 +190,7 @@ export default function PartnersPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex items-center gap-2 rounded-full bg-signal px-6 py-3 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-50"
+                className="btn-x disabled:opacity-50"
               >
                 {submitting ? "Submitting…" : "Submit application"}
                 {!submitting && <ArrowRight className="h-4 w-4" />}

@@ -42,14 +42,14 @@ export default function TalentNetworkPage() {
 
   if (submitted) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-foundation">
-        <div className="text-center px-6">
-          <CheckCircle className="w-12 h-12 text-signal mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">You are on the list</h1>
-          <p className="text-gravity/60 max-w-md mx-auto">
+      <main className="shell-x flex min-h-[80vh] items-center justify-center py-20">
+        <div className="panel-x max-w-lg p-8 text-center lg:p-10">
+          <CheckCircle className="mx-auto mb-5 h-12 w-12 text-signal" />
+          <h1 className="font-display text-3xl font-semibold tracking-tight">You are on the list</h1>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-gravity/60">
             Thank you for joining the talent network. We will reach out when a role that fits your domains opens.
           </p>
-          <Link href="/careers" className="mt-6 inline-block text-signal font-medium hover:underline">
+          <Link href="/careers" className="btn-x-secondary mt-7">
             Back to careers
           </Link>
         </div>
@@ -58,15 +58,15 @@ export default function TalentNetworkPage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <Link href="/careers" className="inline-flex items-center gap-2 text-sm text-gravity/60 hover:text-signal mb-8">
+    <main className="shell-x py-20">
+      <Link href="/careers" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-gravity/60 transition-colors hover:text-signal">
         <ArrowLeft className="w-4 h-4" /> All Roles
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <div className="max-w-xl">
+        <div className="panel-x max-w-xl p-6 lg:p-8">
           <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-2">§ 05 · Careers</p>
-          <h1 className="text-3xl lg:text-5xl font-bold">Talent Network</h1>
+          <h1 className="font-display text-3xl font-semibold tracking-tight lg:text-5xl">Talent Network</h1>
           <p className="mt-4 text-gravity/60">
             No open role fits today, but you want to be known to us? Tell us your domains and we will notify you when a
             fitting role opens.
@@ -79,32 +79,32 @@ export default function TalentNetworkPage() {
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="Email *"
-              className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+              className="field-x"
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <input
                 value={form.first_name}
                 onChange={(e) => setForm({ ...form, first_name: e.target.value })}
                 placeholder="First name"
-                className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+                className="field-x"
               />
               <input
                 value={form.last_name}
                 onChange={(e) => setForm({ ...form, last_name: e.target.value })}
                 placeholder="Last name"
-                className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+                className="field-x"
               />
             </div>
             <input
               value={form.domains}
               onChange={(e) => setForm({ ...form, domains: e.target.value })}
               placeholder="Domains of expertise (comma-separated)"
-              className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+              className="field-x"
             />
             <select
               value={form.seniority_level}
               onChange={(e) => setForm({ ...form, seniority_level: e.target.value })}
-              className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+              className="field-x"
             >
               <option value="junior">Junior</option>
               <option value="mid">Mid-level</option>
@@ -117,20 +117,20 @@ export default function TalentNetworkPage() {
               value={form.linkedin_url}
               onChange={(e) => setForm({ ...form, linkedin_url: e.target.value })}
               placeholder="LinkedIn URL"
-              className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+              className="field-x"
             />
             <input
               type="url"
               value={form.portfolio_url}
               onChange={(e) => setForm({ ...form, portfolio_url: e.target.value })}
               placeholder="Portfolio URL"
-              className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation"
+              className="field-x"
             />
             <textarea
               value={form.bio}
               onChange={(e) => setForm({ ...form, bio: e.target.value })}
               placeholder="Tell us about the systems you have worked on."
-              className="w-full border border-hairline rounded px-3 py-2 text-sm focus:outline-none focus:border-signal bg-foundation h-28"
+              className="field-x h-28"
             />
 
             {error && <p className="text-sm text-red-500">{error}</p>}
@@ -138,7 +138,7 @@ export default function TalentNetworkPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="bg-signal text-white px-6 py-2 rounded text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+              className="btn-x disabled:opacity-50"
             >
               {submitting ? "Submitting..." : "Join the Network"}
             </button>
@@ -146,7 +146,7 @@ export default function TalentNetworkPage() {
         </div>
 
         <aside className="space-y-6">
-          <div className="border border-hairline rounded p-6 bg-soft">
+          <div className="panel-x-soft p-6 lg:p-8">
             <Users className="w-6 h-6 text-signal mb-3" />
             <h2 className="text-lg font-semibold mb-2">Why join</h2>
             <ul className="space-y-2 text-gravity/60 text-sm">

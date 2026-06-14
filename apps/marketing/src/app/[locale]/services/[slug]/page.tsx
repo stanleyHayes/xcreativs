@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import type { Entity } from "@xc/api/types";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, Clock, ReceiptText } from "lucide-react";
 
 interface ServiceFAQ {
   q?: string;
@@ -39,62 +39,79 @@ export default function ServiceDetailPage() {
   if (!service) return <div className="p-12 text-center">Service not found</div>;
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-      <Link href="/services" className="inline-flex items-center gap-2 text-sm text-gravity/60 hover:text-signal mb-8">
-        <ArrowLeft className="w-4 h-4" /> All Services
-      </Link>
-      <h1 className="text-3xl lg:text-5xl font-bold">{service.Title}</h1>
-      <p className="mt-6 text-lg text-gravity/70 max-w-3xl">{service.Summary}</p>
-
-      <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-2 space-y-10">
-          <section>
-            <h2 className="text-xl font-semibold mb-4">Methodology</h2>
-            <ul className="list-disc list-inside space-y-2 text-gravity/70">
-              {service.Methodology?.map((m: string, i: number) => (
-                <li key={i}>{m}</li>
-              ))}
-            </ul>
-          </section>
-          <section>
-            <h2 className="text-xl font-semibold mb-4">Deliverables</h2>
-            <ul className="list-disc list-inside space-y-2 text-gravity/70">
-              {service.Deliverables?.map((d: string, i: number) => (
-                <li key={i}>{d}</li>
-              ))}
-            </ul>
-          </section>
-          {service.FAQs && service.FAQs.length > 0 && (
-            <section>
-              <h2 className="text-xl font-semibold mb-4">FAQ</h2>
-              <div className="space-y-4">
-                {service.FAQs.map((faq: ServiceFAQ, i: number) => (
-                  <div key={i} className="border border-hairline rounded p-4">
-                    <p className="font-medium">{faq.q}</p>
-                    <p className="mt-1 text-sm text-gravity/60">{faq.a}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-        </div>
-        <aside className="space-y-6">
-          <div className="border border-hairline rounded p-6">
-            <p className="text-xs font-medium uppercase tracking-wider text-gravity/40">Timeline</p>
-            <p className="mt-1 text-lg font-semibold">{service.IndicativeTimeline}</p>
-          </div>
-          <div className="border border-hairline rounded p-6">
-            <p className="text-xs font-medium uppercase tracking-wider text-gravity/40">Indicative Price</p>
-            <p className="mt-1 text-lg font-semibold">{service.IndicativePriceBand}</p>
-          </div>
-          <Link
-            href="/contact"
-            className="block text-center bg-signal text-white px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity"
-          >
-            Begin Engagement
+    <main>
+      <section className="relative overflow-hidden border-b border-hairline bg-soft">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <div className="shell-x relative py-16 lg:py-24">
+          <Link href="/services" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-gravity/60 transition-colors hover:text-signal">
+            <ArrowLeft className="h-4 w-4" /> All Services
           </Link>
-        </aside>
-      </div>
+          <p className="kicker-x text-signal">Service line</p>
+          <h1 className="font-display mt-3 max-w-4xl text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">
+            {service.Title}
+          </h1>
+          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gravity/70">{service.Summary}</p>
+        </div>
+      </section>
+
+      <section className="border-b border-hairline">
+        <div className="shell-x grid grid-cols-1 gap-10 py-16 lg:grid-cols-3 lg:py-20">
+          <div className="space-y-8 lg:col-span-2">
+            <section className="panel-x p-6 lg:p-8">
+              <h2 className="font-display text-2xl font-semibold tracking-tight">Methodology</h2>
+              <ul className="mt-6 space-y-3">
+                {service.Methodology?.map((m: string, i: number) => (
+                  <li key={i} className="flex gap-3 text-sm leading-relaxed text-gravity/70">
+                    <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-signal" />
+                    <span>{m}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="panel-x p-6 lg:p-8">
+              <h2 className="font-display text-2xl font-semibold tracking-tight">Deliverables</h2>
+              <ul className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2">
+                {service.Deliverables?.map((d: string, i: number) => (
+                  <li key={i} className="rounded-2xl border border-hairline bg-foundation/80 p-4 text-sm text-gravity/70">
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            {service.FAQs && service.FAQs.length > 0 && (
+              <section>
+                <h2 className="font-display text-2xl font-semibold tracking-tight">FAQ</h2>
+                <div className="mt-6 space-y-4">
+                  {service.FAQs.map((faq: ServiceFAQ, i: number) => (
+                    <div key={i} className="card-x p-5">
+                      <p className="font-semibold">{faq.q}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-gravity/60">{faq.a}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+
+          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+            <div className="panel-x p-6">
+              <Clock className="h-5 w-5 text-signal" />
+              <p className="mt-4 kicker-x">Timeline</p>
+              <p className="mt-1 text-xl font-semibold">{service.IndicativeTimeline}</p>
+            </div>
+            <div className="panel-x p-6">
+              <ReceiptText className="h-5 w-5 text-signal" />
+              <p className="mt-4 kicker-x">Indicative Price</p>
+              <p className="mt-1 text-xl font-semibold">{service.IndicativePriceBand}</p>
+            </div>
+            <Link href="/contact" className="btn-x w-full">
+              Begin Engagement <ArrowRight className="h-4 w-4" />
+            </Link>
+          </aside>
+        </div>
+      </section>
     </main>
   );
 }
