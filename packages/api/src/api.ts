@@ -4,6 +4,9 @@ import type {
   ApplicationsResponse,
   ApprovalWorkflowsResponse,
   AuditLogsResponse,
+  AdminUsersResponse,
+  AdminRolesResponse,
+  AdminPermissionsResponse,
   AssessmentSessionResponse,
   AudioBriefsResponse,
   AssessmentTemplateResponse,
@@ -295,6 +298,16 @@ export const api = {
     const qs = filters ? "?" + new URLSearchParams(filters).toString() : "";
     return fetchAPI<AuditLogsResponse>(`/api/v1/admin/audit-logs${qs}`);
   },
+  listUsersAdmin: (filters?: Record<string, string>) => {
+    const qs = filters ? "?" + new URLSearchParams(filters).toString() : "";
+    return fetchAPI<AdminUsersResponse>(`/api/v1/admin/users${qs}`);
+  },
+  updateUserAdmin: (id: string, data: { role?: string; is_active?: boolean }) =>
+    fetchAPI(`/api/v1/admin/users/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
+  listRolesAdmin: () => fetchAPI<AdminRolesResponse>("/api/v1/admin/roles"),
+  setRolePermissionsAdmin: (role: string, permissionIds: string[]) =>
+    fetchAPI(`/api/v1/admin/roles/${role}/permissions`, { method: "PUT", body: JSON.stringify({ permission_ids: permissionIds }) }),
+  listPermissionsAdmin: () => fetchAPI<AdminPermissionsResponse>("/api/v1/admin/permissions"),
   getRFPSubmissionAdmin: (id: string) => fetchAPI<Entity>(`/api/v1/admin/rfps/${id}`),
   updateRFPSubmissionAdmin: (id: string, data: Record<string, unknown>) => fetchAPI(`/api/v1/admin/rfps/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   extractDocument: (text: string) => fetchAPI("/api/v1/document-intelligence/extract", { method: "POST", body: JSON.stringify({ text }) }),

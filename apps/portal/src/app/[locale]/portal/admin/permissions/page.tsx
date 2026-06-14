@@ -1,85 +1,123 @@
-import { LockKeyhole, ShieldCheck } from "lucide-react";
+"use client";
 
-const permissionGroups = [
-  {
-    resource: "Users",
-    description: "Invite, update, suspend, and review member access.",
-    permissions: ["user:read", "user:write"],
-  },
-  {
-    resource: "Engagements",
-    description: "Control delivery workspace records, milestones, risks, tickets, and deliverables.",
-    permissions: ["engagement:read", "engagement:write"],
-  },
-  {
-    resource: "Content",
-    description: "Manage public pages, reading-list content, webinars, media kit, and insight publishing.",
-    permissions: ["content:read", "content:write"],
-  },
-  {
-    resource: "Billing",
-    description: "Access invoices, payment links, and budget visibility.",
-    permissions: ["billing:read", "billing:write"],
-  },
-];
-
-const roles = ["Admin", "Executive", "Project", "Viewer"];
+import { useCallback, useEffect, useState } from "react";
+import { Loader2, LockKeyhole, RefreshCw, ShieldCheck } from "lucide-react";
+import { api } from "@xc/api";
+import type { AdminPermission, AdminRole } from "@xc/api/types";
 
 export default function AdminPermissionsPage() {
+  const [permissions, setPermissions] = useState<AdminPermission[]>([]);
+  const [roles, setRoles] = useState<AdminRole[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const load = useCallback((signal?: { active: boolean }) => {
+    Promise.all([api.listPermissionsAdmin(), api.listRolesAdmin()])
+      .then(([p, r]) => {
+        if (!signal || signal.active) {
+          setPermissions(p.permissions ?? []);
+          setRoles(r.roles ?? []);
+        }
+      })
+      .catch(() => {
+        if (!signal || signal.active) setError(true);
+      })
+      .finally(() => {
+        if (!signal || signal.active) setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    const signal = { active: true };
+    load(signal);
+    return () => {
+      signal.active = false;
+    };
+  }, [load]);
+
+  const roleHas = (role: AdminRole, perm: AdminPermission) =>
+    role.permissions.some((p) => p.resource === perm.resource && p.action === perm.action);
+
   return (
     <div className="space-y-6">
       <section className="portal-admin-header-x">
-        <div className="flex items-start gap-4">
-          <span className="portal-admin-icon-x">
-            <LockKeyhole className="h-5 w-5" />
-          </span>
-          <div>
-            <p className="portal-meta-x text-signal">Access management</p>
-            <h1 className="font-display mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Permission management</h1>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/55">
-              See the permission catalogue and the role matrix that should govern portal access.
-            </p>
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex items-start gap-4">
+            <span className="portal-admin-icon-x">
+              <LockKeyhole className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="portal-meta-x text-signal">Access management</p>
+              <h1 className="font-display mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Permission management</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/55">
+                The permission catalogue and the live role matrix governing portal access.
+              </p>
+            </div>
           </div>
+          <button type="button" onClick={() => load()} className="portal-btn-x">
+            <RefreshCw className="h-4 w-4" />
+            Refresh
+          </button>
         </div>
       </section>
 
-      <section className="portal-panel-x portal-scrollbar-x overflow-x-auto">
-        <table className="w-full min-w-[760px] text-left text-sm">
-          <thead className="border-b border-white/10 text-xs uppercase tracking-[0.16em] text-white/35">
-            <tr>
-              <th className="px-5 py-4 font-semibold">Resource</th>
-              {roles.map((role) => (
-                <th key={role} className="px-5 py-4 font-semibold">{role}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/10">
-            {permissionGroups.map((group, index) => (
-              <tr key={group.resource}>
-                <td className="px-5 py-4">
-                  <p className="font-semibold text-white">{group.resource}</p>
-                  <p className="mt-1 max-w-md text-xs leading-relaxed text-white/45">{group.description}</p>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {group.permissions.map((permission) => (
-                      <span key={permission} className="portal-chip-x">{permission}</span>
-                    ))}
-                  </div>
-                </td>
-                {roles.map((role, roleIndex) => {
-                  const enabled = roleIndex === 0 || (role === "Executive" && index !== 2) || (role === "Project" && index === 1) || (role === "Viewer" && index === 1);
-                  return (
-                    <td key={role} className="px-5 py-4">
-                      <span className={`inline-flex h-8 w-8 items-center justify-center rounded-lg border ${enabled ? "border-green-300/25 bg-green-300/10 text-green-300" : "border-white/10 bg-white/5 text-white/25"}`}>
-                        <ShieldCheck className="h-4 w-4" />
-                      </span>
-                    </td>
-                  );
-                })}
+      {loading ? (
+        <div className="flex items-center justify-center gap-2 p-10 text-white/50">
+          <Loader2 className="h-5 w-5 animate-spin" /> Loading permissions…
+        </div>
+      ) : error ? (
+        <div className="portal-card-x p-10 text-center text-white/60">
+          Couldn&apos;t load permissions.{" "}
+          <button onClick={() => load()} className="text-signal underline">
+            Retry
+          </button>
+        </div>
+      ) : (
+        <section className="portal-panel-x portal-scrollbar-x overflow-x-auto">
+          <table className="w-full min-w-[760px] text-left text-sm">
+            <thead className="border-b border-white/10 text-xs uppercase tracking-[0.16em] text-white/35">
+              <tr>
+                <th className="px-5 py-4 font-semibold">Permission</th>
+                {roles.map((r) => (
+                  <th key={r.role} className="px-5 py-4 font-semibold capitalize">
+                    {r.role}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+            </thead>
+            <tbody className="divide-y divide-white/10">
+              {permissions.map((perm) => (
+                <tr key={perm.id}>
+                  <td className="px-5 py-4">
+                    <p className="font-semibold text-white">
+                      {perm.resource}:{perm.action}
+                    </p>
+                    {perm.description && (
+                      <p className="mt-1 max-w-md text-xs leading-relaxed text-white/45">{perm.description}</p>
+                    )}
+                  </td>
+                  {roles.map((r) => {
+                    const enabled = roleHas(r, perm);
+                    return (
+                      <td key={r.role} className="px-5 py-4">
+                        <span
+                          className={`inline-flex h-8 w-8 items-center justify-center rounded-lg border ${
+                            enabled
+                              ? "border-green-300/25 bg-green-300/10 text-green-300"
+                              : "border-white/10 bg-white/5 text-white/25"
+                          }`}
+                        >
+                          <ShieldCheck className="h-4 w-4" />
+                        </span>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
     </div>
   );
 }

@@ -322,3 +322,42 @@ export interface UploadResponse {
   bytes: number;
   format: string;
 }
+
+// --- Admin RBAC (users / roles / permissions) ---
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  is_active: boolean;
+  last_login_at: string;
+  mfa_enabled: boolean;
+  created_at: string;
+}
+
+export interface AdminUsersResponse {
+  users: AdminUser[];
+}
+
+export interface AdminPermission {
+  id: string;
+  resource: string;
+  action: string;
+  description: string;
+  role_count?: number;
+}
+
+export interface AdminRole {
+  role: string;
+  user_count: number;
+  permissions: AdminPermission[];
+}
+
+export interface AdminRolesResponse {
+  roles: AdminRole[];
+}
+
+export interface AdminPermissionsResponse {
+  permissions: AdminPermission[];
+}

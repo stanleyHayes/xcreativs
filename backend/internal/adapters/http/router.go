@@ -206,6 +206,11 @@ func NewRouter(cfg *config.Config, log Logger, pool *pgxpool.Pool, identity doma
 
 			admin.Get("/admin/analytics", handleAnalyticsDashboard(pool))
 			admin.Get("/admin/audit-logs", handleListAuditLogsAdmin(pool))
+			admin.Get("/admin/users", handleListUsersAdmin(pool))
+			admin.Patch("/admin/users/{id}", handleUpdateUserAdmin(pool))
+			admin.Get("/admin/roles", handleListRolesAdmin(pool))
+			admin.Put("/admin/roles/{role}/permissions", handleSetRolePermissionsAdmin(pool))
+			admin.Get("/admin/permissions", handleListPermissionsAdmin(pool))
 			admin.Get("/admin/partner/applications", handleListPartnerApplications(pool))
 			admin.Put("/admin/partner/applications/{id}", handleUpdatePartnerApplication(pool))
 			// Applicant tracking (ATS)
