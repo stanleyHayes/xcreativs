@@ -138,16 +138,26 @@ func handleGeneratePaymentLink(pool *pgxpool.Pool) http.HandlerFunc {
 			provider = "paystack"
 		}
 
-		// Load the invoice + the engagement client's email.
+		// Load the invoice + the engagement client's email — scoped to the caller's
+		// engagement (admin bypass) so a non-owner cannot mint payment links for, or
+		// read the client PII of, another tenant's invoice.
+		uid, _ := r.Context().Value(userIDKey).(string)
+		role, _ := r.Context().Value(userRoleKey).(string)
 		var amount float64
 		var currency, number, clientEmail string
-		err := pool.QueryRow(r.Context(), `
+		q := `
 			SELECT i.amount, i.currency::text, i.invoice_number, COALESCE(u.email, '')
 			FROM engagement.invoices i
 			JOIN engagement.engagements e ON i.engagement_id = e.id
 			LEFT JOIN identity.users u ON e.client_id = u.id
-			WHERE i.id = $1
-		`, invID).Scan(&amount, &currency, &number, &clientEmail)
+			WHERE i.id = $1`
+		args := []any{invID}
+		if role != "admin" {
+			q += ` AND (e.client_id = $2::uuid OR EXISTS (
+				SELECT 1 FROM engagement.team_members tm WHERE tm.engagement_id = e.id AND tm.user_id = $2::uuid))`
+			args = append(args, uid)
+		}
+		err := pool.QueryRow(r.Context(), q, args...).Scan(&amount, &currency, &number, &clientEmail)
 		if err != nil {
 			respondError(w, http.StatusNotFound, "invoice not found")
 			return
@@ -204,11 +214,23 @@ func handleUpdateInvoiceStatus(pool *pgxpool.Pool) http.HandlerFunc {
 			respondError(w, http.StatusBadRequest, "invalid status")
 			return
 		}
-		ct, err := pool.Exec(r.Context(), `
+		// Scope the update to the caller's engagement (admin bypass) so a non-owner
+		// cannot change the status of another tenant's invoice (e.g. mark it paid/void).
+		uid, _ := r.Context().Value(userIDKey).(string)
+		role, _ := r.Context().Value(userRoleKey).(string)
+		q := `
 			UPDATE engagement.invoices
 			SET status = $1, paid_at = CASE WHEN $1 = 'paid' THEN NOW() ELSE paid_at END, updated_at = NOW()
-			WHERE id = $2
-		`, req.Status, invID)
+			WHERE id = $2`
+		args := []any{req.Status, invID}
+		if role != "admin" {
+			q += ` AND engagement_id IN (
+				SELECT e.id FROM engagement.engagements e
+				WHERE e.client_id = $3::uuid OR EXISTS (
+					SELECT 1 FROM engagement.team_members tm WHERE tm.engagement_id = e.id AND tm.user_id = $3::uuid))`
+			args = append(args, uid)
+		}
+		ct, err := pool.Exec(r.Context(), q, args...)
 		if err != nil {
 			respondError(w, http.StatusInternalServerError, "failed to update invoice")
 			return

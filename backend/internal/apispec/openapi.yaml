@@ -1412,6 +1412,16 @@ paths:
         '400': { $ref: '#/components/responses/Error' }
         '401': { $ref: '#/components/responses/Error' }
         default: { $ref: '#/components/responses/Error' }
+  "/api/v1/feed/insights":
+    get:
+      tags: [Public]
+      summary: GET /api/v1/feed/insights
+      operationId: get_api_v1_feed_insights
+      responses:
+        '200': { description: Success }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        default: { $ref: '#/components/responses/Error' }
   "/api/v1/glossary":
     get:
       tags: [Public]

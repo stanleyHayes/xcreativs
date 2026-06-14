@@ -268,11 +268,17 @@ func (r *IdentityRepo) ListAPIKeysByUser(ctx context.Context, userID string) ([]
 	return pgx.CollectRows(rows, pgx.RowToStructByName[domain.APIKey])
 }
 
-func (r *IdentityRepo) RevokeAPIKey(ctx context.Context, id string) error {
-	_, err := r.pool.Exec(ctx, `
-		UPDATE identity.api_keys SET is_active = FALSE, revoked_at = NOW() WHERE id = $1
-	`, id)
-	return err
+// RevokeAPIKey scopes the revocation to the owning user so a caller cannot
+// revoke another user's key by id. Returns rows affected (0 = not found / not owned).
+func (r *IdentityRepo) RevokeAPIKey(ctx context.Context, id, userID string) (int64, error) {
+	ct, err := r.pool.Exec(ctx, `
+		UPDATE identity.api_keys SET is_active = FALSE, revoked_at = NOW()
+		WHERE id = $1 AND user_id = $2
+	`, id, userID)
+	if err != nil {
+		return 0, err
+	}
+	return ct.RowsAffected(), nil
 }
 
 func (r *IdentityRepo) UpdateAPIKeyLastUsed(ctx context.Context, id string) error {

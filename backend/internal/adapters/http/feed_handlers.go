@@ -14,6 +14,8 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+const insightsPathPrefix = "/insights/"
+
 // handleDownloadInsight implements the gated-download / email-capture path for
 // theses and whitepapers (agent_plan.md §3.7). It captures the prospect's email
 // as an analytics lead event (no dedicated table required) and returns the
@@ -72,7 +74,7 @@ func handleDownloadInsight(pool *pgxpool.Pool) http.HandlerFunc {
 		_, _ = pool.Exec(r.Context(), `
 			INSERT INTO identity.analytics_events (event_type, visitor_id, page_path, metadata)
 			VALUES ('thesis_download', $1, $2, $3)
-		`, visitor, "/insights/"+slug, meta)
+		`, visitor, insightsPathPrefix+slug, meta)
 
 		respondJSON(w, http.StatusOK, map[string]any{
 			"download_url": insight.GatedPDFURL,
@@ -174,6 +176,66 @@ func handleAudioFeed(pool *pgxpool.Pool) http.HandlerFunc {
 			}
 			if b.PublishedAt != nil {
 				item.PubDate = b.PublishedAt.Format(time.RFC1123Z)
+			}
+			feed.Channel.Items = append(feed.Channel.Items, item)
+		}
+
+		out, err := xml.MarshalIndent(feed, "", "  ")
+		if err != nil {
+			respondError(w, http.StatusInternalServerError, "failed to encode feed")
+			return
+		}
+		w.Header().Set("Content-Type", "application/rss+xml; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(xml.Header))
+		_, _ = w.Write(out)
+	}
+}
+
+// handleInsightsFeed emits an RSS 2.0 feed of published insights (field notes,
+// theses, whitepapers). agent_plan.md §3.4 marks the insights index "RSS-ready";
+// this is that feed. Optional ?type= filter (field_note|thesis|whitepaper)
+// mirrors the JSON list endpoint.
+func handleInsightsFeed(pool *pgxpool.Pool) http.HandlerFunc {
+	deps := NewHandlerDependencies(pool)
+	return func(w http.ResponseWriter, r *http.Request) {
+		contentType := r.URL.Query().Get("type")
+		insights, err := deps.Content.ListInsights(r.Context(), contentType, "en")
+		if err != nil {
+			respondError(w, http.StatusInternalServerError, "failed to build insights feed")
+			return
+		}
+
+		base := strings.TrimRight(os.Getenv("BASE_URL"), "/")
+		if base == "" {
+			base = "https://xcreativs.com"
+		}
+
+		feed := rssFeed{
+			Version: "2.0",
+			ITunes:  "http://www.itunes.com/dtds/podcast-1.0.dtd",
+			Channel: rssChannel{
+				Title:       "XCreativs Insights",
+				Link:        base + "/insights",
+				Description: "Field notes, theses, and whitepapers on intelligent digital systems for governments and enterprises, from XCreativs Technologies.",
+				Language:    "en",
+				Author:      "XCreativs Technologies",
+			},
+		}
+
+		for _, in := range insights {
+			item := rssItem{
+				Title:   in.Title,
+				Link:    base + insightsPathPrefix + in.Slug,
+				GUID:    base + insightsPathPrefix + in.Slug,
+				Desc:    in.Summary,
+				Summary: in.Summary,
+			}
+			if in.AuthorName != "" {
+				item.Author = in.AuthorName
+			}
+			if in.PublishedAt != nil {
+				item.PubDate = in.PublishedAt.Format(time.RFC1123Z)
 			}
 			feed.Channel.Items = append(feed.Channel.Items, item)
 		}

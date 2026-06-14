@@ -113,8 +113,14 @@ func handleRevokeAPIKey(pool *pgxpool.Pool) http.HandlerFunc {
 	identity := db.NewIdentityRepo(pool)
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := chi.URLParam(r, "id")
-		if err := identity.RevokeAPIKey(r.Context(), id); err != nil {
+		userID, _ := r.Context().Value(userIDKey).(string)
+		affected, err := identity.RevokeAPIKey(r.Context(), id, userID)
+		if err != nil {
 			respondError(w, http.StatusInternalServerError, "failed to revoke key")
+			return
+		}
+		if affected == 0 {
+			respondError(w, http.StatusNotFound, "api key not found")
 			return
 		}
 		respondJSON(w, http.StatusOK, map[string]string{"status": "revoked"})

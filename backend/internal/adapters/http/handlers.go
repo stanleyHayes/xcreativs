@@ -635,12 +635,18 @@ func computeEstimate(serviceLine string, params map[string]any) (normalizedLine,
 	priceGHS = fmt.Sprintf("₵%s–₵%s", formatNumber(minGHS), formatNumber(maxGHS))
 	weeks = fmt.Sprintf("%d–%d weeks", minWeeks, maxWeeks)
 
-	// Components breakdown
+	// Components breakdown. Phase boundaries are clamped so each phase is
+	// non-empty and monotonically increasing even when the total is small —
+	// integer division alone produced inverted ranges like "weeks 1–0".
+	d1 := max(1, minWeeks/4)      // Discovery & Architecture end
+	d2 := max(d1+1, minWeeks/2)   // Design & Prototyping end
+	d3 := max(d2+1, maxWeeks*3/4) // Development end
+	d4 := max(d3+1, maxWeeks)     // Testing & Deployment end
 	components = []any{
-		map[string]string{"name": "Discovery & Architecture", "phase": "weeks 1–" + fmt.Sprintf("%d", minWeeks/4)},
-		map[string]string{"name": "Design & Prototyping", "phase": "weeks " + fmt.Sprintf("%d–%d", minWeeks/4+1, minWeeks/2)},
-		map[string]string{"name": "Development", "phase": "weeks " + fmt.Sprintf("%d–%d", minWeeks/2+1, maxWeeks*3/4)},
-		map[string]string{"name": "Testing & Deployment", "phase": "weeks " + fmt.Sprintf("%d–%d", maxWeeks*3/4+1, maxWeeks)},
+		map[string]string{"name": "Discovery & Architecture", "phase": fmt.Sprintf("weeks 1–%d", d1)},
+		map[string]string{"name": "Design & Prototyping", "phase": fmt.Sprintf("weeks %d–%d", d1+1, d2)},
+		map[string]string{"name": "Development", "phase": fmt.Sprintf("weeks %d–%d", d2+1, d3)},
+		map[string]string{"name": "Testing & Deployment", "phase": fmt.Sprintf("weeks %d–%d", d3+1, d4)},
 	}
 
 	// Sample architecture description

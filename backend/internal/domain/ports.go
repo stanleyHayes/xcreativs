@@ -29,7 +29,7 @@ type IdentityRepository interface {
 	CreateAPIKey(ctx context.Context, k *APIKey) error
 	GetAPIKeyByHash(ctx context.Context, hash string) (*APIKey, error)
 	ListAPIKeysByUser(ctx context.Context, userID string) ([]APIKey, error)
-	RevokeAPIKey(ctx context.Context, id string) error
+	RevokeAPIKey(ctx context.Context, id, userID string) (int64, error)
 	UpdateAPIKeyLastUsed(ctx context.Context, id string) error
 
 	// Password Reset
