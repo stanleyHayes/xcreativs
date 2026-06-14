@@ -105,7 +105,7 @@ function DiagnosticForm() {
         <p className="mt-2 text-gravity/60">Your diagnostic ID: {id}</p>
         <p className="mt-4 text-sm text-gravity/60">Our team will review your responses and route you accordingly.</p>
         <a
-          href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/diagnostics/${id}/summary.pdf`}
+          href={`/api/v1/diagnostics/${id}/summary.pdf`}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-x mt-6"

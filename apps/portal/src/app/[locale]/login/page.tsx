@@ -16,7 +16,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
+const API_URL = ""; // relative -> same-origin /api proxy
 const MFA_HELP_TEXT = "Enter the 6-digit code from your authenticator app.";
 const INPUT_CLASS =
   "w-full rounded-2xl border border-white/10 bg-white/[0.055] px-4 py-3 text-sm text-white placeholder:text-white/25 transition-colors focus:border-signal focus:outline-none focus:ring-4 focus:ring-signal/15 disabled:opacity-50";

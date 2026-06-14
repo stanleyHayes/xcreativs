@@ -43,7 +43,7 @@ export default function ClientThemeProvider({ children }: { children: React.Reac
     const token = localStorage.getItem("access_token");
     if (!token) return;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/portal/theme?engagement_id=${engagementId}`, {
+    fetch(`/api/v1/portal/theme?engagement_id=${engagementId}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => r.json())

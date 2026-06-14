@@ -16,7 +16,7 @@ interface SigningData {
   signed_at?: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
+const API_URL = ""; // relative -> same-origin /api proxy
 
 export default function SignPage() {
   const { id } = useParams();

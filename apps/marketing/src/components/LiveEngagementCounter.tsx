@@ -43,7 +43,7 @@ export default function LiveEngagementCounter() {
   const [data, setData] = useState<CounterData | null>(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/metrics/engagements`)
+    fetch(`/api/v1/metrics/engagements`)
       .then((r) => r.json())
       .then((d) => setData(d))
       .catch(() => {});

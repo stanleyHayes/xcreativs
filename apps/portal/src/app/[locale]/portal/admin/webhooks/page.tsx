@@ -40,13 +40,13 @@ export default function AdminWebhooksPage() {
     try {
       const whRes =
         (await api.listWebhooks?.()) ||
-        ((await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/admin/webhooks`, {
+        ((await fetch(`/api/v1/admin/webhooks`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
         }).then((r) => r.json())) as WebhooksResponse);
 
       const dRes =
         (await api.listWebhookDeliveries?.()) ||
-        ((await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/admin/webhooks/deliveries`, {
+        ((await fetch(`/api/v1/admin/webhooks/deliveries`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
         }).then((r) => r.json())) as WebhookDeliveriesResponse);
 
@@ -71,7 +71,7 @@ export default function AdminWebhooksPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/admin/webhooks`, {
+      await fetch(`/api/v1/admin/webhooks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -97,7 +97,7 @@ export default function AdminWebhooksPage() {
     if (!confirm("Delete this webhook subscription?")) return;
     setDeleting(id);
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/admin/webhooks/${id}`, {
+      await fetch(`/api/v1/admin/webhooks/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
       });

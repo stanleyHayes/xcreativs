@@ -56,7 +56,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
     const timer = setTimeout(() => {
       setLoading(true);
       if (isAuthenticated) {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/portal/search?q=${encodeURIComponent(query)}`, {
+        fetch(`/api/v1/portal/search?q=${encodeURIComponent(query)}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
         })
           .then((r) => r.json() as Promise<PortalSearchResponse>)

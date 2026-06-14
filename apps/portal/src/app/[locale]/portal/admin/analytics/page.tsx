@@ -46,7 +46,7 @@ export default function AnalyticsDashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/admin/analytics`, {
+    fetch(`/api/v1/admin/analytics`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
     })
       .then((r) => r.json())

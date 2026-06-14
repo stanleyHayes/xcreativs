@@ -54,7 +54,7 @@ export default function AudioBriefsPage() {
       <main className="shell-x py-16">
       <div className="flex justify-end">
         <a
-          href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/feed/audio`}
+          href={`/api/v1/feed/audio`}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-x-secondary shrink-0"
