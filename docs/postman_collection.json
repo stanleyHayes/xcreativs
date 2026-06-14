@@ -295,6 +295,25 @@
           }
         },
         {
+          "name": "GET /api/v1/admin/audit-logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/audit-logs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "audit-logs"
+              ]
+            }
+          }
+        },
+        {
           "name": "GET /api/v1/admin/bookings",
           "request": {
             "method": "GET",
@@ -328,6 +347,85 @@
                 "v1",
                 "admin",
                 "bookings",
+                ":id"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "GET /api/v1/admin/careers/roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/careers/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "careers",
+                "roles"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/v1/admin/careers/roles",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/careers/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "careers",
+                "roles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "PUT /api/v1/admin/careers/roles/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/careers/roles/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "careers",
+                "roles",
                 ":id"
               ]
             },
