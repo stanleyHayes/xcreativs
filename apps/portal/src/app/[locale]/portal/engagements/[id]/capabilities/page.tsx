@@ -4,7 +4,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
-import { Layers, Plus, Trash2, X } from "lucide-react";
+import { AlertTriangle, Layers, Plus, Trash2, X } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Capability {
   ID: string;
@@ -73,7 +74,19 @@ export default function CapabilitiesPage() {
     try { await api.deleteCapability(id as string, cid); await load(); } catch { setError("Failed to delete"); }
   };
 
-  if (error && !items.length) return <div className="text-white/60">{error}</div>;
+  if (error && !items.length)
+    return (
+      <PortalEmptyState
+        icon={AlertTriangle}
+        title="Could not load capabilities"
+        description={error}
+        action={
+          <button onClick={() => void load()} className="portal-btn-x">
+            Retry
+          </button>
+        }
+      />
+    );
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   return (
@@ -125,7 +138,14 @@ export default function CapabilitiesPage() {
           </div>
         ))}
       </div>
-      {items.length === 0 && <p className="text-center text-white/30 py-8 text-sm">No capabilities tracked yet.</p>}
+      {items.length === 0 && (
+        <PortalEmptyState
+          icon={Layers}
+          title="No capabilities tracked yet"
+          description="Add a capability to start building out the delivery lattice."
+          compact
+        />
+      )}
     </div>
   );
 }

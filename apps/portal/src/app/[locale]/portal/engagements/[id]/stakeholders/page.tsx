@@ -4,7 +4,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
-import { Network, Plus, Pencil, Trash2, X, Save } from "lucide-react";
+import { Network, Plus, Pencil, Trash2, X, Save, AlertTriangle } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Stakeholder {
   id: string;
@@ -122,7 +123,19 @@ export default function StakeholdersPage() {
     setShowForm(true);
   };
 
-  if (error && !items.length) return <div className="text-white/60">{error}</div>;
+  if (error && !items.length)
+    return (
+      <PortalEmptyState
+        icon={AlertTriangle}
+        title="Could not load stakeholders"
+        description={error}
+        action={
+          <button onClick={load} className="portal-btn-x">
+            Retry
+          </button>
+        }
+      />
+    );
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   const cell = (influence: string, interest: string) => items.filter((s) => s.influence === influence && s.interest === interest);
@@ -213,7 +226,14 @@ export default function StakeholdersPage() {
         </div>
       </div>
 
-      {items.length === 0 && <p className="text-center text-white/30 py-8 text-sm">No stakeholders mapped yet.</p>}
+      {items.length === 0 && (
+        <PortalEmptyState
+          compact
+          icon={Network}
+          title="No stakeholders mapped yet"
+          description="Add stakeholders to plot them on the power/interest map and track sentiment."
+        />
+      )}
     </div>
   );
 }

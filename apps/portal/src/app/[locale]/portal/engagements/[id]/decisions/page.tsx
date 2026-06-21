@@ -4,8 +4,9 @@ import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
-import { Scale, Plus, Pencil, Trash2, X, Save } from "lucide-react";
+import { Scale, Plus, Pencil, Trash2, X, Save, AlertTriangle } from "lucide-react";
 import ThreadedComments from "@/components/portal/ThreadedComments";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Decision {
   ID: string;
@@ -134,7 +135,8 @@ export default function DecisionsPage() {
     setShowForm(true);
   };
 
-  if (error && !decisions.length) return <div className="text-white/60">{error}</div>;
+  if (error && !decisions.length)
+    return <PortalEmptyState compact icon={AlertTriangle} title="Could not load decisions" description={error} />;
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   return (

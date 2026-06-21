@@ -14,6 +14,7 @@ import {
   Truck,
 } from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
+import EmptyState from "@xc/ui/EmptyState";
 
 export const metadata: Metadata = {
   title: "Industries — XCreativs Technologies",
@@ -73,7 +74,14 @@ export default async function IndustriesPage() {
       <main className="shell-x py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {industries.length === 0 && (
-          <p className="text-center text-gravity/40 py-12 col-span-full">No industry pages available yet.</p>
+          <div className="col-span-full">
+            <EmptyState
+              icon={Building2}
+              title="No industries available"
+              description="Industry pages will appear here as they're published."
+              compact
+            />
+          </div>
         )}
         {industries.map((ind: Industry) => {
           const Icon = getIndustryIcon(ind);

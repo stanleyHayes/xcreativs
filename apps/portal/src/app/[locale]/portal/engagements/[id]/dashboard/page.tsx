@@ -7,6 +7,7 @@ import { api } from "@xc/api";
 import type { DashboardResponse } from "@xc/api/types";
 import {
   AlertCircle,
+  AlertTriangle,
   ArrowRight,
   CheckCircle,
   Clock,
@@ -19,6 +20,7 @@ import {
   ShieldAlert,
   Sparkles,
 } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Milestone {
   ID?: string;
@@ -68,11 +70,12 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <div className="portal-panel-x p-8">
-        <p className="portal-meta-x">Dashboard</p>
-        <h2 className="font-display mt-2 text-3xl font-semibold">Workspace data unavailable</h2>
-        <p className="mt-3 text-sm text-white/56">{error}</p>
-      </div>
+      <PortalEmptyState
+        icon={AlertTriangle}
+        eyebrow="Dashboard"
+        title="Workspace data unavailable"
+        description={error}
+      />
     );
   }
 

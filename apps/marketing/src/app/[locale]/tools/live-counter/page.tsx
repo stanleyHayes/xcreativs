@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { Activity, Briefcase, CheckSquare, AlertTriangle, Users, TrendingUp, RefreshCw } from "lucide-react";
 import BannerWatermark from "@xc/ui/BannerWatermark";
+import EmptyState from "@xc/ui/EmptyState";
 
 interface CounterData {
   active_engagements: number;
@@ -122,10 +123,11 @@ export default function LiveCounterPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center text-gravity/40 py-12">
-              <Activity className="w-8 h-8 mx-auto mb-3 opacity-50" />
-              <p>Failed to load counter data.</p>
-            </div>
+            <EmptyState
+              icon={AlertTriangle}
+              title="Failed to load counter"
+              description="We couldn't load the live counter right now. Please try again shortly."
+            />
           )}
         </div>
       </section>

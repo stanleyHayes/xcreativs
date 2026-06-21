@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BookText } from "lucide-react";
+import { BookText, AlertTriangle } from "lucide-react";
 import { api } from "@xc/api";
 import PageBanner from "@xc/ui/PageBanner";
+import EmptyState from "@xc/ui/EmptyState";
 
 interface GlossaryTerm {
   ID: string;
@@ -21,7 +22,7 @@ export default function GlossaryPage() {
     api.listGlossary().then((d) => { setTerms((d.terms as GlossaryTerm[] | undefined) || []); setLoading(false); }).catch(() => setError("Failed to load data"));
   }, []);
 
-  if (error) return <div className="p-12 text-center text-gravity/60">{error}</div>;
+  if (error) return <EmptyState icon={AlertTriangle} title="Failed to load glossary" description="We couldn't load the glossary right now. Please try again shortly." />;
   if (loading) return <div className="p-12 text-center">Loading...</div>;
 
   return (

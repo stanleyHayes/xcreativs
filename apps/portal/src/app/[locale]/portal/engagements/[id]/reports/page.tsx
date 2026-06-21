@@ -3,7 +3,8 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { FileBarChart, Download, ClipboardCheck, TrendingUp, Shield } from "lucide-react";
+import { FileBarChart, Download, ClipboardCheck, TrendingUp, Shield, AlertTriangle } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Report {
   ID?: string;
@@ -32,7 +33,13 @@ export default function ReportsPage() {
     api.listReports(id as string).then((d) => { setReports((d.reports || []) as Report[]); setLoading(false); }).catch(() => setError("Failed to load data"));
   }, [id]);
 
-  if (error) return <div className="text-white/60">{error}</div>;
+  if (error) return (
+    <PortalEmptyState
+      icon={AlertTriangle}
+      title="Failed to load reports"
+      description={error}
+    />
+  );
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   return (
@@ -40,6 +47,13 @@ export default function ReportsPage() {
       <h2 className="mb-4 font-display text-xl font-semibold tracking-tight">Reports Library</h2>
       <p className="text-sm text-white/50 mb-6">Quarterly reviews, status memos, board packs, and technical handovers.</p>
 
+      {reports.length === 0 ? (
+        <PortalEmptyState
+          icon={FileBarChart}
+          title="No reports available"
+          description="Quarterly reviews, status memos, and board packs will appear here once they're published."
+        />
+      ) : (
       <div className="space-y-3">
         {reports.map((r) => {
           const config = (r.ReportType ? reportTypeConfig[r.ReportType] : undefined) || { icon: <FileBarChart className="w-4 h-4" />, color: "text-white/40", label: r.ReportType };
@@ -72,6 +86,7 @@ export default function ReportsPage() {
           );
         })}
       </div>
+      )}
     </div>
   );
 }

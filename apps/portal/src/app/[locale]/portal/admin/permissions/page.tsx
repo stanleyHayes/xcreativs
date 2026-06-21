@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Loader2, LockKeyhole, RefreshCw, ShieldCheck } from "lucide-react";
+import { AlertTriangle, Loader2, LockKeyhole, RefreshCw, ShieldCheck } from "lucide-react";
 import { api } from "@xc/api";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 import type { AdminPermission, AdminRole } from "@xc/api/types";
 
 export default function AdminPermissionsPage() {
@@ -66,12 +67,17 @@ export default function AdminPermissionsPage() {
           <Loader2 className="h-5 w-5 animate-spin" /> Loading permissions…
         </div>
       ) : error ? (
-        <div className="portal-card-x p-10 text-center text-white/60">
-          Couldn&apos;t load permissions.{" "}
-          <button onClick={() => load()} className="text-signal underline">
-            Retry
-          </button>
-        </div>
+        <PortalEmptyState
+          icon={AlertTriangle}
+          title="Failed to load permissions"
+          description="We couldn't load the permission catalogue. Please try again."
+          compact
+          action={
+            <button onClick={() => load()} className="text-signal underline">
+              Retry
+            </button>
+          }
+        />
       ) : (
         <section className="portal-panel-x portal-scrollbar-x overflow-x-auto">
           <table className="w-full min-w-[760px] text-left text-sm">

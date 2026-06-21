@@ -4,7 +4,8 @@ import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
-import { Ticket, Clock, AlertCircle, CheckCircle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
+import { Ticket, Clock, AlertCircle, CheckCircle, Plus, Pencil, Trash2, X, Save, AlertTriangle } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface SupportTicket {
   ID: string;
@@ -142,7 +143,19 @@ export default function TicketsPage() {
     setShowForm(true);
   };
 
-  if (error && !tickets.length) return <div className="text-white/60">{error}</div>;
+  if (error && !tickets.length)
+    return (
+      <PortalEmptyState
+        icon={AlertTriangle}
+        title="Could not load tickets"
+        description={error}
+        action={
+          <button onClick={() => load()} className="portal-btn-x">
+            Retry
+          </button>
+        }
+      />
+    );
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   return (

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import type { WebhooksResponse, WebhookDeliveriesResponse } from "@xc/api/types";
 import { Webhook, Plus, Trash2, Loader2, Send, CheckCircle, XCircle, Clock, RefreshCw } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface WebhookSub {
   id: string;
@@ -219,11 +220,11 @@ export default function AdminWebhooksPage() {
       {activeTab === "subscriptions" && (
         <>
           {webhooks.length === 0 ? (
-            <div className="portal-panel-x p-8 text-center text-white/40">
-              <Webhook className="mx-auto mb-3 h-8 w-8 opacity-50" />
-              <h2 className="font-display text-xl font-semibold text-white/72">No webhook subscriptions yet</h2>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">Create a subscription to notify external systems about portal events.</p>
-            </div>
+            <PortalEmptyState
+              icon={Webhook}
+              title="No webhooks yet"
+              description="Create a subscription to notify external systems about portal events."
+            />
           ) : (
             <div className="space-y-3">
               {webhooks.map((wh) => (
@@ -261,11 +262,11 @@ export default function AdminWebhooksPage() {
       {activeTab === "deliveries" && (
         <>
           {deliveries.length === 0 ? (
-            <div className="portal-panel-x p-8 text-center text-white/40">
-              <Clock className="mx-auto mb-3 h-8 w-8 opacity-50" />
-              <h2 className="font-display text-xl font-semibold text-white/72">No deliveries yet</h2>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">Events will appear here after outbound webhook attempts are triggered.</p>
-            </div>
+            <PortalEmptyState
+              icon={Clock}
+              title="No webhook deliveries yet"
+              description="Events will appear here after outbound webhook attempts are triggered."
+            />
           ) : (
             <div className="space-y-3">
               {deliveries.map((d) => (

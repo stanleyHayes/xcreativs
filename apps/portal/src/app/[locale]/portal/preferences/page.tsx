@@ -54,7 +54,13 @@ export default function NotificationPreferencesPage() {
     finally { setSaving(false); }
   }
 
-  if (loading || !prefs) return <div className="text-white/60 p-8">Loading…</div>;
+  if (loading || !prefs)
+    return (
+      <div className="portal-panel-x mx-auto flex max-w-2xl items-center justify-center gap-3 p-12 text-sm text-white/55">
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-signal" aria-hidden />
+        Loading preferences…
+      </div>
+    );
 
   return (
     <div className="portal-panel-x mx-auto max-w-2xl p-6 lg:p-8">

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { api } from "@xc/api";
 import type { AssessmentTemplateResponse, AssessmentSessionResponse } from "@xc/api/types";
 import BannerWatermark from "@xc/ui/BannerWatermark";
-import { BarChart3, ArrowRight, CheckCircle, RotateCcw, TrendingUp, Shield, Database, Server, Cog, Target } from "lucide-react";
+import EmptyState from "@xc/ui/EmptyState";
+import { BarChart3, ArrowRight, CheckCircle, RotateCcw, TrendingUp, Shield, Database, Server, Cog, Target, AlertTriangle } from "lucide-react";
 
 interface AssessmentTemplate {
   id: string;
@@ -150,7 +151,11 @@ export default function ReadinessAssessmentPage() {
   if (error && step === "intro") {
     return (
       <main className="shell-x py-20">
-        <p className="text-red-500">{error}</p>
+        <EmptyState
+          icon={AlertTriangle}
+          title="Assessment failed to load"
+          description="We couldn't load the assessment right now. Please try again shortly."
+        />
       </main>
     );
   }

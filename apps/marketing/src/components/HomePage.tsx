@@ -13,7 +13,8 @@ const MEDIA = [
   "/media/hero-network-2.png",
   "/media/ai-systems-2.png",
 ];
-import { ArrowRight, ArrowUpRight, Briefcase, FlaskConical, Building2, Landmark, Network } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Briefcase, FlaskConical, Building2, Landmark, Network, FolderOpen } from "lucide-react";
+import EmptyState from "@xc/ui/EmptyState";
 import LiveEngagementCounter from "./LiveEngagementCounter";
 import HeroBackdrop from "./decor/HeroBackdrop";
 import type { HoldingTreeResponse } from "@xc/api/types";
@@ -441,7 +442,14 @@ function HoldingTree() {
                       </li>
                     ))}
                     {visibleItems.length === 0 && (
-                      <li className="text-sm leading-5 text-gravity/40">Portfolio entries publish here when live.</li>
+                      <li>
+                        <EmptyState
+                          compact
+                          icon={FolderOpen}
+                          title="No entries yet"
+                          description="Portfolio entries will appear here as units go live."
+                        />
+                      </li>
                     )}
                     {items.length > visibleItems.length && (
                       <li className="text-sm font-medium leading-5 text-signal">

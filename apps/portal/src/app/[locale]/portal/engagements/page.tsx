@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
-import { ArrowRight, BriefcaseBusiness, Building2, Filter, Search, SlidersHorizontal, Target, Users } from "lucide-react";
+import { AlertTriangle, ArrowRight, BriefcaseBusiness, Building2, Filter, Search, SlidersHorizontal, Target, Users } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Engagement {
   ID?: string;
@@ -45,11 +46,8 @@ export default function EngagementsPage() {
 
   if (error) {
     return (
-      <div className="portal-panel-x p-8">
-        <p className="portal-meta-x">Client work</p>
-        <h1 className="font-display mt-2 text-3xl font-semibold">Engagements unavailable</h1>
-        <p className="mt-3 text-sm text-white/56">{error}</p>
-      </div>
+      <PortalEmptyState icon={AlertTriangle} title="Engagements unavailable" description={error} />
+
     );
   }
 

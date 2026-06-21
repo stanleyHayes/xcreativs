@@ -5,8 +5,9 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { FileUpload } from "@xc/ui/FileUpload";
 import CustomSelect from "@xc/ui/CustomSelect";
-import { FileText, CheckCircle, XCircle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
+import { FileText, CheckCircle, XCircle, Plus, Pencil, Trash2, X, Save, AlertTriangle } from "lucide-react";
 import ThreadedComments from "@/components/portal/ThreadedComments";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Deliverable {
   ID: string;
@@ -153,7 +154,7 @@ export default function DeliverablesPage() {
     setShowForm(true);
   };
 
-  if (error && !deliverables.length) return <div className="text-white/60">{error}</div>;
+  if (error && !deliverables.length) return <PortalEmptyState icon={AlertTriangle} title="Could not load deliverables" description={error} />;
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   return (

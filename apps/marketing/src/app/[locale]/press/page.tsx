@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Megaphone } from "lucide-react";
+import { Megaphone, AlertTriangle } from "lucide-react";
 import { api } from "@xc/api";
 import PageBanner from "@xc/ui/PageBanner";
+import EmptyState from "@xc/ui/EmptyState";
 
 interface PressItem {
   Slug: string;
@@ -29,7 +30,14 @@ export default function PressPage() {
       .catch(() => setError("Failed to load data"));
   }, []);
 
-  if (error) return <div className="p-12 text-center text-gravity/60">{error}</div>;
+  if (error)
+    return (
+      <EmptyState
+        icon={AlertTriangle}
+        title="Failed to load press releases"
+        description="We couldn't load press releases right now. Please try again shortly."
+      />
+    );
   if (loading) return <div className="p-12 text-center">Loading...</div>;
 
   return (

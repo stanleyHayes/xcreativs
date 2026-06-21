@@ -3,7 +3,8 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { MonitorPlay, Plus, X, ExternalLink, Ban, Copy } from "lucide-react";
+import { MonitorPlay, Plus, X, ExternalLink, Ban, Copy, AlertTriangle } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Demo {
   id: string;
@@ -47,7 +48,19 @@ export default function DemosPage() {
     try { await api.revokeDemoLink(did); await load(); } catch { setError("Failed to revoke"); }
   };
 
-  if (error && !items.length) return <div className="text-white/60">{error}</div>;
+  if (error && !items.length)
+    return (
+      <PortalEmptyState
+        icon={AlertTriangle}
+        title="Could not load demos"
+        description={error}
+        action={
+          <button onClick={load} className="portal-btn-x">
+            Retry
+          </button>
+        }
+      />
+    );
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   return (
@@ -96,7 +109,14 @@ export default function DemosPage() {
           </div>
         ))}
       </div>
-      {items.length === 0 && <p className="text-center text-white/30 py-8 text-sm">No demo links yet.</p>}
+      {items.length === 0 && (
+        <PortalEmptyState
+          compact
+          icon={MonitorPlay}
+          title="No demo links yet"
+          description="Create a signed, time-limited SSO link to share a preview environment."
+        />
+      )}
     </div>
   );
 }

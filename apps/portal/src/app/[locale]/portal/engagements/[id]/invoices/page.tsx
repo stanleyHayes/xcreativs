@@ -3,9 +3,10 @@
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { Receipt, CheckCircle, Clock, XCircle, Plus, X, Link2 } from "lucide-react";
+import { Receipt, CheckCircle, Clock, XCircle, Plus, X, Link2, AlertTriangle } from "lucide-react";
 import { useCurrency } from "@xc/ui/CurrencyProvider";
 import CustomSelect from "@xc/ui/CustomSelect";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Invoice {
   ID: string;
@@ -69,7 +70,7 @@ export default function InvoicesPage() {
     catch { alert("Failed to update invoice"); } finally { setBusy(null); }
   }
 
-  if (error) return <div className="text-white/60">{error}</div>;
+  if (error) return <PortalEmptyState icon={AlertTriangle} title="Could not load invoices" description={error} />;
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   const statusIcon = (s: string) => {
@@ -116,10 +117,13 @@ export default function InvoicesPage() {
       )}
 
       {invoices.length === 0 ? (
-        <div className="portal-panel-x p-8 text-center">
-          <Receipt className="w-8 h-8 text-white/20 mx-auto mb-3" />
-          <p className="text-white/50">No invoices yet.</p>
-        </div>
+        <PortalEmptyState
+          compact
+          icon={Receipt}
+          eyebrow="Invoices"
+          title="No invoices yet"
+          description="Generate an invoice to start billing for this engagement."
+        />
       ) : (
         <div className="space-y-3">
           {invoices.map((inv) => {

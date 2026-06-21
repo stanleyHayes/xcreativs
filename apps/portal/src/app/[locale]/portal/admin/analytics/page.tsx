@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BarChart3, Users, MousePointerClick, FileText, Briefcase, Globe, TrendingUp, TrendingDown, Activity } from "lucide-react";
+import { BarChart3, Users, MousePointerClick, FileText, Briefcase, Globe, TrendingUp, TrendingDown, Activity, AlertTriangle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface AnalyticsMetrics {
   visitors_30d?: number;
@@ -70,13 +71,11 @@ export default function AnalyticsDashboardPage() {
   }
   if (!data) {
     return (
-      <div className="portal-panel-x p-8">
-        <p className="portal-meta-x">Analytics</p>
-        <h1 className="font-display mt-2 text-3xl font-semibold">Analytics unavailable</h1>
-        <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/56">
-          We could not load admin analytics. Check the API service and refresh this workspace.
-        </p>
-      </div>
+      <PortalEmptyState
+        icon={AlertTriangle}
+        title="Analytics unavailable"
+        description="We couldn't load analytics right now. Please try again in a moment."
+      />
     );
   }
 

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
 import { Briefcase, Calendar, ChevronDown, ChevronUp, ExternalLink, CheckCircle, Plus } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 const statusColors: Record<string, string> = {
   received: "text-yellow-400 bg-yellow-400/10",
@@ -162,11 +163,11 @@ export default function AdminApplicationsPage() {
       </section>
 
       {apps.length === 0 && (
-        <div className="portal-panel-x p-8 text-center text-white/40">
-          <Briefcase className="mx-auto mb-3 h-8 w-8 opacity-50" />
-          <h2 className="font-display text-xl font-semibold text-white/72">No applications found</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">Applications will appear here once candidates submit role forms.</p>
-        </div>
+        <PortalEmptyState
+          icon={Briefcase}
+          title="No applications yet"
+          description="Applications will appear here once candidates submit role forms."
+        />
       )}
 
       <div className="space-y-3">

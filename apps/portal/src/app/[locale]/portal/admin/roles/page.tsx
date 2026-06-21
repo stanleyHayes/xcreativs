@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { CheckCircle2, Loader2, RefreshCw, Shield, UserCog } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, RefreshCw, Shield, UserCog } from "lucide-react";
 import { api } from "@xc/api";
 import type { AdminRole } from "@xc/api/types";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 const ROLE_SUMMARIES: Record<string, string> = {
   admin: "Full workspace administration and configuration.",
@@ -68,12 +69,18 @@ export default function AdminRolesPage() {
           <Loader2 className="h-5 w-5 animate-spin" /> Loading roles…
         </div>
       ) : error ? (
-        <div className="portal-card-x p-10 text-center text-white/60">
-          Couldn&apos;t load roles.{" "}
-          <button onClick={() => load()} className="text-signal underline">
-            Retry
-          </button>
-        </div>
+        <PortalEmptyState
+          icon={AlertTriangle}
+          title="Failed to load roles"
+          description="We couldn't load roles right now. Please try again."
+          compact
+          action={
+            <button type="button" onClick={() => load()} className="portal-btn-x">
+              <RefreshCw className="h-4 w-4" />
+              Retry
+            </button>
+          }
+        />
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
           {roles.map((role) => (

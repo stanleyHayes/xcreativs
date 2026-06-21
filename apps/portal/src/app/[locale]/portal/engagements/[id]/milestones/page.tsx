@@ -4,7 +4,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
-import { Flag, CheckCircle, Clock, Circle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
+import { Flag, CheckCircle, Clock, Circle, Plus, Pencil, Trash2, X, Save, AlertTriangle } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Milestone {
   ID: string;
@@ -150,7 +151,19 @@ export default function MilestonesPage() {
     setShowForm(true);
   };
 
-  if (error && !milestones.length) return <div className="text-white/60">{error}</div>;
+  if (error && !milestones.length)
+    return (
+      <PortalEmptyState
+        icon={AlertTriangle}
+        title="Could not load milestones"
+        description={error}
+        action={
+          <button onClick={load} className="portal-btn-x">
+            Retry
+          </button>
+        }
+      />
+    );
   if (loading) return <div className="text-white/60">Loading milestones...</div>;
 
   const completed = milestones.filter((m) => m.Status === "completed").length;
@@ -248,10 +261,16 @@ export default function MilestonesPage() {
       )}
 
       {milestones.length === 0 ? (
-        <div className="portal-panel-x p-8 text-center text-white/40">
-          <Flag className="w-8 h-8 mx-auto mb-3 opacity-50" />
-          <p>No milestones defined for this engagement.</p>
-        </div>
+        <PortalEmptyState
+          icon={Flag}
+          title="No milestones yet"
+          description="No milestones defined for this engagement. Add the first one to start tracking progress."
+          action={
+            <button onClick={() => { resetForm(); setShowForm(true); }} className="portal-btn-x">
+              <Plus className="w-4 h-4" /> Add milestone
+            </button>
+          }
+        />
       ) : (
         <div className="relative space-y-0">
           <div className="absolute left-[19px] top-2 bottom-2 w-px bg-white/10" />

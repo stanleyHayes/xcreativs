@@ -4,8 +4,9 @@ import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
-import { Mail, CheckCircle, Clock, Plus, X, Loader2, Trash2 } from "lucide-react";
+import { Mail, CheckCircle, Clock, Plus, X, Loader2, Trash2, AlertTriangle } from "lucide-react";
 import type { TeamMembersResponse } from "@xc/api/types";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface TeamMember {
   ID: string;
@@ -87,7 +88,15 @@ export default function TeamPage() {
     }
   }
 
-  if (error) return <div className="text-white/60">{error}</div>;
+  if (error)
+    return (
+      <PortalEmptyState
+        icon={AlertTriangle}
+        title="Could not load team"
+        description={error}
+        compact
+      />
+    );
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   const xcreativs = members.filter((m) => m.IsXCreativs);

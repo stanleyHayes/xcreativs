@@ -3,7 +3,8 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { FileText, Download, Shield, BookOpen, FileCheck } from "lucide-react";
+import { FileText, Download, Shield, BookOpen, FileCheck, AlertTriangle } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface PortalDocument {
   ID: string;
@@ -31,7 +32,14 @@ export default function DocumentsPage() {
     api.listDocuments(id as string).then((d) => { setDocuments((d.documents as PortalDocument[] | undefined) || []); setLoading(false); }).catch(() => setError("Failed to load data"));
   }, [id]);
 
-  if (error) return <div className="text-white/60">{error}</div>;
+  if (error)
+    return (
+      <PortalEmptyState
+        icon={AlertTriangle}
+        title="Document library unavailable"
+        description={error}
+      />
+    );
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   return (
@@ -39,6 +47,13 @@ export default function DocumentsPage() {
       <h2 className="mb-4 font-display text-xl font-semibold tracking-tight">Document Library</h2>
       <p className="text-sm text-white/50 mb-6">Reference documents, contracts, and agreements.</p>
 
+      {documents.length === 0 ? (
+        <PortalEmptyState
+          icon={FileText}
+          title="No documents in library"
+          description="Reference documents, contracts, and agreements will appear here once they are added."
+        />
+      ) : (
       <div className="space-y-3">
         {documents.map((doc) => {
           const config = docTypeConfig[doc.DocType] || { icon: <FileText className="w-4 h-4" />, color: "text-white/40", label: doc.DocType };
@@ -71,6 +86,7 @@ export default function DocumentsPage() {
           );
         })}
       </div>
+      )}
     </div>
   );
 }

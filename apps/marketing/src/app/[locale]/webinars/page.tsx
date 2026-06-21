@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { Calendar, Clock, Users, Video, Radio, CheckCircle } from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
+import EmptyState from "@xc/ui/EmptyState";
 
 interface Webinar {
   Slug: string;
@@ -130,7 +131,11 @@ export default function WebinarsPage() {
       </div>
 
       {webinars.length === 0 && (
-        <p className="text-center text-gravity/40 py-12">No webinars found.</p>
+        <EmptyState
+          icon={Video}
+          title="No webinars scheduled"
+          description="Scheduled webinars will appear here — check back soon."
+        />
       )}
       </main>
     </>

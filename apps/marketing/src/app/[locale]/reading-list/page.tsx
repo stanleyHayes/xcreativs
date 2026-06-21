@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { BookOpen, ExternalLink, Star, Clock, Tag } from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
+import EmptyState from "@xc/ui/EmptyState";
 
 const categoryLabels: Record<string, string> = {
   strategy: "Strategy",
@@ -130,7 +131,11 @@ export default function ReadingListPage() {
       </div>
 
       {items.length === 0 && (
-        <p className="text-center text-gravity/40 py-12">No reading list items found.</p>
+        <EmptyState
+          icon={BookOpen}
+          title="No reading list items"
+          description="No reading list items in this category yet — check back soon."
+        />
       )}
       </main>
     </>

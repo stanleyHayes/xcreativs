@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { FlaskConical } from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
+import EmptyState from "@xc/ui/EmptyState";
 
 export const metadata: Metadata = {
   title: "Labs — XCreativs Technologies",
@@ -46,7 +47,11 @@ export default async function LabsPage() {
       <main className="shell-x py-16">
         <div className="mt-12 space-y-8">
         {products.length === 0 && (
-          <p className="text-center text-gravity/40 py-12">No lab products available yet.</p>
+          <EmptyState
+            icon={FlaskConical}
+            title="No lab products yet"
+            description="Lab products will appear here as they move from research into the open."
+          />
         )}
         {products.map((p) => (
           <Link

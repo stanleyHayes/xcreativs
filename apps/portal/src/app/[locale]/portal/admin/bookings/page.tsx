@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
 import { Calendar, CheckCircle, Clock, XCircle, Loader2 } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 const statusColors: Record<string, string> = {
   requested: "text-yellow-400 bg-yellow-400/10",
@@ -114,11 +115,11 @@ export default function AdminBookingsPage() {
       </section>
 
       {bookings.length === 0 ? (
-        <div className="portal-panel-x p-8 text-center text-white/40">
-          <Clock className="mx-auto mb-3 h-8 w-8 opacity-50" />
-          <h2 className="font-display text-xl font-semibold text-white/72">No bookings found</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">New consultation requests will appear here with preferred dates, topic, and contact details.</p>
-        </div>
+        <PortalEmptyState
+          icon={Clock}
+          title="No bookings yet"
+          description="New consultation requests will appear here with preferred dates, topic, and contact details."
+        />
       ) : (
         <div className="space-y-3">
           {bookings.map((b) => (

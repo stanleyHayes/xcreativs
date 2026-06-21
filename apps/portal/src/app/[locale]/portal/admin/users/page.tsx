@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Activity, Loader2, Mail, RefreshCw, ShieldCheck, UserCircle, Users } from "lucide-react";
+import { Activity, AlertTriangle, Loader2, Mail, RefreshCw, ShieldCheck, UserCircle, Users } from "lucide-react";
 import { api } from "@xc/api";
 import type { AdminUser } from "@xc/api/types";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 const ROLES = ["admin", "executive", "project", "editor", "viewer"];
 
@@ -105,14 +106,22 @@ export default function AdminUsersPage() {
             <Loader2 className="h-5 w-5 animate-spin" /> Loading members…
           </div>
         ) : error ? (
-          <div className="p-10 text-center text-white/60">
-            Couldn&apos;t load users.{" "}
-            <button onClick={() => load()} className="text-signal underline">
-              Retry
-            </button>
-          </div>
+          <PortalEmptyState
+            icon={AlertTriangle}
+            title="Failed to load users"
+            description="We couldn't load users right now. Please try again."
+            action={
+              <button onClick={() => load()} className="text-signal underline">
+                Retry
+              </button>
+            }
+          />
         ) : users.length === 0 ? (
-          <div className="p-10 text-center text-white/45">No users yet.</div>
+          <PortalEmptyState
+            icon={Users}
+            title="No users yet"
+            description="Workspace members will appear here once invited to collaborate."
+          />
         ) : (
           <div className="divide-y divide-white/10">
             {users.map((user) => (

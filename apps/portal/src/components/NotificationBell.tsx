@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { api } from "@xc/api";
 import type { NotificationItem, NotificationsResponse } from "@xc/api/types";
 import { Bell, Check, Loader2 } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
@@ -109,9 +110,12 @@ export default function NotificationBell() {
 
           <div className="max-h-80 overflow-y-auto">
             {notifications.length === 0 ? (
-              <div className="px-4 py-6 text-center text-sm text-white/40">
-                No notifications yet
-              </div>
+              <PortalEmptyState
+                icon={Bell}
+                title="No notifications yet"
+                description="You're all caught up — no new notifications."
+                compact
+              />
             ) : (
               notifications.map((n) => (
                 <div

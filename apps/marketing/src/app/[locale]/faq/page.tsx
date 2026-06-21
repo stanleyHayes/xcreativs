@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, AlertTriangle } from "lucide-react";
 import { api } from "@xc/api";
 import type { Entity } from "@xc/api/types";
 import PageBanner from "@xc/ui/PageBanner";
+import EmptyState from "@xc/ui/EmptyState";
 
 interface FAQItem extends Entity {
   ID: string;
@@ -22,7 +23,14 @@ export default function FAQPage() {
     api.listFAQ().then((d) => { setFaqs((d.faqs as FAQItem[]) || []); setLoading(false); }).catch(() => setError("Failed to load data"));
   }, []);
 
-  if (error) return <div className="p-12 text-center text-gravity/60">{error}</div>;
+  if (error)
+    return (
+      <EmptyState
+        icon={AlertTriangle}
+        title="Failed to load FAQ"
+        description="We couldn't load the FAQ right now. Please try again shortly."
+      />
+    );
   if (loading) return <div className="p-12 text-center">Loading...</div>;
 
   const categories = Array.from(new Set(faqs.map((f) => f.Category)));

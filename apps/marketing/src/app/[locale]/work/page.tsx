@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { FolderOpen } from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
+import EmptyState from "@xc/ui/EmptyState";
 
 export const metadata: Metadata = {
   title: "Work — XCreativs Technologies",
@@ -43,7 +44,11 @@ export default async function WorkPage() {
       <main className="shell-x py-16">
         <div className="mt-12 space-y-8">
         {items.length === 0 && (
-          <p className="text-center text-gravity/40 py-12">No case studies available yet.</p>
+          <EmptyState
+            icon={FolderOpen}
+            title="No case studies yet"
+            description="Case studies and work dossiers will appear here as engagements are published."
+          />
         )}
         {items.map((item: WorkDossier) => (
           <Link

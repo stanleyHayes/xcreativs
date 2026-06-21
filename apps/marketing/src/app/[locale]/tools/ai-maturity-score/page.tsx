@@ -5,7 +5,8 @@ import Link from "next/link";
 import { api } from "@xc/api";
 import type { AssessmentTemplateResponse } from "@xc/api/types";
 import BannerWatermark from "@xc/ui/BannerWatermark";
-import { Brain, ArrowRight, CheckCircle, RotateCcw, TrendingUp, Target, Database, Users, Shield } from "lucide-react";
+import EmptyState from "@xc/ui/EmptyState";
+import { Brain, ArrowRight, CheckCircle, RotateCcw, TrendingUp, Target, Database, Users, Shield, AlertTriangle } from "lucide-react";
 
 interface AssessmentTemplate {
   id: string;
@@ -141,7 +142,11 @@ export default function AIMaturityScorePage() {
   if (error && step === "intro") {
     return (
       <main className="shell-x py-20">
-        <p className="text-red-500">{error}</p>
+        <EmptyState
+          icon={AlertTriangle}
+          title="Assessment failed to load"
+          description={error}
+        />
       </main>
     );
   }

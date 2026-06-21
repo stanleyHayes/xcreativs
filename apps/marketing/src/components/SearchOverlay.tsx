@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { api } from "@xc/api";
 import type { SearchResultItem, SearchResponse } from "@xc/api/types";
-import { Search, X, FileText, Briefcase, BookOpen, Globe, AlertTriangle, CheckSquare, MessageSquare, Loader2 } from "lucide-react";
+import { Search, X, FileText, Briefcase, BookOpen, Globe, AlertTriangle, CheckSquare, MessageSquare, Loader2, SearchX } from "lucide-react";
+import EmptyState from "@xc/ui/EmptyState";
 
 type SearchResult = SearchResultItem;
 
@@ -112,7 +113,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
 
         <div className="max-h-[50vh] overflow-y-auto">
           {allResults.length === 0 && query.trim() && !loading && (
-            <div className="px-4 py-8 text-center text-gravity/40 text-sm">No results found for &quot;{query}&quot;</div>
+            <EmptyState icon={SearchX} title="No results found" description="Try adjusting your search terms to find what you're looking for." compact />
           )}
 
           {Object.entries(grouped).map(([type, items]) => (

@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { Download, Image as ImageIcon, Images, FileText, Palette, Camera } from "lucide-react";
+import { Download, Image as ImageIcon, Images, FileText, Palette, Camera, AlertTriangle } from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
+import EmptyState from "@xc/ui/EmptyState";
 
 const typeIcons: Record<string, React.ReactNode> = {
   logo: <Palette className="w-5 h-5" />,
@@ -37,7 +38,13 @@ export default function MediaKitPage() {
       .catch(() => setError("Failed to load media kit"));
   }, []);
 
-  if (error) return <div className="p-12 text-center text-gravity/60">{error}</div>;
+  if (error) return (
+    <EmptyState
+      icon={AlertTriangle}
+      title="Failed to load media kit"
+      description="We couldn't load the media kit right now. Please try again shortly."
+    />
+  );
   if (loading) return <div className="p-12 text-center">Loading...</div>;
 
   const grouped = assets.reduce((acc: Record<string, MediaKitAsset[]>, asset: MediaKitAsset) => {
@@ -87,7 +94,11 @@ export default function MediaKitPage() {
       </div>
 
         {assets.length === 0 && (
-          <p className="text-center text-gravity/40 py-12">No media kit assets available.</p>
+          <EmptyState
+            icon={Images}
+            title="No media assets available"
+            description="Logos, brand assets, and press resources will appear here once available."
+          />
         )}
       </main>
     </>

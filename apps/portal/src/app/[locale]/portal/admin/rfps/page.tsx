@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
 import { FileText, Clock, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 const statusColors: Record<string, string> = {
   received: "text-yellow-400 bg-yellow-400/10",
@@ -113,11 +114,11 @@ export default function AdminRFPsPage() {
       </section>
 
       {rfps.length === 0 ? (
-        <div className="portal-panel-x p-8 text-center text-white/40">
-          <Clock className="mx-auto mb-3 h-8 w-8 opacity-50" />
-          <h2 className="font-display text-xl font-semibold text-white/72">No RFP submissions found</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">New submitted RFPs will appear here with their scope, criteria, requirements, and document link.</p>
-        </div>
+        <PortalEmptyState
+          icon={Clock}
+          title="No RFP submissions yet"
+          description="New submitted RFPs will appear here with their scope, criteria, requirements, and document link."
+        />
       ) : (
         <div className="space-y-3">
           {rfps.map((rfp) => (

@@ -4,7 +4,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { FileUpload } from "@xc/ui/FileUpload";
-import { Clock, CheckCircle, Code } from "lucide-react";
+import EmptyState from "@xc/ui/EmptyState";
+import { Clock, CheckCircle, Code, AlertTriangle } from "lucide-react";
 
 interface CandidateChallenge {
   title: string;
@@ -44,7 +45,7 @@ export default function CandidateAssessmentPage() {
   }
 
   if (loading) return <div className="p-12 text-center">Loading…</div>;
-  if (error && !challenge) return <div className="p-12 text-center text-gravity/60">{error}</div>;
+  if (error && !challenge) return <EmptyState icon={AlertTriangle} title="Assessment challenge unavailable" description={error} />;
   if (!challenge) return null;
 
   return (

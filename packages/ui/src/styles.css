@@ -972,6 +972,7 @@ textarea::placeholder {
   font-size: 1.1rem;
 }
 .portal-empty-icon-x {
+  position: relative;
   display: inline-flex;
   height: 3rem;
   width: 3rem;
@@ -982,10 +983,49 @@ textarea::placeholder {
   background: color-mix(in oklab, var(--color-signal) 12%, transparent);
   color: var(--color-signal);
   box-shadow: 0 18px 40px -28px color-mix(in oklab, var(--color-signal) 80%, transparent);
+  animation: xc-empty-float 4s ease-in-out infinite;
+}
+.portal-empty-icon-x::before,
+.xc-empty-icon::before {
+  content: "";
+  position: absolute;
+  inset: -28%;
+  border-radius: inherit;
+  background: radial-gradient(circle, color-mix(in oklab, var(--color-signal) 32%, transparent), transparent 68%);
+  z-index: -1;
+  animation: xc-empty-glow 3.2s ease-in-out infinite;
 }
 .portal-empty-x-compact .portal-empty-icon-x {
   height: 2.25rem;
   width: 2.25rem;
+}
+
+/* Shared empty-state icon (theme-adaptive via the signal token; used by the
+   @xc/ui EmptyState component in both the light marketing and dark portal apps). */
+.xc-empty-icon {
+  position: relative;
+  border: 1px solid color-mix(in oklab, var(--color-signal) 30%, transparent);
+  background: color-mix(in oklab, var(--color-signal) 10%, transparent);
+  color: var(--color-signal);
+  box-shadow: 0 18px 44px -28px color-mix(in oklab, var(--color-signal) 80%, transparent);
+  animation: xc-empty-float 4s ease-in-out infinite;
+}
+
+@keyframes xc-empty-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes xc-empty-glow {
+  0%, 100% { opacity: 0.28; transform: scale(0.9); }
+  50% { opacity: 0.62; transform: scale(1.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal-empty-icon-x,
+  .xc-empty-icon,
+  .portal-empty-icon-x::before,
+  .xc-empty-icon::before {
+    animation: none;
+  }
 }
 
 .portal-admin-header-x {

@@ -3,8 +3,9 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { Wallet } from "lucide-react";
+import { Wallet, AlertTriangle } from "lucide-react";
 import { useCurrency } from "@xc/ui/CurrencyProvider";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface BudgetLine {
   ID?: string;
@@ -26,7 +27,7 @@ export default function BudgetPage() {
     api.listBudgetLines(id as string).then((d) => { setLines((d.budget_lines as BudgetLine[]) || []); setLoading(false); }).catch(() => setError("Failed to load data"));
   }, [id]);
 
-  if (error) return <div className="text-white/60">{error}</div>;
+  if (error) return <PortalEmptyState icon={AlertTriangle} title="Failed to load budget" description="We couldn't load the budget tracker. Please try again in a moment." />;
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   const totalAllocated = lines.reduce((sum, l) => sum + (l.AllocatedUSD || 0), 0);
@@ -66,6 +67,13 @@ export default function BudgetPage() {
         </div>
       </div>
 
+      {lines.length === 0 ? (
+        <PortalEmptyState
+          icon={Wallet}
+          title="No budget lines tracked"
+          description="Add budget allocations to start tracking spend across this engagement's line items."
+        />
+      ) : (
       <div className="space-y-3">
         {lines.map((l) => {
           const allocated = l.AllocatedUSD || 0;
@@ -95,6 +103,7 @@ export default function BudgetPage() {
           );
         })}
       </div>
+      )}
     </div>
   );
 }

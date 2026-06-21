@@ -6,6 +6,7 @@ import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
 import { AlertTriangle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import ThreadedComments from "@/components/portal/ThreadedComments";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Risk {
   ID: string;
@@ -145,7 +146,19 @@ export default function RisksPage() {
     setShowForm(true);
   };
 
-  if (error && !risks.length) return <div className="text-white/60">{error}</div>;
+  if (error && !risks.length)
+    return (
+      <PortalEmptyState
+        icon={AlertTriangle}
+        title="Could not load risks"
+        description={error}
+        action={
+          <button onClick={() => void load()} className="portal-btn-x">
+            Retry
+          </button>
+        }
+      />
+    );
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   return (

@@ -3,7 +3,8 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { CheckCircle, Clock, XCircle, MessageSquare } from "lucide-react";
+import { CheckCircle, Clock, XCircle, MessageSquare, AlertTriangle } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface ApprovalWorkflow {
   ID: string;
@@ -73,7 +74,19 @@ export default function ApprovalsPage() {
     pending: { icon: <Clock className="w-4 h-4" />, color: "text-yellow-400", label: "Pending", bg: "bg-yellow-400/10" },
   };
 
-  if (error) return <div className="text-white/60">{error}</div>;
+  if (error)
+    return (
+      <PortalEmptyState
+        icon={AlertTriangle}
+        title="Could not load approvals"
+        description={error}
+        action={
+          <button onClick={reloadWorkflows} className="portal-btn-x">
+            Retry
+          </button>
+        }
+      />
+    );
   if (loading) return <div className="text-white/60">Loading...</div>;
 
   return (
@@ -163,10 +176,12 @@ export default function ApprovalsPage() {
         })}
 
         {workflows.length === 0 && (
-          <div className="portal-panel-x p-8 text-center">
-            <Clock className="w-8 h-8 text-white/20 mx-auto mb-3" />
-            <p className="text-white/50">No approval workflows yet.</p>
-          </div>
+          <PortalEmptyState
+            icon={Clock}
+            title="No approval workflows yet"
+            description="When deliverables are sent for sign-off, their approval workflows will appear here with a full audit trail."
+            compact
+          />
         )}
       </div>
     </div>

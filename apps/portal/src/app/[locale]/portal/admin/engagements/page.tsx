@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
 import { Briefcase, Plus, Loader2, Save, X, Building2, Globe } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 interface Engagement {
   ID: string;
@@ -303,11 +304,11 @@ export default function AdminEngagementsPage() {
       )}
 
       {engagements.length === 0 ? (
-        <div className="portal-panel-x p-8 text-center text-white/40">
-          <Briefcase className="mx-auto mb-3 h-8 w-8 opacity-50" />
-          <h2 className="font-display text-xl font-semibold text-white/72">No engagements found</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">Create the first engagement to unlock dashboards, milestones, deliverables, and client portal rooms.</p>
-        </div>
+        <PortalEmptyState
+          icon={Briefcase}
+          title="No engagements yet"
+          description="Create the first engagement to unlock dashboards, milestones, deliverables, and client portal rooms."
+        />
       ) : (
         <div className="space-y-3">
           {engagements.map((e) => (

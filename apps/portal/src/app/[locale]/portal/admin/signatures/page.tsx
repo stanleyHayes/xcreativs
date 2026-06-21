@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import CustomSelect from "@xc/ui/CustomSelect";
 import { FileSignature, Send, CheckCircle, Clock, XCircle, Eye, Loader2, X, Download } from "lucide-react";
+import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 const statusColors: Record<string, string> = {
   draft: "text-white/50 bg-white/5",
@@ -233,11 +234,11 @@ export default function AdminSignaturesPage() {
       )}
 
       {requests.length === 0 ? (
-        <div className="portal-panel-x p-8 text-center text-white/40">
-          <Clock className="mx-auto mb-3 h-8 w-8 opacity-50" />
-          <h2 className="font-display text-xl font-semibold text-white/72">No signature requests found</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">Create a draft request to send documents for review and signature.</p>
-        </div>
+        <PortalEmptyState
+          icon={Clock}
+          title="No signature requests yet"
+          description="Create a draft request to send documents for review and signature."
+        />
       ) : (
         <div className="space-y-3">
           {requests.map((req) => (

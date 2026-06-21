@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
-import { Building2, Network } from "lucide-react";
+import { Building2, Network, AlertTriangle } from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
+import EmptyState from "@xc/ui/EmptyState";
 
 type LeadershipMember = string | { name?: string; role?: string };
 
@@ -29,7 +30,14 @@ export default function SubsidiariesPage() {
       .catch(() => setError("Failed to load data"));
   }, []);
 
-  if (error) return <div className="p-12 text-center text-gravity/60">{error}</div>;
+  if (error)
+    return (
+      <EmptyState
+        icon={AlertTriangle}
+        title="Failed to load subsidiaries"
+        description="We couldn't load the subsidiaries right now. Please try again shortly."
+      />
+    );
   if (loading) return <div className="p-12 text-center">Loading...</div>;
 
   return (
@@ -83,7 +91,11 @@ export default function SubsidiariesPage() {
       </div>
 
       {subs.length === 0 && (
-        <p className="text-center text-gravity/40 py-12">No subsidiaries listed.</p>
+        <EmptyState
+          icon={Building2}
+          title="No subsidiaries listed"
+          description="Group subsidiaries will appear here as they're established."
+        />
       )}
       </main>
     </>
