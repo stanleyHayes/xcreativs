@@ -14,9 +14,9 @@ databases:
     plan: basic-256mb
 
 services:
-  - type: redis
+  - type: keyvalue
     name: xcreativs-redis
-    plan: free
+    plan: starter # cheapest paid Key Value tier (free is not offered for Key Value)
     ipAllowList: [] # internal only
 
   - type: web
@@ -36,7 +36,7 @@ services:
           property: connectionString
       - key: REDIS_URL
         fromService:
-          type: redis
+          type: keyvalue
           name: xcreativs-redis
           property: connectionString
       - key: JWT_SECRET
