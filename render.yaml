@@ -10,7 +10,7 @@ databases:
   - name: xcreativs-db
     databaseName: xcreativs
     user: xcreativs
-    postgresMajorVersion: "16"
+    postgresMajorVersion: "18"
     plan: basic-256mb
 
 services:
