@@ -17,6 +17,11 @@ import (
 )
 
 func main() {
+	// Optionally hydrate the environment from a Render Secret File (/etc/secrets/.env)
+	// or a local ./.env. Real environment variables always take precedence, so this
+	// only fills variables the platform didn't already provide.
+	config.LoadEnvFiles("/etc/secrets/.env", ".env")
+
 	cfg, err := config.Load()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "config load failed: %v\n", err)

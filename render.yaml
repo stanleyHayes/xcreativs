@@ -43,12 +43,16 @@ services:
         generateValue: true
       - key: JWT_REFRESH_SECRET
         generateValue: true
-      # Set these after the Vercel domain is known:
+      # Public (non-secret) config — baked in so the production config validator
+      # passes on boot. Adjust the domains once custom domains are mapped; the
+      # *.vercel.app entries are for testing before DNS resolves.
       - key: BASE_URL
-        sync: false
+        value: https://portal.xcreativs.com
       - key: ALLOWED_ORIGINS
-        sync: false
-      # Optional integrations:
+        value: https://xcreativs.com,https://www.xcreativs.com,https://portal.xcreativs.com,https://xcreativs-marketing.vercel.app,https://xcreativs-portal.vercel.app
+      # Optional integrations — SECRETS, set in the Render dashboard (never commit
+      # these to git). The API boots fine without them; features stay dormant
+      # (e.g. /uploads returns 501 until Cloudinary is set).
       - key: RESEND_API_KEY
         sync: false
       - key: ANTHROPIC_API_KEY
