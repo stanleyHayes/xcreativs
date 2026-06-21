@@ -2,5 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "buildCommand": "turbo run build",
-  "ignoreCommand": "npx turbo-ignore marketing --fallback=HEAD^1"
+  "ignoreCommand": "npx turbo-ignore marketing"
 }
