@@ -1,9 +1,9 @@
 .PHONY: build run dev test test-cover migrate-up migrate-down migrate-force migrate-version migrate-create seed lint fmt vet openapi clean docker-build
 
-# SQL migrations now live in the backend module (backend/migrations) so they can
-# be embedded into the binary; seed data is still at repo root (one level up).
+# SQL migrations and content seeds now live in the backend module so they can be
+# embedded into the binary (backend/migrations, backend/seeds).
 MIGRATIONS_DIR ?= migrations
-SEEDS_DIR ?= ../seeds
+SEEDS_DIR ?= seeds
 
 # Load DB_URL from .env for migrate/seed targets
 LOAD_ENV := set -a && . ./.env && set +a
@@ -69,8 +69,8 @@ seed:
 	$(LOAD_ENV) && psql "$$DB_URL" \
 		-f $(SEEDS_DIR)/seed.sql \
 		-f $(SEEDS_DIR)/seed_layer_six.sql \
-		-f scripts/seed_assessment.sql \
-		-f scripts/seed_ai_maturity.sql \
+		-f $(SEEDS_DIR)/seed_assessment.sql \
+		-f $(SEEDS_DIR)/seed_ai_maturity.sql \
 		-f $(SEEDS_DIR)/seed_phase_b.sql
 
 # Clean build artifacts

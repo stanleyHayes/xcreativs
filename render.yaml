@@ -73,6 +73,9 @@ services:
       # migrate CLI). Safe to leave on — it only applies pending migrations.
       - key: RUN_MIGRATIONS
         value: "true"
+      # Seed content (pages, etc.) once, only when content.pages is empty.
+      - key: RUN_SEED
+        value: "true"
       # Optional admin bootstrap: set in the dashboard as "email:password,email:password".
       # Passwords are bcrypt-hashed at runtime; remove after first successful login
       # so a restart can't reset a password changed in the UI.

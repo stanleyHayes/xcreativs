@@ -19,7 +19,42 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"xcreatives.com/backend/migrations"
+	"xcreatives.com/backend/seeds"
 )
+
+// contentSeedOrder is the apply order for the embedded content seeds (mirrors
+// the Makefile `seed` target). Order matters — later files may reference rows
+// created by earlier ones.
+var contentSeedOrder = []string{
+	"seed.sql",
+	"seed_layer_six.sql",
+	"seed_assessment.sql",
+	"seed_ai_maturity.sql",
+	"seed_phase_b.sql",
+}
+
+// SeedContent applies the embedded content seeds, but only when content.pages is
+// empty — the seeds are not all idempotent, so this runs exactly once on a fresh
+// database. Returns true if seeding was performed.
+func SeedContent(ctx context.Context, pool *pgxpool.Pool) (bool, error) {
+	var n int
+	if err := pool.QueryRow(ctx, `SELECT count(*) FROM content.pages`).Scan(&n); err != nil {
+		return false, fmt.Errorf("check content.pages: %w", err)
+	}
+	if n > 0 {
+		return false, nil // already seeded
+	}
+	for _, name := range contentSeedOrder {
+		sql, err := seeds.FS.ReadFile(name)
+		if err != nil {
+			return false, fmt.Errorf("read seed %s: %w", name, err)
+		}
+		if _, err := pool.Exec(ctx, string(sql)); err != nil {
+			return false, fmt.Errorf("apply seed %s: %w", name, err)
+		}
+	}
+	return true, nil
+}
 
 // RunStartup performs optional one-time startup tasks gated by environment
 // variables: RUN_MIGRATIONS=true applies embedded migrations, and SEED_ADMINS
@@ -38,6 +73,13 @@ func RunStartup(ctx context.Context, log *slog.Logger, pool *pgxpool.Pool, dbURL
 			log.Error("admin seed failed", "error", err)
 		} else if n > 0 {
 			log.Info("admin users seeded", "count", n)
+		}
+	}
+	if os.Getenv("RUN_SEED") == "true" {
+		if seeded, err := SeedContent(ctx, pool); err != nil {
+			log.Error("content seed failed", "error", err)
+		} else if seeded {
+			log.Info("content seeded")
 		}
 	}
 }
