@@ -49,7 +49,7 @@ services:
       - key: BASE_URL
         value: https://portal.xcreativs.com
       - key: ALLOWED_ORIGINS
-        value: https://xcreativs.com,https://www.xcreativs.com,https://portal.xcreativs.com,https://xcreativs-marketing.vercel.app,https://xcreativs-portal.vercel.app
+        value: https://xcreativs.com,https://www.xcreativs.com,https://portal.xcreativs.com,https://xcreativs.vercel.app,https://xcreativs-portal.vercel.app
       # Optional integrations — SECRETS, set in the Render dashboard (never commit
       # these to git). The API boots fine without them; features stay dormant
       # (e.g. /uploads returns 501 until Cloudinary is set).
