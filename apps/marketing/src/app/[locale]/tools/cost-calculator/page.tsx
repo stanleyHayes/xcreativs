@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { DollarSign, ArrowRight, Clock, Users, Shield, Gauge, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useCurrency } from "@xc/ui/CurrencyProvider";
+import BannerWatermark from "@xc/ui/BannerWatermark";
 
 const complexityMultipliers = {
   standard: 1.0,
@@ -62,9 +63,9 @@ export default function CostCalculatorPage() {
   return (
     <main>
       <section className="relative overflow-hidden border-b border-hairline bg-soft">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <BannerWatermark icon={DollarSign} />
         <div className="shell-x relative py-16 lg:py-20">
-          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <p className="context-label-x mb-4">Engagement estimator</p>
           <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <DollarSign className="w-8 h-8 text-green-400" />
             Engagement Cost Calculator

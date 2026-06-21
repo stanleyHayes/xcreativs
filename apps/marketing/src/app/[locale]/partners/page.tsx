@@ -15,9 +15,16 @@ import {
   Network,
   ArrowRight,
 } from "lucide-react";
+import CustomSelect from "@xc/ui/CustomSelect";
 import PageBanner from "@xc/ui/PageBanner";
 
 const INPUT = "field-x";
+const PARTNER_TYPE_OPTIONS = [
+  { value: "technology", label: "Technology Partner" },
+  { value: "consulting", label: "Consulting Partner" },
+  { value: "distribution", label: "Distribution Partner" },
+  { value: "content", label: "Content Partner" },
+];
 
 const PARTNER_TYPES = [
   { icon: Cpu, name: "Technology", blurb: "Integrate your platform into our solutions — AI, cloud, security, data." },
@@ -107,9 +114,7 @@ export default function PartnersPage() {
       {/* Why partner */}
       <section className="border-b border-hairline">
         <div className="shell-x py-20">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">
-            § 01 · Why partner
-          </p>
+          <p className="context-label-x mb-4">Partnership thesis</p>
           <h2 className="font-display text-2xl font-semibold tracking-tight lg:text-4xl">
             Build on national-scale infrastructure.
           </h2>
@@ -133,9 +138,7 @@ export default function PartnersPage() {
       {/* Partnership types */}
       <section className="border-b border-hairline bg-soft">
         <div className="shell-x py-20">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">
-            § 02 · Tracks
-          </p>
+          <p className="context-label-x mb-4">Partner tracks</p>
           <h2 className="font-display text-2xl font-semibold tracking-tight lg:text-4xl">
             Four ways to partner.
           </h2>
@@ -158,9 +161,7 @@ export default function PartnersPage() {
       <section className="border-b border-hairline">
         <div className="shell-x grid grid-cols-1 gap-12 py-20 lg:grid-cols-5">
           <div className="lg:col-span-3">
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">
-              § 03 · Apply
-            </p>
+            <p className="context-label-x mb-4">Partner application</p>
             <h2 className="font-display text-2xl font-semibold tracking-tight lg:text-4xl">
               Apply to partner.
             </h2>
@@ -175,12 +176,11 @@ export default function PartnersPage() {
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <input required type="email" placeholder="Contact email *" value={form.contact_email} onChange={(e) => setForm({ ...form, contact_email: e.target.value })} className={INPUT} />
-                <select value={form.partner_type} onChange={(e) => setForm({ ...form, partner_type: e.target.value })} className={INPUT}>
-                  <option value="technology">Technology Partner</option>
-                  <option value="consulting">Consulting Partner</option>
-                  <option value="distribution">Distribution Partner</option>
-                  <option value="content">Content Partner</option>
-                </select>
+                <CustomSelect
+                  value={form.partner_type}
+                  onChange={(value) => setForm({ ...form, partner_type: value })}
+                  options={PARTNER_TYPE_OPTIONS}
+                />
               </div>
               <input value={form.target_markets} onChange={(e) => setForm({ ...form, target_markets: e.target.value })} placeholder="Target markets (comma-separated)" className={INPUT} />
               <input value={form.existing_product} onChange={(e) => setForm({ ...form, existing_product: e.target.value })} placeholder="What product or service do you currently offer?" className={INPUT} />

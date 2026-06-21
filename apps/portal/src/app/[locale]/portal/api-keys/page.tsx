@@ -16,6 +16,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import CustomSelect from "@xc/ui/CustomSelect";
 import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
 const scopeLabels: Record<string, string> = {
@@ -35,6 +36,12 @@ const scopeDescriptions: Record<string, string> = {
   partner_read: "Read partner referrals, orders, and products.",
   admin: "Full administrative API access for trusted systems.",
 };
+
+const EXPIRATION_OPTIONS = [
+  { value: "never", label: "Never" },
+  { value: "30d", label: "30 days" },
+  { value: "90d", label: "90 days" },
+];
 
 const defaultForm = {
   name: "",
@@ -399,15 +406,12 @@ export default function APIKeysPage() {
             </label>
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-white/65">Expiration</span>
-              <select
+              <CustomSelect
                 value={form.expires}
-                onChange={(e) => setForm((current) => ({ ...current, expires: e.target.value }))}
-                className="portal-field-x w-full"
-              >
-                <option value="never">Never</option>
-                <option value="30d">30 days</option>
-                <option value="90d">90 days</option>
-              </select>
+                onChange={(value) => setForm((current) => ({ ...current, expires: value }))}
+                options={EXPIRATION_OPTIONS}
+                variant="portal"
+              />
             </label>
           </div>
 

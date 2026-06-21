@@ -11,7 +11,7 @@ export default function NotFound() {
           <SatelliteDish className="h-7 w-7" />
         </span>
 
-        <p className="text-gradient font-display text-[clamp(5rem,18vw,11rem)] font-semibold leading-none">
+        <p className="font-display text-[clamp(5rem,18vw,11rem)] font-semibold leading-none text-signal">
           404
         </p>
 

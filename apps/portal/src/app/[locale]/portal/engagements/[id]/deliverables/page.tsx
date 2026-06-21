@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { FileUpload } from "@xc/ui/FileUpload";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { FileText, CheckCircle, XCircle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import ThreadedComments from "@/components/portal/ThreadedComments";
 
@@ -30,6 +31,20 @@ const statusConfig: Record<string, { color: string; label: string }> = {
   delivered: { color: "text-signal bg-signal/10 border-signal/30", label: "Delivered" },
   archived: { color: "text-white/30 bg-white/5 border-white/10", label: "Archived" },
 };
+
+const DELIVERABLE_STATUS_OPTIONS = [
+  { value: "draft", label: "Draft" },
+  { value: "review", label: "Review" },
+  { value: "approved", label: "Approved" },
+  { value: "delivered", label: "Delivered" },
+  { value: "archived", label: "Archived" },
+];
+
+const VISIBILITY_OPTIONS = [
+  { value: "viewer", label: "Viewer" },
+  { value: "project", label: "Project" },
+  { value: "executive", label: "Executive" },
+];
 
 export default function DeliverablesPage() {
   const { id } = useParams();
@@ -175,21 +190,11 @@ export default function DeliverablesPage() {
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Status</label>
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="portal-field-x w-full">
-                <option value="draft">Draft</option>
-                <option value="review">Review</option>
-                <option value="approved">Approved</option>
-                <option value="delivered">Delivered</option>
-                <option value="archived">Archived</option>
-              </select>
+              <CustomSelect value={form.status} onChange={(value) => setForm({ ...form, status: value })} options={DELIVERABLE_STATUS_OPTIONS} variant="portal" />
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Visibility</label>
-              <select value={form.visibility_role} onChange={(e) => setForm({ ...form, visibility_role: e.target.value })} className="portal-field-x w-full">
-                <option value="viewer">Viewer</option>
-                <option value="project">Project</option>
-                <option value="executive">Executive</option>
-              </select>
+              <CustomSelect value={form.visibility_role} onChange={(value) => setForm({ ...form, visibility_role: value })} options={VISIBILITY_OPTIONS} variant="portal" />
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Version</label>

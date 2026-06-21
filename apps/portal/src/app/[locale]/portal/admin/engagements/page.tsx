@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { Briefcase, Plus, Loader2, Save, X, Building2, Globe } from "lucide-react";
 
 interface Engagement {
@@ -30,6 +31,17 @@ const stageColors: Record<string, string> = {
   completed: "text-signal bg-signal/10 border-signal/20",
   archived: "text-white/36 bg-white/5 border-white/10",
 };
+
+const STAGE_OPTIONS = ["discovery", "scoping", "active", "paused", "completed", "archived"].map((value) => ({
+  value,
+  label: value,
+}));
+
+const CURRENCY_OPTIONS = [
+  { value: "USD", label: "USD" },
+  { value: "GHS", label: "GHS" },
+  { value: "EUR", label: "EUR" },
+];
 
 export default function AdminEngagementsPage() {
   const [engagements, setEngagements] = useState<Engagement[]>([]);
@@ -162,15 +174,12 @@ export default function AdminEngagementsPage() {
             </div>
             <div>
               <label className="block text-xs text-white/50 mb-1">Stage *</label>
-              <select
+              <CustomSelect
                 value={form.stage}
-                onChange={(e) => setForm({ ...form, stage: e.target.value })}
-                className="portal-field-x w-full"
-              >
-                {["discovery", "scoping", "active", "paused", "completed", "archived"].map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
+                onChange={(value) => setForm({ ...form, stage: value })}
+                options={STAGE_OPTIONS}
+                variant="portal"
+              />
             </div>
             <div>
               <label className="block text-xs text-white/50 mb-1">Title *</label>
@@ -238,15 +247,12 @@ export default function AdminEngagementsPage() {
             </div>
             <div>
               <label className="block text-xs text-white/50 mb-1">Currency</label>
-              <select
+              <CustomSelect
                 value={form.currency_preference}
-                onChange={(e) => setForm({ ...form, currency_preference: e.target.value })}
-                className="portal-field-x w-full"
-              >
-                <option value="USD">USD</option>
-                <option value="GHS">GHS</option>
-                <option value="EUR">EUR</option>
-              </select>
+                onChange={(value) => setForm({ ...form, currency_preference: value })}
+                options={CURRENCY_OPTIONS}
+                variant="portal"
+              />
             </div>
             <div className="md:col-span-2">
               <label className="block text-xs text-white/50 mb-1">Description</label>

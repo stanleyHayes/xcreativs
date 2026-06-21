@@ -30,6 +30,7 @@ import {
   LogIn,
 } from "lucide-react";
 import SearchOverlay from "./SearchOverlay";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { useTheme } from "@xc/ui/ThemeProvider";
 import { useCurrency, CurrencyCode } from "@xc/ui/CurrencyProvider";
 
@@ -45,6 +46,11 @@ export default function Navigation() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const { theme, toggleTheme } = useTheme();
   const { currency, setCurrency } = useCurrency();
+  const currencyOptions = [
+    { value: "USD", label: "USD" },
+    { value: "GHS", label: "GHS" },
+    { value: "EUR", label: "EUR" },
+  ];
 
   const groups: MenuGroup[] = [
     {
@@ -92,8 +98,8 @@ export default function Navigation() {
 
   return (
     <header className="sticky top-0 z-[70]">
-      <div className="h-[3px] w-full bg-gradient-to-r from-signal via-signal/40 to-transparent" />
-      <div className="border-b border-hairline bg-foundation/80 backdrop-blur-xl">
+      <div className="h-[3px] w-full bg-signal" />
+      <div className="border-b border-hairline bg-foundation">
         <div className="mx-auto max-w-[1440px] px-5 lg:px-10">
           <div className="flex h-[68px] items-center justify-between gap-6">
             {/* Wordmark */}
@@ -206,16 +212,14 @@ export default function Navigation() {
               >
                 {theme === "dark" ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
               </button>
-              <select
+              <CustomSelect
                 value={currency}
-                onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
+                onChange={(value) => setCurrency(value as CurrencyCode)}
+                options={currencyOptions}
                 aria-label="Currency"
-                className="cursor-pointer rounded-full bg-transparent px-1.5 py-1 text-xs font-medium text-gravity/70 transition-colors hover:text-gravity focus:outline-none"
-              >
-                <option value="USD">USD</option>
-                <option value="GHS">GHS</option>
-                <option value="EUR">EUR</option>
-              </select>
+                variant="currency"
+                className="custom-select-inline-x"
+              />
               <LocaleLink
                 href={pathnameWithoutLocale}
                 locale={otherLocale}
@@ -311,16 +315,14 @@ export default function Navigation() {
                 >
                   {otherLocale}
                 </LocaleLink>
-                <select
+                <CustomSelect
                   value={currency}
-                  onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
+                  onChange={(value) => setCurrency(value as CurrencyCode)}
+                  options={currencyOptions}
                   aria-label="Currency"
-                  className="h-10 cursor-pointer rounded-full border border-hairline bg-soft/70 px-3 py-1 text-xs font-semibold text-gravity/60 focus:outline-none"
-                >
-                  <option value="USD">USD</option>
-                  <option value="GHS">GHS</option>
-                  <option value="EUR">EUR</option>
-                </select>
+                  variant="nav"
+                  className="custom-select-inline-x min-w-[5.25rem]"
+                />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <Link

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { CheckCircle, ClipboardList, Clock, ListFilter, RefreshCw, Search, X, XCircle } from "lucide-react";
 import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
@@ -31,6 +32,14 @@ const statusConfig: Record<string, { color: string; bg: string; icon: React.Reac
   rejected: { color: "text-red-400", bg: "bg-red-400/10", icon: <XCircle className="w-3.5 h-3.5" />, label: "Rejected" },
   inactive: { color: "text-white/30", bg: "bg-white/5", icon: <XCircle className="w-3.5 h-3.5" />, label: "Inactive" },
 };
+
+const PARTNER_APPLICATION_FILTER_OPTIONS = [
+  { value: "", label: "All statuses" },
+  { value: "applied", label: "Applied" },
+  { value: "under_review", label: "Under Review" },
+  { value: "approved", label: "Approved" },
+  { value: "rejected", label: "Rejected" },
+];
 
 export default function AdminPartnerApplicationsPage() {
   const [applications, setApplications] = useState<PartnerApplication[]>([]);
@@ -114,13 +123,7 @@ export default function AdminPartnerApplicationsPage() {
             </div>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="portal-field-x sm:w-48">
-              <option value="">All statuses</option>
-              <option value="applied">Applied</option>
-              <option value="under_review">Under Review</option>
-              <option value="approved">Approved</option>
-              <option value="rejected">Rejected</option>
-            </select>
+            <CustomSelect value={statusFilter} onChange={setStatusFilter} options={PARTNER_APPLICATION_FILTER_OPTIONS} variant="portal" className="sm:w-48" />
             <button onClick={load} className="portal-btn-secondary-x" type="button">
               <RefreshCw className="h-4 w-4" />
               Refresh

@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { Scale, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import ThreadedComments from "@/components/portal/ThreadedComments";
 
@@ -26,6 +27,13 @@ const statusConfig: Record<string, { color: string; label: string }> = {
   rejected: { color: "text-red-400 bg-red-400/10 border-red-400/30", label: "Rejected" },
   superseded: { color: "text-white/30 bg-white/5 border-white/10", label: "Superseded" },
 };
+
+const DECISION_STATUS_OPTIONS = [
+  { value: "proposed", label: "Proposed" },
+  { value: "approved", label: "Approved" },
+  { value: "rejected", label: "Rejected" },
+  { value: "superseded", label: "Superseded" },
+];
 
 export default function DecisionsPage() {
   const { id } = useParams();
@@ -151,12 +159,7 @@ export default function DecisionsPage() {
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Status</label>
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="portal-field-x w-full">
-                <option value="proposed">Proposed</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-                <option value="superseded">Superseded</option>
-              </select>
+              <CustomSelect value={form.status} onChange={(value) => setForm({ ...form, status: value })} options={DECISION_STATUS_OPTIONS} variant="portal" />
             </div>
             <div className="md:col-span-2">
               <label className="text-xs text-white/50 mb-1 block">Description</label>

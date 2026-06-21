@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { Layers, Plus, Trash2, X } from "lucide-react";
 
 interface Capability {
@@ -19,6 +20,7 @@ const columns = [
   { key: "delivered", label: "Delivered", color: "border-green-400/40" },
   { key: "deferred", label: "Deferred", color: "border-yellow-400/40" },
 ];
+const CAPABILITY_STATUS_OPTIONS = columns.map((column) => ({ value: column.key, label: column.label }));
 const nextStatus: Record<string, string> = { queued: "in_flight", in_flight: "delivered", delivered: "deferred", deferred: "queued" };
 const nextLabel: Record<string, string> = { queued: "In-Flight", in_flight: "Delivered", delivered: "Deferred", deferred: "Queued" };
 
@@ -89,9 +91,7 @@ export default function CapabilitiesPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <input value={form.capability_name} onChange={(e) => setForm({ ...form, capability_name: e.target.value })} placeholder="Capability name" className="md:col-span-2 portal-field-x" />
-            <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="portal-field-x">
-              {columns.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
-            </select>
+            <CustomSelect value={form.status} onChange={(value) => setForm({ ...form, status: value })} options={CAPABILITY_STATUS_OPTIONS} variant="portal" />
             {form.status === "deferred" && (
               <input value={form.reason_deferred} onChange={(e) => setForm({ ...form, reason_deferred: e.target.value })} placeholder="Reason deferred" className="md:col-span-3 portal-field-x" />
             )}

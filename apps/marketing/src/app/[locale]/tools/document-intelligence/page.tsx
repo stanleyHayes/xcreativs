@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { api } from "@xc/api";
 import { FileSearch, ArrowRight, Loader2, Calendar, DollarSign, Building2, AlertCircle, FileText } from "lucide-react";
+import BannerWatermark from "@xc/ui/BannerWatermark";
 
 interface ExtractedResult {
   summary: string;
@@ -38,9 +39,9 @@ export default function DocumentIntelligencePage() {
   return (
     <main>
       <section className="relative overflow-hidden border-b border-hairline bg-soft">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <BannerWatermark icon={FileSearch} />
         <div className="shell-x relative py-16 lg:py-20">
-          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <p className="context-label-x mb-4">Document extraction</p>
           <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <FileSearch className="w-8 h-8 text-pink-400" />
             Document Intelligence Demo

@@ -4,6 +4,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { FileSignature, Send, CheckCircle, Clock, XCircle, Eye, Loader2, X, Download } from "lucide-react";
 
 const statusColors: Record<string, string> = {
@@ -23,6 +24,15 @@ const statusLabels: Record<string, string> = {
   declined: "Declined",
   expired: "Expired",
 };
+
+const SIGNATURE_STATUS_OPTIONS = Object.entries(statusLabels).map(([value, label]) => ({ value, label }));
+const SIGNATURE_FILTER_OPTIONS = [{ value: "", label: "All statuses" }, ...SIGNATURE_STATUS_OPTIONS];
+const DOCUMENT_TYPE_OPTIONS = [
+  { value: "nda", label: "NDA" },
+  { value: "mou", label: "MoU" },
+  { value: "sow", label: "Statement of Work" },
+  { value: "amendment", label: "Amendment" },
+];
 
 interface SignatureRequest {
   id: string;
@@ -142,12 +152,7 @@ export default function AdminSignaturesPage() {
             </div>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <select value={filter} onChange={(e) => setFilter(e.target.value)} className="portal-field-x sm:w-44">
-              <option value="">All statuses</option>
-              {Object.keys(statusLabels).map((s) => (
-                <option key={s} value={s}>{statusLabels[s]}</option>
-              ))}
-            </select>
+            <CustomSelect value={filter} onChange={setFilter} options={SIGNATURE_FILTER_OPTIONS} variant="portal" className="sm:w-44" />
             <button onClick={() => setShowForm((s) => !s)} className="portal-btn-x">
               {showForm ? "Close form" : "New request"}
             </button>
@@ -164,16 +169,12 @@ export default function AdminSignaturesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Document Type</label>
-              <select
+              <CustomSelect
                 value={form.document_type}
-                onChange={(e) => setForm({ ...form, document_type: e.target.value })}
-                className="portal-field-x w-full"
-              >
-                <option value="nda">NDA</option>
-                <option value="mou">MoU</option>
-                <option value="sow">Statement of Work</option>
-                <option value="amendment">Amendment</option>
-              </select>
+                onChange={(value) => setForm({ ...form, document_type: value })}
+                options={DOCUMENT_TYPE_OPTIONS}
+                variant="portal"
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Recipient Email *</label>

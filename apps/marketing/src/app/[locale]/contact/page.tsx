@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { api } from "@xc/api";
 import { FileText, Newspaper, Calculator, CheckCircle, Calendar, Mail } from "lucide-react";
+import CustomSelect from "@xc/ui/CustomSelect";
 import PageBanner from "@xc/ui/PageBanner";
 
 function errorMessage(err: unknown): string | undefined {
@@ -17,6 +18,82 @@ function errorMessage(err: unknown): string | undefined {
 const FIELD_CLASS = "field-x";
 const FORM_CARD_CLASS = "panel-x max-w-xl space-y-4 p-6 lg:p-8";
 const WIDE_FORM_CARD_CLASS = "panel-x max-w-3xl space-y-5 p-6 lg:p-8";
+
+const SECTOR_OPTIONS = [
+  { value: "", label: "Select...", disabled: true },
+  { value: "government", label: "Government" },
+  { value: "health", label: "Health" },
+  { value: "financial_services", label: "Financial Services" },
+  { value: "insurance", label: "Insurance" },
+  { value: "retail_commerce", label: "Retail & Commerce" },
+  { value: "energy", label: "Energy" },
+  { value: "education", label: "Education" },
+  { value: "ngo_development", label: "NGO & Development" },
+];
+
+const SERVICE_LINE_OPTIONS = [
+  { value: "", label: "Select...", disabled: true },
+  { value: "digital_systems_audit", label: "Digital Systems Audit" },
+  { value: "enterprise_government_systems", label: "Enterprise & Government Systems" },
+  { value: "ai_automation", label: "AI & Automation" },
+  { value: "strategic_web_platforms", label: "Strategic Web & Digital Platforms" },
+  { value: "strategy_advisory", label: "Strategy & Advisory" },
+];
+
+const INTEGRATION_OPTIONS = [
+  { value: "0", label: "None" },
+  { value: "1", label: "1-3" },
+  { value: "4", label: "4-10" },
+  { value: "10", label: "10+" },
+];
+
+const DATA_VOLUME_OPTIONS = [
+  { value: "small", label: "Small" },
+  { value: "medium", label: "Medium" },
+  { value: "large", label: "Large" },
+  { value: "enterprise", label: "Enterprise" },
+];
+
+const USER_COUNT_OPTIONS = [
+  { value: "0", label: "< 100" },
+  { value: "100", label: "100-1,000" },
+  { value: "1000", label: "1,000-10,000" },
+  { value: "10000", label: "10,000+" },
+];
+
+const COMPLIANCE_OPTIONS = [
+  { value: "none", label: "None" },
+  { value: "standard", label: "Standard (SOC2)" },
+  { value: "regulatory", label: "Regulatory (HIPAA, GDPR)" },
+  { value: "national_security", label: "National Security" },
+];
+
+const AI_NEEDS_OPTIONS = [
+  { value: "none", label: "None" },
+  { value: "basic", label: "Basic (classification, search)" },
+  { value: "advanced", label: "Advanced (LLM, generation)" },
+];
+
+const TIMELINE_OPTIONS = [
+  { value: "standard", label: "Standard" },
+  { value: "accelerated", label: "Accelerated" },
+  { value: "critical", label: "Critical" },
+];
+
+const TOPIC_OPTIONS = [
+  { value: "", label: "Select...", disabled: true },
+  { value: "discovery", label: "Discovery Call (30 min)" },
+  { value: "advisory", label: "Advisory Session (60 min)" },
+  { value: "technical_review", label: "Technical Review (45 min)" },
+  { value: "partnership", label: "Partnership Discussion" },
+];
+
+const PREFERRED_TIME_OPTIONS = [
+  { value: "", label: "No preference" },
+  { value: "morning", label: "Morning (08:00-12:00 GMT)" },
+  { value: "afternoon", label: "Afternoon (12:00-17:00 GMT)" },
+  { value: "evening", label: "Evening (17:00-20:00 GMT)" },
+];
 
 interface EstimateComponent {
   name: string;
@@ -132,17 +209,7 @@ function DiagnosticForm() {
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">Sector</label>
-        <select name="sector" required className={FIELD_CLASS}>
-          <option value="">Select...</option>
-          <option value="government">Government</option>
-          <option value="health">Health</option>
-          <option value="financial_services">Financial Services</option>
-          <option value="insurance">Insurance</option>
-          <option value="retail_commerce">Retail & Commerce</option>
-          <option value="energy">Energy</option>
-          <option value="education">Education</option>
-          <option value="ngo_development">NGO & Development</option>
-        </select>
+        <CustomSelect name="sector" required defaultValue="" options={SECTOR_OPTIONS} />
       </div>
       <button type="submit" className="btn-x">
         Start Diagnostic
@@ -255,14 +322,7 @@ function EstimateForm() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Service Line</label>
-          <select name="service_line" required className={FIELD_CLASS}>
-            <option value="">Select...</option>
-            <option value="digital_systems_audit">Digital Systems Audit</option>
-            <option value="enterprise_government_systems">Enterprise & Government Systems</option>
-            <option value="ai_automation">AI & Automation</option>
-            <option value="strategic_web_platforms">Strategic Web & Digital Platforms</option>
-            <option value="strategy_advisory">Strategy & Advisory</option>
-          </select>
+          <CustomSelect name="service_line" required defaultValue="" options={SERVICE_LINE_OPTIONS} />
         </div>
       </div>
 
@@ -271,55 +331,27 @@ function EstimateForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Integrations</label>
-            <select name="integrations" className={FIELD_CLASS}>
-              <option value="0">None</option>
-              <option value="1">1–3</option>
-              <option value="4">4–10</option>
-              <option value="10">10+</option>
-            </select>
+            <CustomSelect name="integrations" options={INTEGRATION_OPTIONS} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Data Volume</label>
-            <select name="data_volume" className={FIELD_CLASS}>
-              <option value="small">Small</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
-              <option value="enterprise">Enterprise</option>
-            </select>
+            <CustomSelect name="data_volume" options={DATA_VOLUME_OPTIONS} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Expected Users</label>
-            <select name="user_count" className={FIELD_CLASS}>
-              <option value="0">&lt; 100</option>
-              <option value="100">100–1,000</option>
-              <option value="1000">1,000–10,000</option>
-              <option value="10000">10,000+</option>
-            </select>
+            <CustomSelect name="user_count" options={USER_COUNT_OPTIONS} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Compliance</label>
-            <select name="compliance" className={FIELD_CLASS}>
-              <option value="none">None</option>
-              <option value="standard">Standard (SOC2)</option>
-              <option value="regulatory">Regulatory (HIPAA, GDPR)</option>
-              <option value="national_security">National Security</option>
-            </select>
+            <CustomSelect name="compliance" options={COMPLIANCE_OPTIONS} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">AI Needs</label>
-            <select name="ai_needs" className={FIELD_CLASS}>
-              <option value="none">None</option>
-              <option value="basic">Basic (classification, search)</option>
-              <option value="advanced">Advanced (LLM, generation)</option>
-            </select>
+            <CustomSelect name="ai_needs" options={AI_NEEDS_OPTIONS} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Timeline Urgency</label>
-            <select name="timeline_urgency" className={FIELD_CLASS}>
-              <option value="standard">Standard</option>
-              <option value="accelerated">Accelerated</option>
-              <option value="critical">Critical</option>
-            </select>
+            <CustomSelect name="timeline_urgency" options={TIMELINE_OPTIONS} />
           </div>
         </div>
       </div>
@@ -392,13 +424,7 @@ function BookingForm() {
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">Topic *</label>
-        <select name="topic" required className={FIELD_CLASS}>
-          <option value="">Select...</option>
-          <option value="discovery">Discovery Call (30 min)</option>
-          <option value="advisory">Advisory Session (60 min)</option>
-          <option value="technical_review">Technical Review (45 min)</option>
-          <option value="partnership">Partnership Discussion</option>
-        </select>
+        <CustomSelect name="topic" required defaultValue="" options={TOPIC_OPTIONS} />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -407,12 +433,7 @@ function BookingForm() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Preferred Time</label>
-          <select name="preferred_time" className={FIELD_CLASS}>
-            <option value="">No preference</option>
-            <option value="morning">Morning (08:00–12:00 GMT)</option>
-            <option value="afternoon">Afternoon (12:00–17:00 GMT)</option>
-            <option value="evening">Evening (17:00–20:00 GMT)</option>
-          </select>
+          <CustomSelect name="preferred_time" defaultValue="" options={PREFERRED_TIME_OPTIONS} />
         </div>
       </div>
       <button type="submit" className="btn-x">

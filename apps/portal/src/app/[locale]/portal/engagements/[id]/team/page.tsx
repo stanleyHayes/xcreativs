@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { Mail, CheckCircle, Clock, Plus, X, Loader2, Trash2 } from "lucide-react";
 import type { TeamMembersResponse } from "@xc/api/types";
 
@@ -14,6 +15,13 @@ interface TeamMember {
   AvailabilityStatus: string;
   IsXCreativs: boolean;
 }
+
+const AVAILABILITY_OPTIONS = [
+  { value: "available", label: "Available" },
+  { value: "busy", label: "Busy" },
+  { value: "away", label: "Away" },
+  { value: "offline", label: "Offline" },
+];
 
 export default function TeamPage() {
   const { id } = useParams();
@@ -139,16 +147,12 @@ export default function TeamPage() {
             </div>
             <div>
               <label className="block text-xs text-white/50 mb-1">Availability</label>
-              <select
+              <CustomSelect
                 value={form.availability_status}
-                onChange={(e) => setForm({ ...form, availability_status: e.target.value })}
-                className="portal-field-x w-full"
-              >
-                <option value="available">Available</option>
-                <option value="busy">Busy</option>
-                <option value="away">Away</option>
-                <option value="offline">Offline</option>
-              </select>
+                onChange={(value) => setForm({ ...form, availability_status: value })}
+                options={AVAILABILITY_OPTIONS}
+                variant="portal"
+              />
             </div>
           </div>
           <label className="flex items-center gap-2 text-sm text-white/70">

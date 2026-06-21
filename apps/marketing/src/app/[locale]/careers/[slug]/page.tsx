@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
+import BannerWatermark from "@xc/ui/BannerWatermark";
 import { ArrowLeft, ArrowRight, Briefcase, CheckCircle, TrendingUp } from "lucide-react";
 
 interface Role {
@@ -39,7 +40,7 @@ export default function RoleDetailPage() {
   return (
     <main>
       <section className="relative overflow-hidden border-b border-hairline bg-soft">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <BannerWatermark icon={Briefcase} />
         <div className="shell-x relative py-16 lg:py-24">
           <Link href="/careers" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-gravity/60 transition-colors hover:text-signal">
             <ArrowLeft className="h-4 w-4" /> All Roles

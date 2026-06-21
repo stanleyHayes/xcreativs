@@ -138,13 +138,9 @@ export default function AudioBriefDetailPage() {
       <article className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
         <section className="panel-x overflow-hidden">
           <div className="relative overflow-hidden bg-[#08090d] px-6 py-10 text-white lg:px-10 lg:py-14">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_88%_12%,rgba(91,147,255,0.26),transparent_28rem)]"
-            />
             <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/10" />
             <div className="relative">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/70">
+              <span className="inline-flex items-center gap-2 rounded-lg border border-white/12 bg-white/8 px-3 py-1.5 text-sm font-semibold text-white/72">
                 <Radio className="h-3.5 w-3.5 text-[#78a6ff]" />
                 Audio brief
               </span>
@@ -202,7 +198,7 @@ export default function AudioBriefDetailPage() {
                 </button>
 
                 <div className="min-w-0 flex-1">
-                  <div className="mb-3 flex items-center justify-between gap-4 text-xs font-semibold uppercase tracking-[0.16em] text-gravity/42">
+                  <div className="mb-3 flex items-center justify-between gap-4 text-sm font-semibold text-gravity/48">
                     <span className="inline-flex items-center gap-2">
                       <AudioWaveform className="h-4 w-4 text-signal" />
                       Listening progress
@@ -249,7 +245,7 @@ export default function AudioBriefDetailPage() {
 
             {brief.Transcript && (
               <section>
-                <div className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-gravity/40">
+                <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-gravity/48">
                   <ScrollText className="h-4 w-4 text-signal" />
                   Transcript
                 </div>

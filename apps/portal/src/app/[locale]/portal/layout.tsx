@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@xc/ui/ThemeProvider";
 import { useCurrency, CurrencyCode } from "@xc/ui/CurrencyProvider";
+import CustomSelect from "@xc/ui/CustomSelect";
 import NotificationBell from "@/components/NotificationBell";
 import ClientThemeProvider, { useClientTheme } from "@/components/ClientThemeProvider";
 
@@ -171,6 +172,11 @@ function PortalLayoutInner({
 
   const { theme, toggleTheme } = useTheme();
   const { currency, setCurrency } = useCurrency();
+  const currencyOptions = [
+    { value: "USD", label: "USD" },
+    { value: "GHS", label: "GHS" },
+    { value: "EUR", label: "EUR" },
+  ];
 
   const currentPath = pathname.replace(/^\/(en|fr)(?=\/|$)/, "") || "/";
   const hrefFor = (path: string) => (locale === "en" ? path : `/${locale}${path}`);
@@ -294,11 +300,8 @@ function PortalLayoutInner({
 
   return (
     <div className="portal-shell-x relative isolate flex min-h-screen flex-col overflow-x-hidden bg-gravity text-foundation lg:flex-row">
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-[0.035]" />
-      <div aria-hidden className="pointer-events-none absolute -right-[18%] top-0 h-[42rem] w-[42rem] rounded-full bg-signal/15 blur-[140px]" />
-
       <aside
-        className={`relative z-20 hidden shrink-0 flex-col border-white/10 bg-white/[0.035] backdrop-blur-xl transition-[width] duration-200 lg:fixed lg:left-0 lg:top-0 lg:flex lg:h-screen lg:border-r ${
+        className={`relative z-20 hidden shrink-0 flex-col border-white/10 bg-white/[0.035] transition-[width] duration-200 lg:fixed lg:left-0 lg:top-0 lg:flex lg:h-screen lg:border-r ${
           sidebarCollapsed ? "lg:w-20" : "lg:w-72"
         }`}
       >
@@ -523,19 +526,15 @@ function PortalLayoutInner({
               >
                 {theme === "dark" ? <Sun className="mx-auto h-4 w-4" /> : <Moon className="mx-auto h-4 w-4" />}
               </button>
-              <div className="portal-currency-control-x hidden sm:inline-flex">
-                <select
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-                  className="portal-currency-select-x"
-                  aria-label="Currency"
-                >
-                  <option value="USD">USD</option>
-                  <option value="GHS">GHS</option>
-                  <option value="EUR">EUR</option>
-                </select>
-                <ChevronDown className="portal-currency-chevron-x" />
-              </div>
+              <CustomSelect
+                value={currency}
+                onChange={(value) => setCurrency(value as CurrencyCode)}
+                options={currencyOptions}
+                aria-label="Currency"
+                variant="currency"
+                className="custom-select-inline-x hidden sm:inline-block"
+                triggerClassName="portal-currency-trigger-x"
+              />
               <NotificationBell />
               <Link
                 href={hrefFor("/portal/settings")}

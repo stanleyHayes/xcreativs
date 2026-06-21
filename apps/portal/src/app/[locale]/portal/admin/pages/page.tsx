@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { AlertTriangle, FileText, Loader2, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import PortalEmptyState from "@/components/portal/PortalEmptyState";
 
@@ -32,6 +33,16 @@ const statusColors: Record<string, string> = {
   published: "text-green-300 bg-green-400/10 border-green-400/20",
   draft: "text-yellow-200 bg-yellow-400/10 border-yellow-400/20",
 };
+
+const PAGE_STATUS_OPTIONS = [
+  { value: "draft", label: "Draft" },
+  { value: "published", label: "Published" },
+];
+
+const PAGE_FILTER_OPTIONS = [
+  { value: "", label: "All statuses" },
+  ...PAGE_STATUS_OPTIONS,
+];
 
 const emptyForm: PageForm = {
   slug: "",
@@ -278,11 +289,7 @@ export default function AdminPagesPage() {
             </div>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <select value={filter} onChange={(e) => setFilter(e.target.value)} className="portal-field-x sm:w-44">
-              <option value="">All statuses</option>
-              <option value="published">Published</option>
-              <option value="draft">Draft</option>
-            </select>
+            <CustomSelect value={filter} onChange={setFilter} options={PAGE_FILTER_OPTIONS} variant="portal" className="sm:w-44" />
             <button onClick={startCreate} className="portal-btn-x">
               <Plus className="w-4 h-4" />
               New page
@@ -340,14 +347,12 @@ export default function AdminPagesPage() {
             </div>
             <div>
               <label className="block text-xs text-white/50 mb-1">Status *</label>
-              <select
+              <CustomSelect
                 value={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.value })}
-                className="portal-field-x w-full"
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-              </select>
+                onChange={(value) => setForm({ ...form, status: value })}
+                options={PAGE_STATUS_OPTIONS}
+                variant="portal"
+              />
             </div>
             <div>
               <label className="block text-xs text-white/50 mb-1">Title (EN) *</label>

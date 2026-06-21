@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
 import { Receipt, CheckCircle, Clock, XCircle, Plus, X, Link2 } from "lucide-react";
 import { useCurrency } from "@xc/ui/CurrencyProvider";
+import CustomSelect from "@xc/ui/CustomSelect";
 
 interface Invoice {
   ID: string;
@@ -23,6 +24,12 @@ const statusStyle = (s: string) =>
   s === "void" ? "bg-white/5 text-white/40" :
   s === "sent" ? "bg-blue-400/10 text-blue-400" :
   "bg-yellow-400/10 text-yellow-400";
+
+const CURRENCY_OPTIONS = [
+  { value: "USD", label: "USD" },
+  { value: "GHS", label: "GHS" },
+  { value: "EUR", label: "EUR" },
+];
 
 export default function InvoicesPage() {
   const { id } = useParams();
@@ -93,9 +100,7 @@ export default function InvoicesPage() {
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Currency</label>
-              <select value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value })} className="portal-field-x w-full">
-                <option value="USD">USD</option><option value="GHS">GHS</option><option value="EUR">EUR</option>
-              </select>
+              <CustomSelect value={form.currency} onChange={(value) => setForm({ ...form, currency: value })} options={CURRENCY_OPTIONS} variant="portal" />
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Due date</label>

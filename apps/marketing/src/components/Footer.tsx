@@ -90,8 +90,6 @@ export default function Footer() {
     <footer className="site-footer-x bg-grain relative overflow-hidden border-t">
       <div className="site-footer-rule-x h-px w-full opacity-80" />
 
-      <div className="bg-grid pointer-events-none absolute inset-0 opacity-[0.16] dark:opacity-[0.08]" />
-
       <div className="relative mx-auto max-w-[1440px] px-5 lg:px-10">
         <div className="grid gap-10 border-b border-hairline py-12 dark:border-white/10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.65fr)] lg:py-14">
           <div>

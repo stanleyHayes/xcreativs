@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { FileText, Clock, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 
 const statusColors: Record<string, string> = {
@@ -21,6 +22,10 @@ const statusLabels: Record<string, string> = {
 };
 
 const statusOptions = ["received", "reviewing", "shortlisted", "declined", "accepted"];
+const RFP_FILTER_OPTIONS = [
+  { value: "", label: "All statuses" },
+  ...statusOptions.map((value) => ({ value, label: statusLabels[value] })),
+];
 
 interface RFP {
   id: string;
@@ -103,12 +108,7 @@ export default function AdminRFPsPage() {
               </p>
             </div>
           </div>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="portal-field-x sm:w-48">
-            <option value="">All statuses</option>
-            {statusOptions.map((s) => (
-              <option key={s} value={s}>{statusLabels[s]}</option>
-            ))}
-          </select>
+          <CustomSelect value={filter} onChange={setFilter} options={RFP_FILTER_OPTIONS} variant="portal" className="sm:w-48" />
         </div>
       </section>
 

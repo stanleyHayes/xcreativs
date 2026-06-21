@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Grid3X3, X, CheckCircle, ArrowUpRight } from "lucide-react";
+import BannerWatermark from "@xc/ui/BannerWatermark";
 
 const sectors = [
   "Government & Public Sector",
@@ -88,9 +89,9 @@ export default function CapabilityLatticePage() {
   return (
     <main>
       <section className="relative overflow-hidden border-b border-hairline bg-soft">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <BannerWatermark icon={Grid3X3} />
         <div className="shell-x relative py-16 lg:py-20">
-          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <p className="context-label-x mb-4">Capability matrix</p>
           <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <Grid3X3 className="w-8 h-8 text-signal" />
             Capability Lattice Explorer
@@ -121,7 +122,7 @@ export default function CapabilityLatticePage() {
               <div className="grid grid-cols-[180px_repeat(8,1fr)] gap-1">
                 <div className="p-2" />
                 {capabilities.map((cap) => (
-                  <div key={cap} className="p-2 text-[10px] font-medium uppercase tracking-wider text-gravity/50 text-center leading-tight">
+                  <div key={cap} className="p-2 text-[11px] font-medium text-gravity/50 text-center leading-tight">
                     {cap}
                   </div>
                 ))}

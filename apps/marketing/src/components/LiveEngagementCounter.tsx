@@ -53,10 +53,6 @@ export default function LiveEngagementCounter() {
 
   return (
     <section className="relative overflow-hidden bg-[#08090d] py-16 text-white">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(91,147,255,0.22),transparent_34rem)]"
-      />
       <div className="relative mx-auto max-w-6xl px-6">
         <div className="mb-8 flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-green-400 shadow-[0_0_24px_rgba(74,222,128,0.7)]" />

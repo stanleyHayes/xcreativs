@@ -86,7 +86,7 @@ export default function ApplyRolePage() {
       </Link>
 
       <div className="panel-x max-w-3xl p-6 lg:p-8">
-        <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-2">§ 05 · Careers</p>
+        <p className="context-label-x mb-4">Career application</p>
         <h1 className="font-display text-3xl font-semibold tracking-tight lg:text-5xl">Apply: {role.Title}</h1>
         <p className="mt-2 text-gravity/60">
           {role.Department} · {role.Location || "Remote"} · {role.EmploymentType}

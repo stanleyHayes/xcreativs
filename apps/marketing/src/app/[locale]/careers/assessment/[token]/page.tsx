@@ -50,7 +50,7 @@ export default function CandidateAssessmentPage() {
   return (
     <main className="shell-x py-16">
       <div className="panel-x mx-auto max-w-4xl p-6 lg:p-8">
-        <p className="mb-2 flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-signal"><Code className="h-3.5 w-3.5" /> Technical Assessment</p>
+        <p className="context-label-x mb-4 flex items-center gap-1"><Code className="h-3.5 w-3.5" /> Technical assessment</p>
         <h1 className="font-display text-3xl font-semibold tracking-tight lg:text-5xl">{challenge.title}</h1>
         <p className="mt-3 text-gravity/60">Hi {challenge.applicant_name}, here is your assessment.</p>
         <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-gravity/50">
@@ -62,7 +62,7 @@ export default function CandidateAssessmentPage() {
         {challenge.description && <p className="mt-8 whitespace-pre-line leading-relaxed text-gravity/80">{challenge.description}</p>}
         {challenge.prompt && (
           <div className="panel-x-soft mt-6 p-5">
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">Brief</p>
+            <p className="mb-2 text-sm font-medium text-gravity/48">Brief</p>
             <p className="whitespace-pre-line leading-relaxed text-gravity/80">{challenge.prompt}</p>
           </div>
         )}

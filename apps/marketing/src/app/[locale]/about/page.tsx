@@ -1,140 +1,158 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Compass,
+  Quote,
+  Building2,
+  Hammer,
+  Flag,
+  Workflow,
   Briefcase,
   FlaskConical,
   Landmark,
-  ShieldCheck,
-  Boxes,
-  TrendingUp,
-  Crosshair,
   ArrowRight,
-  Quote,
 } from "lucide-react";
 import PageBanner from "@xc/ui/PageBanner";
 
 export const metadata: Metadata = {
   title: "About — XCreativs Technologies",
   description:
-    "XCreativs is a sovereign-by-design technology group building national-scale digital systems for governments and enterprises — across services, product labs, and spun-out subsidiaries.",
+    "XCreativs Technologies is a Ghanaian sovereign technology company building the intelligent digital systems governments, authorities, and serious enterprises depend on — a long-term infrastructure partner, not a vendor.",
 };
 
-interface AboutFounder {
-  name?: string;
-  title?: string;
-}
-
-interface AboutData {
-  mission?: string;
-  founders?: AboutFounder[];
-}
-
-interface AboutPageResponse {
-  Data?: AboutData;
-}
-
-async function getAbout(): Promise<AboutPageResponse | null> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/v1/pages/about`,
-    { next: { revalidate: 60 } }
-  );
-  if (!res.ok) return null;
-  return res.json() as Promise<AboutPageResponse>;
-}
-
+// What We Do — the three operating arms (holding-company model).
 const ARMS = [
   {
     icon: Briefcase,
     name: "Services",
     blurb:
-      "Client engagements — audits, architecture, and national-scale system delivery. The revenue engine that funds everything the group builds.",
+      "The engagement arm. We partner with governments, authorities, and enterprises to design and build bespoke intelligence systems — from concept and architecture through engineering, deployment, and ongoing operation. Where institutional challenges become working infrastructure.",
   },
   {
     icon: FlaskConical,
     name: "Labs",
     blurb:
-      "The product arm. Where recurring problems become durable products — like ILIVVON, our health-intelligence platform.",
+      "Our venture studio. We identify problems worth solving at scale and build our own products to solve them — incubating, engineering, and proving them in the market before they stand on their own.",
   },
   {
     icon: Landmark,
     name: "Subsidiaries",
     blurb:
-      "Products that outgrow the Labs spin out into independent, self-standing companies — extending the group's reach.",
+      "Independent companies, born from proven work. When a Labs venture matures into something with its own trajectory, it spins out as a standalone subsidiary with its own brand, team, and mandate — while remaining part of the XCreativs family.",
   },
 ];
 
-const PRINCIPLES = [
+// What We Believe.
+const BELIEFS = [
   {
-    icon: ShieldCheck,
-    title: "Sovereign by default",
+    icon: Building2,
+    title: "Infrastructure, not products",
     blurb:
-      "Self-hosted, data-resident, and engineered so institutions own their stack — never their vendors.",
+      "A national intelligence platform is not consumer software, and shouldn't be procured, built, or maintained as if it were. We design for permanence, resilience, and institutional ownership — to outlast the projects that create them.",
   },
   {
-    icon: Boxes,
-    title: "Architecture first",
+    icon: Hammer,
+    title: "We show, we don't pitch",
     blurb:
-      "We design the system before the screen. Every engagement opens with the architecture for the next 18–36 months.",
+      "We don't ask institutions to imagine what we might build. We build it first. Every engagement begins with a working artifact you can use — long before any contract is signed. It is the only honest way to demonstrate capability.",
   },
   {
-    icon: TrendingUp,
-    title: "Compound infrastructure",
+    icon: Flag,
+    title: "Build it here",
     blurb:
-      "We build assets that accrue — platforms and capabilities that keep paying off long after launch day.",
+      "The default answer to a sovereign digital challenge in Africa has been to import a foreign vendor. We exist to make that the wrong default — world-class national systems, owned by the institutions and the country they serve, not licensed in perpetuity from abroad.",
   },
   {
-    icon: Crosshair,
-    title: "Serious firms only",
+    icon: Workflow,
+    title: "Change the system, not the symptom",
     blurb:
-      "We partner with governments and enterprises that treat technology as core infrastructure, not a line item.",
+      "We intervene where systems actually change how they behave — their rules, information flows, and incentives — rather than the surface metrics that only look like progress. The difference between a dashboard and a decision.",
+  },
+];
+
+// How We Work.
+const HOW_WE_WORK = [
+  {
+    title: "Artifact-first",
+    blurb:
+      "We arrive with a working system, not a slide deck. Before we ask an institution to commit, we've already built something real enough to use. Proof comes before promise.",
+  },
+  {
+    title: "You own the capability. We retain the engine.",
+    blurb:
+      "Partners receive a perpetual, exclusive licence to the systems we build — durable capability they can rely on indefinitely. We retain the underlying engineering, so the system keeps improving, stays supported, and never becomes a liability our partners maintain alone.",
+  },
+  {
+    title: "Partnership, not procurement",
+    blurb:
+      "We don't disappear when a system ships. We stay — operating, refining, and extending what we build, with a long-term stake in how well it performs. The relationship is the point.",
+  },
+  {
+    title: "Engineered to a standard",
+    blurb:
+      "Every system is held to a single, uncompromising engineering standard — in architecture, in code quality, in reliability. The institutions we serve cannot afford systems that merely work in a demo. Ours are built to run.",
+  },
+];
+
+// The founders — two partners, a clean division of responsibility.
+const FOUNDERS = [
+  {
+    name: "Daniel Nana Kwadwo Baah",
+    title: "Co-founder & Chief Executive Officer",
+    photo: "/media/founders/daniel-baah.jpg",
+    bio:
+      "As Chief Executive, Daniel leads XCreativs's strategy, commercial direction, partnerships, and operations. He owns the relationships that bring the company's work into being — translating institutional challenges into engagements, and ensuring every partnership is built on terms that protect both XCreativs and the organisations it serves. He sets the direction; the company executes against it.",
+  },
+  {
+    name: "Stanley Hayford",
+    title: "Co-founder & Chief Technology Officer",
+    photo: "/media/founders/stanley-hayford.png",
+    bio:
+      "As Chief Technology Officer, Stanley owns the whole of XCreativs's technical work — architecture, engineering, and the standards every system is held to. He is responsible for how the company's platforms are conceived and built, from the foundational infrastructure shared across engagements to the intelligence capabilities that sit on top of it. The artifact-first doctrine and the engineering standard XCreativs is known for are his to uphold.",
   },
 ];
 
 const STATS = [
+  { value: "Ghana", label: "Engineered in Africa" },
   { value: "3", label: "Operating arms" },
-  { value: "5", label: "Service lines" },
-  { value: "EN · FR", label: "Bilingual delivery" },
-  { value: "National", label: "Scale by default" },
+  { value: "Sovereign", label: "By default" },
+  { value: "Partner", label: "Not a vendor" },
 ];
 
-export default async function AboutPage() {
-  const page = await getAbout();
-  const data: AboutData = page?.Data || {};
-  const mission =
-    data.mission ||
-    "To build intelligent digital systems that give governments and enterprises strategic advantage — sovereign by design, and engineered to compound.";
-
+export default function AboutPage() {
   return (
     <>
       <PageBanner
         icon={Compass}
         eyebrow="Who we are"
-        title="A sovereign technology group."
-        description="XCreativs builds the digital infrastructure that governments and enterprises cannot operate without — across services, product labs, and independent subsidiaries."
+        title="We build the systems that nations and institutions run on."
+        description="XCreativs Technologies is a Ghanaian sovereign technology company building the intelligent digital infrastructure governments, authorities, and serious enterprises depend on — engineered in Africa, owned by the institutions it serves."
         crumbs={[{ label: "Home", href: "/" }, { label: "About" }]}
       />
 
       {/* Manifesto */}
       <section className="relative overflow-hidden border-b border-hairline">
-        <div
-          aria-hidden
-          className="animate-drift pointer-events-none absolute -right-[10%] top-[-40%] h-[40vmax] w-[40vmax] rounded-full bg-signal/10 blur-[130px]"
-        />
         <div className="shell-x relative grid gap-12 py-20 lg:grid-cols-12 lg:py-28">
           <div className="lg:col-span-8">
             <Quote className="h-9 w-9 text-signal/40" />
             <p className="font-display mt-5 text-3xl font-semibold leading-[1.12] tracking-tight lg:text-5xl">
-              We don&apos;t build websites. We build infrastructure that governments and
-              enterprises <span className="text-gradient">cannot operate without</span>.
+              We are not a software house. The systems we build are too consequential to be bought
+              off a shelf and forgotten — we build them as{" "}
+              <span className="text-signal">infrastructure</span>, engineered to a standard and
+              owned by the institutions they serve.
             </p>
           </div>
           <div className="lg:col-span-4 lg:pt-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-signal">Mission</p>
-            <p className="mt-3 text-base leading-relaxed text-gravity/65">{mission}</p>
+            <p className="context-label-x">The boilerplate</p>
+            <p className="mt-3 text-base leading-relaxed text-gravity/65">
+              XCreativs Technologies designs and builds the intelligent digital systems
+              governments, authorities, and serious enterprises depend on. We work as a long-term
+              infrastructure partner — not a vendor selling software.
+            </p>
             <p className="mt-4 text-base leading-relaxed text-gravity/55">
-              Self-hosted, sovereignty-conscious, and bilingual by design — so the institutions we
-              serve stay in control of their own systems.
+              We bring working systems rather than proposals, and retain the engineering that powers
+              them — so our partners gain durable capability, not a one-off project.
             </p>
           </div>
         </div>
@@ -148,26 +166,22 @@ export default async function AboutPage() {
               <p className="font-display text-3xl font-semibold tracking-tight text-signal lg:text-4xl">
                 {s.value}
               </p>
-              <p className="mt-1 text-xs font-medium uppercase tracking-wider text-gravity/45">
-                {s.label}
-              </p>
+              <p className="mt-1 text-sm font-medium text-gravity/50">{s.label}</p>
             </div>
           ))}
         </div>
       </section>
 
       <main className="shell-x">
-        {/* The model */}
+        {/* The model — What We Do */}
         <section className="border-b border-hairline py-20">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">
-            § 01 · The model
-          </p>
+          <p className="context-label-x mb-3">What we do</p>
           <h2 className="font-display text-2xl font-semibold tracking-tight lg:text-4xl">
             One company. Three arms. Compounding.
           </h2>
           <p className="mt-4 max-w-2xl text-gravity/60">
-            Client revenue funds the Labs that build products, which spin out into independent
-            subsidiaries. Each arm strengthens the next.
+            XCreativs operates as a holding company across three tiers — each one strengthening the
+            next.
           </p>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
             {ARMS.map((arm) => {
@@ -185,66 +199,93 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* Principles */}
+        {/* What We Believe */}
         <section className="border-b border-hairline py-20">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">
-            § 02 · Operating principles
-          </p>
+          <p className="context-label-x mb-3">What we believe</p>
           <h2 className="font-display text-2xl font-semibold tracking-tight lg:text-4xl">
-            How we build.
+            Convictions, not slogans.
           </h2>
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {PRINCIPLES.map((p) => {
-              const Icon = p.icon;
+            {BELIEFS.map((b) => {
+              const Icon = b.icon;
               return (
-                <div key={p.title} className="card-x p-6">
+                <div key={b.title} className="card-x p-6">
                   <Icon className="h-5 w-5 text-signal" />
-                  <h3 className="mt-4 font-semibold">{p.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-gravity/60">{p.blurb}</p>
+                  <h3 className="mt-4 font-semibold">{b.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-gravity/60">{b.blurb}</p>
                 </div>
               );
             })}
           </div>
         </section>
 
-        {/* Leadership */}
-        {data.founders && data.founders.length > 0 && (
-          <section className="border-b border-hairline py-20">
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gravity/40">
-              § 03 · Leadership
-            </p>
-            <h2 className="font-display text-2xl font-semibold tracking-tight lg:text-4xl">
-              The people accountable.
-            </h2>
-            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {data.founders.map((f, i) => (
-                <div key={i} className="card-x flex items-center gap-4 p-6">
-                  <span className="font-display flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-signal/10 text-lg font-semibold text-signal">
-                    {(f.name || "?").charAt(0)}
-                  </span>
-                  <div>
-                    <p className="font-semibold">{f.name}</p>
-                    <p className="text-sm text-gravity/55">{f.title}</p>
-                  </div>
+        {/* How We Work */}
+        <section className="border-b border-hairline py-20">
+          <p className="context-label-x mb-3">How we work</p>
+          <h2 className="font-display text-2xl font-semibold tracking-tight lg:text-4xl">
+            The terms of the partnership.
+          </h2>
+          <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2">
+            {HOW_WE_WORK.map((w, i) => (
+              <div key={w.title} className="flex gap-5">
+                <span className="font-display text-2xl font-semibold tabular-nums text-signal/40">
+                  0{i + 1}
+                </span>
+                <div>
+                  <h3 className="font-semibold">{w.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-gravity/60">{w.blurb}</p>
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Leadership */}
+        <section className="border-b border-hairline py-20">
+          <p className="context-label-x mb-3">Leadership</p>
+          <h2 className="font-display text-2xl font-semibold tracking-tight lg:text-4xl">
+            The people accountable.
+          </h2>
+          <p className="mt-4 max-w-2xl text-gravity/60">
+            XCreativs was founded by two partners with a clean division of responsibility: one owns
+            the business, the other owns the technology. Together they set the standard the company
+            is built to.
+          </p>
+          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {FOUNDERS.map((f) => (
+              <article key={f.name} className="card-x overflow-hidden p-0">
+                <div className="relative aspect-[3/2] w-full bg-soft">
+                  <Image
+                    src={f.photo}
+                    alt={f.name}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover object-top"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold">{f.name}</h3>
+                  <p className="text-sm font-medium text-signal">{f.title}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-gravity/60">{f.bio}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
       </main>
 
-      {/* CTA */}
+      {/* Why XCreativs — closing */}
       <section className="relative overflow-hidden bg-[#08090d] text-white">
-        <div
-          aria-hidden
-          className="animate-drift-slow pointer-events-none absolute -left-[8%] bottom-[-50%] h-[36vmax] w-[36vmax] rounded-full bg-[#5b93ff]/25 blur-[130px]"
-        />
         <div className="shell-x relative py-24 lg:py-32">
+          <p className="context-label-x mb-4 text-white/40">Why XCreativs</p>
           <h2 className="font-display max-w-3xl text-3xl font-semibold tracking-tight lg:text-5xl">
-            Build something institutions depend on.
+            The systems that will define Africa&apos;s next decades are being built now.
           </h2>
-          <p className="mt-4 max-w-xl text-white/68">
-            Serious prospects only. Begin with the engagement readiness diagnostic.
+          <p className="mt-5 max-w-2xl text-white/68">
+            The question is by whom, and on whose terms. XCreativs is built to offer the other path —
+            world-class engineering, conceived and owned on the continent, delivered by a partner
+            with a permanent stake in the outcome. We build the systems that matter most, and we
+            build them to stay.
           </p>
           <Link
             href="/contact"

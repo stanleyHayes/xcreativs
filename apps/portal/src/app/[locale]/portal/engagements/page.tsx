@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { ArrowRight, BriefcaseBusiness, Building2, Filter, Search, SlidersHorizontal, Target, Users } from "lucide-react";
 
 interface Engagement {
@@ -112,16 +113,16 @@ export default function EngagementsPage() {
             </label>
             <label className="relative block">
               <Filter className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30" />
-              <select
+              <CustomSelect
                 value={stageFilter}
-                onChange={(event) => setStageFilter(event.target.value)}
-                className="portal-field-x portal-field-icon-x appearance-none"
-              >
-                <option value="all" className="bg-gravity text-white">All stages</option>
-                {stages.map((stage) => (
-                  <option key={stage} value={stage} className="bg-gravity text-white">{stage}</option>
-                ))}
-              </select>
+                onChange={setStageFilter}
+                options={[
+                  { value: "all", label: "All stages" },
+                  ...stages.map((stage) => ({ value: stage, label: stage })),
+                ]}
+                variant="portal"
+                triggerClassName="portal-field-icon-x"
+              />
             </label>
           </div>
         </div>

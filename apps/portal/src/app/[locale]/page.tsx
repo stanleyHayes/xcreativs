@@ -32,12 +32,11 @@ export default async function PortalLanding() {
 
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-gravity text-foundation">
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-[0.04]" />
       <div aria-hidden className="rule-x absolute inset-x-0 top-0 h-px opacity-50" />
 
       <div className="shell-x relative grid min-h-screen items-center gap-10 py-14 lg:grid-cols-[1fr_0.9fr] lg:py-20">
         <section className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/55 backdrop-blur">
+          <div className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-sm font-semibold text-white/58">
             <ShieldCheck className="h-4 w-4 text-signal" />
             Secure workspace
           </div>
@@ -62,7 +61,7 @@ export default async function PortalLanding() {
               Sign in to portal
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <span className="portal-chip-x px-3 py-2 text-white/52">SSO options available after sign-in opens</span>
+            <span className="portal-chip-x px-3 py-2 text-white/52">Credential access with MFA support</span>
           </div>
 
           <div className="mt-10 grid max-w-2xl grid-cols-3 gap-3">

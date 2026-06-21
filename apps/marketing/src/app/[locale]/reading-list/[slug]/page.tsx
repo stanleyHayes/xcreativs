@@ -130,13 +130,9 @@ export default function ReadingListDetailPage() {
       <article className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
         <section className="panel-x overflow-hidden">
           <div className="relative bg-gravity px-6 py-10 text-foundation lg:px-10 lg:py-14">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_88%_8%,rgba(91,147,255,0.28),transparent_28rem)]"
-            />
             <div className="relative">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/70">
+                <span className="inline-flex items-center gap-2 rounded-lg border border-white/12 bg-white/8 px-3 py-1.5 text-sm font-semibold text-white/72">
                   <BookOpen className="h-3.5 w-3.5 text-signal" />
                   {categoryLabel(item.Category)}
                 </span>
@@ -171,7 +167,7 @@ export default function ReadingListDetailPage() {
 
           <div className="space-y-8 p-6 lg:p-10">
             <section>
-              <div className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-gravity/40">
+              <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-gravity/48">
                 <Quote className="h-4 w-4 text-signal" />
                 XCreativs annotation
               </div>
@@ -182,7 +178,7 @@ export default function ReadingListDetailPage() {
 
             {item.KeyTakeaway && (
               <section className="rounded-lg border border-signal/18 bg-signal/7 p-5 lg:p-6">
-                <div className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-signal">
+                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-signal">
                   <CheckCircle2 className="h-4 w-4" />
                   Key takeaway
                 </div>
@@ -207,7 +203,7 @@ export default function ReadingListDetailPage() {
 
           {item.Tags && item.Tags.length > 0 && (
             <div className="card-x p-5">
-              <p className="kicker-x mb-4 flex items-center gap-2 text-gravity/45">
+            <p className="mb-4 flex items-center gap-2 text-sm font-semibold text-gravity/50">
                 <Tag className="h-3.5 w-3.5 text-signal" />
                 Tags
               </p>

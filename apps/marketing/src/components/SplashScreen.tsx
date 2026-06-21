@@ -10,8 +10,6 @@ export default function SplashScreen() {
       aria-hidden
       className="xc-splash fixed inset-0 z-[120] flex flex-col items-center justify-center bg-foundation"
     >
-      <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black,transparent_68%)]" />
-
       <div className="relative flex flex-col items-center">
         <div className="relative flex h-16 w-16 items-center justify-center">
           <span className="xc-splash-ring absolute inset-0 rounded-full border border-signal/30" />

@@ -1,76 +1,52 @@
 import type { Metadata } from "next";
+import { Server } from "lucide-react";
+import LegalDocument from "../_components/LegalDocument";
 
 export const metadata: Metadata = {
-  title: "Data Residency — XCreativs Technologies",
+  title: "Data Residency - XCreativs Technologies",
   description: "XCreativs Technologies data residency policy. Where client data lives, how it is protected, and how sovereignty is maintained.",
 };
 
 export default function DataResidencyPage() {
   return (
-    <main className="legal-page-x">
-      <div className="shell-x relative py-20">
-        <div className="legal-copy-x max-w-4xl">
-      <p className="kicker-x mb-4">Trust center</p>
-      <h1>Data Residency</h1>
-      <p className="mt-4 max-w-2xl text-lg">
-        Where your data lives, how it is protected, and how sovereignty is maintained.
-      </p>
-
-      <div className="mt-12 max-w-3xl space-y-10">
-        <section>
-          <h2>Principle</h2>
-          <p>
-            XCreativs Technologies designs every system with data sovereignty as a first-class constraint.
-            For government clients, this means primary data storage within national borders. For enterprise
-            clients, it means storage in the jurisdiction of their choosing, with clear contractual guarantees.
-          </p>
-        </section>
-
-        <section>
-          <h2>Default Residency</h2>
-          <p>
-            Unless otherwise specified in the engagement agreement, all client data for African mandates
-            is stored in AWS regions located in South Africa (af-south-1) or Nigeria (af-west-1).
-            European mandates default to Frankfurt (eu-central-1) or Ireland (eu-west-1).
-          </p>
-        </section>
-
-        <section>
-          <h2>Encryption</h2>
-          <p>
-            All data is encrypted at rest using AES-256 and in transit using TLS 1.3. Encryption keys
-            are managed through AWS KMS or HashiCorp Vault, with key material never leaving the
-            designated residency region.
-          </p>
-        </section>
-
-        <section>
-          <h2>Subprocessors</h2>
-          <p>
-            We maintain a published list of all subprocessors with their data residency characteristics.
-            No subprocessor is engaged for client data processing without explicit contractual commitment
-            to matching the client&apos;s residency requirements.
-          </p>
-        </section>
-
-        <section>
-          <h2>Audit & Compliance</h2>
-          <p>
-            Annual third-party audits verify residency compliance. Clients may request residency attestations
-            at any time during an active engagement. All audit reports are shared under NDA.
-          </p>
-        </section>
-
-        <section>
-          <h2>Questions</h2>
-          <p>
-            For data residency questions specific to your engagement, contact your engagement lead
-            or email security@xcreativs.com.
-          </p>
-        </section>
-      </div>
-        </div>
-      </div>
-    </main>
+    <LegalDocument
+      icon={Server}
+      label="Data sovereignty"
+      title="Data Residency"
+      description="Where client data lives, how residency decisions are made, and how sovereign operating requirements are protected."
+      updated="14 June 2026"
+      owner="Security and delivery governance"
+      sections={[
+        {
+          title: "Residency principle",
+          body: "XCreativs designs systems with data sovereignty as a first-class constraint. For public-sector and regulated clients, residency choices are agreed during engagement setup and reflected in the technical architecture.",
+        },
+        {
+          title: "Default regions",
+          body: "Unless an agreement specifies otherwise, African mandates are designed around African or client-approved regions. European mandates default to European regions. Client-specific jurisdiction requirements take priority.",
+        },
+        {
+          title: "Encryption and key handling",
+          body: "Client data is encrypted in transit and at rest. Where client requirements demand it, key material can be restricted to the selected residency region or managed through client-approved controls.",
+        },
+        {
+          title: "Subprocessors",
+          body: "Subprocessors are selected with residency, security, and operational need in mind. We do not introduce subprocessors for client data processing without appropriate contractual safeguards.",
+        },
+        {
+          title: "Backups and recovery",
+          body: "Backup, disaster recovery, and retention patterns are designed to respect the same residency posture as the primary workload unless a separate recovery region is explicitly approved.",
+        },
+        {
+          title: "Attestations and review",
+          body: "Clients may request residency information during an active engagement. Where third-party evidence or architecture attestations are required, they are shared under the applicable confidentiality terms.",
+        },
+      ]}
+      assurance={[
+        "Residency posture agreed during engagement setup.",
+        "Backup and recovery patterns aligned to approved regions.",
+        "Subprocessors reviewed for residency and contractual safeguards.",
+      ]}
+    />
   );
 }

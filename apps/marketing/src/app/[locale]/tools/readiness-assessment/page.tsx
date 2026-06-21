@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { api } from "@xc/api";
 import type { AssessmentTemplateResponse, AssessmentSessionResponse } from "@xc/api/types";
+import BannerWatermark from "@xc/ui/BannerWatermark";
 import { BarChart3, ArrowRight, CheckCircle, RotateCcw, TrendingUp, Shield, Database, Server, Cog, Target } from "lucide-react";
 
 interface AssessmentTemplate {
@@ -155,11 +156,12 @@ export default function ReadinessAssessmentPage() {
   }
 
   return (
-    <main className="shell-x py-20">
-      <div className="max-w-3xl">
+    <main className="shell-x relative overflow-hidden py-20">
+      <BannerWatermark icon={BarChart3} />
+      <div className="relative max-w-3xl">
         <div className="flex items-center gap-2 mb-4">
           <BarChart3 className="w-5 h-5 text-purple-400" />
-          <p className="kicker-x">§ 07 · Interactive Tool</p>
+          <p className="context-label-x">Readiness diagnostic</p>
         </div>
         <h1 className="font-display text-4xl font-semibold tracking-tight lg:text-5xl">{template?.title || "Digital Systems Readiness Assessment"}</h1>
         <p className="mt-4 text-lg text-gravity/60">{template?.description}</p>
@@ -337,7 +339,7 @@ function ResultsStep({ results, questions, onReset }: { results: AssessmentResul
   return (
     <div className="space-y-8">
       <div className="panel-x-soft p-8 text-center">
-        <p className="text-sm text-gravity/50 uppercase tracking-wider">Overall Readiness Score</p>
+        <p className="text-sm font-medium text-gravity/50">Overall readiness score</p>
         <div className="mt-4 flex items-center justify-center gap-4">
           <div className="text-5xl font-bold">{percentage}%</div>
           <div className={`px-3 py-1 rounded text-sm font-medium ${overallGrade.bg} ${overallGrade.color}`}>

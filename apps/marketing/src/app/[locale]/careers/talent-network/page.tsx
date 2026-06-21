@@ -4,6 +4,15 @@ import Link from "next/link";
 import { useState } from "react";
 import { api } from "@xc/api";
 import { ArrowLeft, CheckCircle, Users } from "lucide-react";
+import CustomSelect from "@xc/ui/CustomSelect";
+
+const SENIORITY_OPTIONS = [
+  { value: "junior", label: "Junior" },
+  { value: "mid", label: "Mid-level" },
+  { value: "senior", label: "Senior" },
+  { value: "lead", label: "Lead / Principal" },
+  { value: "executive", label: "Executive" },
+];
 
 export default function TalentNetworkPage() {
   const [form, setForm] = useState({
@@ -65,7 +74,7 @@ export default function TalentNetworkPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div className="panel-x max-w-xl p-6 lg:p-8">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-2">§ 05 · Careers</p>
+          <p className="context-label-x mb-4">Talent network</p>
           <h1 className="font-display text-3xl font-semibold tracking-tight lg:text-5xl">Talent Network</h1>
           <p className="mt-4 text-gravity/60">
             No open role fits today, but you want to be known to us? Tell us your domains and we will notify you when a
@@ -101,17 +110,11 @@ export default function TalentNetworkPage() {
               placeholder="Domains of expertise (comma-separated)"
               className="field-x"
             />
-            <select
+            <CustomSelect
               value={form.seniority_level}
-              onChange={(e) => setForm({ ...form, seniority_level: e.target.value })}
-              className="field-x"
-            >
-              <option value="junior">Junior</option>
-              <option value="mid">Mid-level</option>
-              <option value="senior">Senior</option>
-              <option value="lead">Lead / Principal</option>
-              <option value="executive">Executive</option>
-            </select>
+              onChange={(value) => setForm({ ...form, seniority_level: value })}
+              options={SENIORITY_OPTIONS}
+            />
             <input
               type="url"
               value={form.linkedin_url}

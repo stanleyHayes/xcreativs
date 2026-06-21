@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Network, ArrowRight, Building2, FlaskConical, Briefcase, Users, Landmark, Cpu, Globe, ArrowUpRight } from "lucide-react";
+import BannerWatermark from "@xc/ui/BannerWatermark";
 
 interface Node {
   id: string;
@@ -123,9 +124,9 @@ export default function HoldingVisualiserPage() {
   return (
     <main>
       <section className="relative overflow-hidden border-b border-hairline bg-soft">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <BannerWatermark icon={Network} />
         <div className="shell-x relative py-16 lg:py-20">
-          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <p className="context-label-x mb-4">Holding company structure</p>
           <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <Network className="w-8 h-8 text-blue-400" />
             Holding Company Visualiser

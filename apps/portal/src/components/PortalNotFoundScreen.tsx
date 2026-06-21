@@ -6,16 +6,6 @@ export default function PortalNotFoundScreen() {
 
   return (
     <main className="portal-shell-x relative isolate flex min-h-screen items-center overflow-hidden bg-gravity text-foundation">
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-[0.045]" />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-40 top-10 h-[34rem] w-[34rem] rounded-full bg-signal/20 blur-[130px]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -left-52 bottom-[-12rem] h-[30rem] w-[30rem] rounded-full bg-white/8 blur-[120px]"
-      />
-
       <section className="relative mx-auto grid w-full max-w-6xl gap-8 px-5 py-16 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end lg:px-8">
         <div>
           <span className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.045] px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/50">

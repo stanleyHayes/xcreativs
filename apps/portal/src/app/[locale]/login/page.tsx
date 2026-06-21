@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Suspense, useState } from "react";
 import { api } from "@xc/api";
-import { useRouter, useParams, useSearchParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import {
   ArrowRight,
   CheckCircle2,
@@ -16,12 +16,9 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const API_URL = ""; // relative -> same-origin /api proxy
 const MFA_HELP_TEXT = "Enter the 6-digit code from your authenticator app.";
 const INPUT_CLASS =
   "portal-field-x portal-login-input-x text-sm placeholder:text-white/30 disabled:opacity-50";
-const SSO_BUTTON_CLASS =
-  "group flex min-h-11 items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.055] px-4 py-3 text-sm font-semibold text-white/80 transition-colors hover:border-signal/50 hover:bg-signal/10 hover:text-white";
 
 export default function LoginPage() {
   return (
@@ -37,19 +34,15 @@ function LoginPageContent() {
   const [mfaCode, setMfaCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [hideSsoError, setHideSsoError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mfaRequired, setMfaRequired] = useState(false);
   const router = useRouter();
   const params = useParams();
-  const searchParams = useSearchParams();
   const locale = (params?.locale as string) || "en";
-  const ssoError = searchParams.get("sso_error");
-  const visibleError = error || (!hideSsoError && ssoError ? `Single sign-on failed: ${ssoError}` : "");
+  const visibleError = error;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setHideSsoError(true);
     setLoading(true);
     setError("");
 
@@ -78,20 +71,11 @@ function LoginPageContent() {
 
   return (
     <main className="portal-shell-x relative isolate overflow-hidden bg-gravity text-foundation">
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-[0.045]" />
-      <div
-        aria-hidden
-        className="animate-drift pointer-events-none absolute -right-[16rem] top-[-14rem] h-[38rem] w-[38rem] rounded-full bg-signal/25 blur-[140px]"
-      />
-      <div
-        aria-hidden
-        className="animate-drift-slow pointer-events-none absolute -left-[14rem] bottom-[-16rem] h-[34rem] w-[34rem] rounded-full bg-signal/10 blur-[130px]"
-      />
       <div aria-hidden className="rule-x absolute inset-x-0 top-0 h-px opacity-40" />
 
       <div className="shell-x relative grid min-h-[calc(100vh-72px)] items-center gap-10 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
         <section className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white/55 backdrop-blur">
+          <div className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-sm font-semibold text-white/58">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
@@ -133,17 +117,17 @@ function LoginPageContent() {
         </section>
 
         <section className="mx-auto w-full max-w-md">
-          <div className="portal-card-x overflow-hidden border-white/15 bg-white/[0.035] p-2 backdrop-blur-2xl">
+          <div className="portal-card-x overflow-hidden border-white/15 bg-white/[0.035] p-2">
             <div className="rounded-lg border border-white/10 bg-gravity/80 p-5 shadow-2xl sm:p-6 lg:p-7">
               <div className="mb-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-signal">
-                  Portal sign in
-                </p>
+                  <p className="context-label-x">
+                    Portal sign in
+                  </p>
                 <h2 className="font-display mt-2 text-3xl font-semibold tracking-tight">
                   Welcome back.
                 </h2>
                 <p className="mt-2 text-sm text-white/45">
-                  Use your workspace credentials or continue with your organisation provider.
+                  Use your workspace credentials to enter the secure portal.
                 </p>
               </div>
 
@@ -244,28 +228,10 @@ function LoginPageContent() {
                 )}
               </form>
 
-              <div className="mt-8">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="h-px flex-1 bg-white/10" />
-                  <span className="text-xs font-medium uppercase tracking-[0.16em] text-white/35">
-                    or continue with
-                  </span>
-                  <div className="h-px flex-1 bg-white/10" />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <a href={`${API_URL}/api/v1/auth/oauth/google/login`} className={SSO_BUTTON_CLASS}>
-                    Google
-                  </a>
-                  <a href={`${API_URL}/api/v1/auth/oauth/microsoft/login`} className={SSO_BUTTON_CLASS}>
-                    Microsoft
-                  </a>
-                </div>
-              </div>
-
               <div className="mt-8 flex items-start gap-3 rounded-lg border border-white/10 bg-white/[0.035] p-4 text-xs leading-relaxed text-white/45">
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-signal" />
                 <p>
-                  Access is provisioned per engagement. If your organisation uses SSO, choose your provider and we&apos;ll route you through the secure handshake.
+                  Access is provisioned per engagement. Use the account issued to your team, then complete MFA when prompted.
                 </p>
               </div>
             </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { Briefcase, Calendar, ChevronDown, ChevronUp, ExternalLink, CheckCircle, Plus } from "lucide-react";
 
 const statusColors: Record<string, string> = {
@@ -18,6 +19,14 @@ const statusLabels: Record<string, string> = {
   received: "Received", under_review: "Under Review", interview_scheduled: "Interview", offer: "Offer", declined: "Declined", withdrawn: "Withdrawn",
 };
 const statusOptions = ["received", "under_review", "interview_scheduled", "offer", "declined", "withdrawn"];
+const APPLICATION_STATUS_OPTIONS = statusOptions.map((value) => ({ value, label: statusLabels[value] }));
+const APPLICATION_FILTER_OPTIONS = [{ value: "", label: "All statuses" }, ...APPLICATION_STATUS_OPTIONS];
+const INTERVIEW_TYPE_OPTIONS = [
+  { value: "phone", label: "Phone" },
+  { value: "technical", label: "Technical" },
+  { value: "onsite", label: "Onsite" },
+  { value: "final", label: "Final" },
+];
 
 interface Application {
   id: string; applicant_name: string; applicant_email: string; applicant_phone: string;
@@ -147,10 +156,7 @@ export default function AdminApplicationsPage() {
               <Briefcase className="h-4 w-4" />
               Manage roles
             </Link>
-            <select value={filter} onChange={(e) => setFilter(e.target.value)} className="portal-field-x sm:w-48">
-              <option value="">All statuses</option>
-              {statusOptions.map((s) => <option key={s} value={s}>{statusLabels[s]}</option>)}
-            </select>
+            <CustomSelect value={filter} onChange={setFilter} options={APPLICATION_FILTER_OPTIONS} variant="portal" className="sm:w-48" />
           </div>
         </div>
       </section>
@@ -179,9 +185,15 @@ export default function AdminApplicationsPage() {
                 <p className="text-xs text-white/40">{a.applicant_email}</p>
               </div>
               <span className={`portal-chip-x ${statusColors[a.status] || ""}`}>{statusLabels[a.status] || a.status}</span>
-              <select value={a.status} disabled={updating === a.id} onChange={(e) => updateStatus(a.id, e.target.value)} className="portal-field-x text-xs lg:w-44">
-                {statusOptions.map((s) => <option key={s} value={s}>{statusLabels[s]}</option>)}
-              </select>
+              <CustomSelect
+                value={a.status}
+                disabled={updating === a.id}
+                onChange={(value) => updateStatus(a.id, value)}
+                options={APPLICATION_STATUS_OPTIONS}
+                variant="portal"
+                className="lg:w-44"
+                triggerClassName="text-xs"
+              />
             </div>
 
             {expandedId === a.id && (
@@ -215,9 +227,7 @@ export default function AdminApplicationsPage() {
 
                   {showSchedule === a.id && (
                     <div className="portal-panel-x mt-2 grid grid-cols-2 gap-2 p-3 md:grid-cols-4">
-                      <select value={iv.interview_type} onChange={(e) => setIv({ ...iv, interview_type: e.target.value })} className="portal-field-x text-xs">
-                        <option value="phone">Phone</option><option value="technical">Technical</option><option value="onsite">Onsite</option><option value="final">Final</option>
-                      </select>
+                      <CustomSelect value={iv.interview_type} onChange={(value) => setIv({ ...iv, interview_type: value })} options={INTERVIEW_TYPE_OPTIONS} variant="portal" triggerClassName="text-xs" />
                       <input type="datetime-local" value={iv.scheduled_at} onChange={(e) => setIv({ ...iv, scheduled_at: e.target.value })} className="portal-field-x text-xs" />
                       <input type="number" value={iv.duration_minutes} onChange={(e) => setIv({ ...iv, duration_minutes: Number(e.target.value) })} placeholder="Minutes" className="portal-field-x text-xs" />
                       <input value={iv.location} onChange={(e) => setIv({ ...iv, location: e.target.value })} placeholder="Meeting link / location" className="portal-field-x text-xs" />
@@ -232,10 +242,17 @@ export default function AdminApplicationsPage() {
                     <h4 className="text-xs uppercase tracking-wider text-white/40">Assessments</h4>
                     {challenges.length > 0 && (
                       <div className="flex items-center gap-1">
-                        <select value={assignChoice[a.id] || ""} onChange={(e) => setAssignChoice({ ...assignChoice, [a.id]: e.target.value })} className="portal-field-x text-xs">
-                          <option value="">Assign challenge…</option>
-                          {challenges.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
-                        </select>
+                        <CustomSelect
+                          value={assignChoice[a.id] || ""}
+                          onChange={(value) => setAssignChoice({ ...assignChoice, [a.id]: value })}
+                          options={[
+                            { value: "", label: "Assign challenge...", disabled: true },
+                            ...challenges.map((challenge) => ({ value: challenge.id, label: challenge.title })),
+                          ]}
+                          variant="portal"
+                          className="min-w-48"
+                          triggerClassName="text-xs"
+                        />
                         <button onClick={() => assign(a.id)} disabled={!assignChoice[a.id]} className="portal-admin-action-x disabled:opacity-40">Assign</button>
                       </div>
                     )}

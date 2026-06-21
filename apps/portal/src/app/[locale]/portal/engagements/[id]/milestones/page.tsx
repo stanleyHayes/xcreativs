@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { Flag, CheckCircle, Clock, Circle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 
 interface Milestone {
@@ -24,6 +25,12 @@ const statusConfig: Record<string, { icon: React.ReactNode; color: string; label
   in_progress: { icon: <Clock className="w-5 h-5" />, color: "text-signal bg-signal/10 border-signal/30", label: "In Progress" },
   upcoming: { icon: <Circle className="w-5 h-5" />, color: "text-white/40 bg-white/5 border-white/10", label: "Upcoming" },
 };
+
+const MILESTONE_STATUS_OPTIONS = [
+  { value: "upcoming", label: "Upcoming" },
+  { value: "in_progress", label: "In Progress" },
+  { value: "completed", label: "Completed" },
+];
 
 export default function MilestonesPage() {
   const { id } = useParams();
@@ -200,15 +207,12 @@ export default function MilestonesPage() {
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Status</label>
-              <select
+              <CustomSelect
                 value={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.value })}
-                className="portal-field-x w-full"
-              >
-                <option value="upcoming">Upcoming</option>
-                <option value="in_progress">In Progress</option>
-                <option value="completed">Completed</option>
-              </select>
+                onChange={(value) => setForm({ ...form, status: value })}
+                options={MILESTONE_STATUS_OPTIONS}
+                variant="portal"
+              />
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Sort Order</label>

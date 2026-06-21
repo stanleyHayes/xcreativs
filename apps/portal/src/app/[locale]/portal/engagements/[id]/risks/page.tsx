@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { AlertTriangle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import ThreadedComments from "@/components/portal/ThreadedComments";
 
@@ -34,6 +35,27 @@ const statusConfig: Record<string, { color: string; label: string }> = {
   accepted: { color: "text-yellow-400 bg-yellow-400/10 border-yellow-400/30", label: "Accepted" },
   closed: { color: "text-green-400 bg-green-400/10 border-green-400/30", label: "Closed" },
 };
+
+const SEVERITY_OPTIONS = [
+  { value: "low", label: "Low" },
+  { value: "medium", label: "Medium" },
+  { value: "high", label: "High" },
+  { value: "critical", label: "Critical" },
+];
+
+const RISK_STATUS_OPTIONS = [
+  { value: "open", label: "Open" },
+  { value: "mitigated", label: "Mitigated" },
+  { value: "accepted", label: "Accepted" },
+  { value: "closed", label: "Closed" },
+];
+
+const ESCALATION_OPTIONS = [
+  { value: "none", label: "None" },
+  { value: "watch", label: "Watch" },
+  { value: "escalated", label: "Escalated" },
+  { value: "resolved", label: "Resolved" },
+];
 
 export default function RisksPage() {
   const { id } = useParams();
@@ -148,30 +170,15 @@ export default function RisksPage() {
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Severity</label>
-              <select value={form.severity} onChange={(e) => setForm({ ...form, severity: e.target.value })} className="portal-field-x w-full">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="critical">Critical</option>
-              </select>
+              <CustomSelect value={form.severity} onChange={(value) => setForm({ ...form, severity: value })} options={SEVERITY_OPTIONS} variant="portal" />
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Status</label>
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="portal-field-x w-full">
-                <option value="open">Open</option>
-                <option value="mitigated">Mitigated</option>
-                <option value="accepted">Accepted</option>
-                <option value="closed">Closed</option>
-              </select>
+              <CustomSelect value={form.status} onChange={(value) => setForm({ ...form, status: value })} options={RISK_STATUS_OPTIONS} variant="portal" />
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Escalation</label>
-              <select value={form.escalation_status} onChange={(e) => setForm({ ...form, escalation_status: e.target.value })} className="portal-field-x w-full">
-                <option value="none">None</option>
-                <option value="watch">Watch</option>
-                <option value="escalated">Escalated</option>
-                <option value="resolved">Resolved</option>
-              </select>
+              <CustomSelect value={form.escalation_status} onChange={(value) => setForm({ ...form, escalation_status: value })} options={ESCALATION_OPTIONS} variant="portal" />
             </div>
             <div className="md:col-span-3">
               <label className="text-xs text-white/50 mb-1 block">Description</label>

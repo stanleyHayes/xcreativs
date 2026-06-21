@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { Network, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 
 interface Stakeholder {
@@ -26,6 +27,19 @@ const sentimentColor: Record<string, string> = {
   skeptic: "border-yellow-400/40 bg-yellow-400/10",
   blocker: "border-red-400/40 bg-red-400/10",
 };
+
+const LEVEL_OPTIONS = [
+  { value: "low", label: "Low" },
+  { value: "medium", label: "Medium" },
+  { value: "high", label: "High" },
+];
+
+const SENTIMENT_OPTIONS = [
+  { value: "supporter", label: "Supporter" },
+  { value: "neutral", label: "Neutral" },
+  { value: "skeptic", label: "Skeptic" },
+  { value: "blocker", label: "Blocker" },
+];
 
 const levels = ["high", "medium", "low"]; // rows top→bottom (influence) and cols left→right (interest) reversed
 
@@ -143,21 +157,15 @@ export default function StakeholdersPage() {
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Influence</label>
-              <select value={form.influence} onChange={(e) => setForm({ ...form, influence: e.target.value })} className="portal-field-x w-full">
-                <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option>
-              </select>
+              <CustomSelect value={form.influence} onChange={(value) => setForm({ ...form, influence: value })} options={LEVEL_OPTIONS} variant="portal" />
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Interest</label>
-              <select value={form.interest} onChange={(e) => setForm({ ...form, interest: e.target.value })} className="portal-field-x w-full">
-                <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option>
-              </select>
+              <CustomSelect value={form.interest} onChange={(value) => setForm({ ...form, interest: value })} options={LEVEL_OPTIONS} variant="portal" />
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Sentiment</label>
-              <select value={form.sentiment} onChange={(e) => setForm({ ...form, sentiment: e.target.value })} className="portal-field-x w-full">
-                <option value="supporter">Supporter</option><option value="neutral">Neutral</option><option value="skeptic">Skeptic</option><option value="blocker">Blocker</option>
-              </select>
+              <CustomSelect value={form.sentiment} onChange={(value) => setForm({ ...form, sentiment: value })} options={SENTIMENT_OPTIONS} variant="portal" />
             </div>
             <div className="md:col-span-3">
               <label className="text-xs text-white/50 mb-1 block">Notes</label>

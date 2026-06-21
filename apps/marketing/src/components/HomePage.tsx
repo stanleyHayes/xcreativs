@@ -136,8 +136,8 @@ export default function HomePage() {
       {/* Services Snapshot */}
       <section className="border-b border-hairline">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-2">
-            § 01
+          <p className="context-label-x mb-3">
+            Operating model
           </p>
           <h2 className="text-2xl lg:text-3xl font-bold mb-10">{t("services_title")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -163,8 +163,8 @@ export default function HomePage() {
       {/* Labs Preview */}
       <section className="border-b border-hairline bg-soft">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-2">
-            § 02
+          <p className="context-label-x mb-3">
+            Product ventures
           </p>
           <h2 className="text-2xl lg:text-3xl font-bold mb-4">{t("labs_title")}</h2>
           <p className="text-gravity/60 mb-10 max-w-xl">{t("labs_sub")}</p>
@@ -192,8 +192,8 @@ export default function HomePage() {
       {/* Selected Dossiers */}
       <section className="border-b border-hairline">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-12 py-20">
-          <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-2">
-            § 03
+          <p className="context-label-x mb-3">
+            Field evidence
           </p>
           <h2 className="text-2xl lg:text-3xl font-bold mb-10">{t("dossiers_title")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -211,10 +211,10 @@ export default function HomePage() {
                     sizes="(max-width: 1024px) 100vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-foundation via-foundation/10 to-transparent" />
+	                  <div className="absolute inset-0 bg-foundation/20" />
                 </div>
                 <div className="p-6">
-                  <p className="text-xs font-medium uppercase tracking-wider text-signal mb-2">
+	                  <p className="mb-2 text-sm font-medium text-signal">
                     {d.Industry} · {d.ServiceLine}
                   </p>
                   <h3 className="text-lg font-semibold group-hover:text-signal transition-colors line-clamp-2">
@@ -243,12 +243,8 @@ export default function HomePage() {
 
       {/* Engage CTA */}
       <section className="relative overflow-hidden border-b border-hairline bg-foundation text-gravity dark:border-white/10 dark:bg-[#08090d] dark:text-white">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(0,102,204,0.12),transparent_30rem)] dark:bg-[radial-gradient(circle_at_82%_18%,rgba(91,147,255,0.22),transparent_30rem)]"
-        />
         <div className="relative mx-auto max-w-[1440px] px-6 py-20 lg:px-12 lg:py-28">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-signal">Qualified access</p>
+          <p className="context-label-x mb-3">Qualified access</p>
           <h2 className="font-display max-w-3xl text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">{t("engage_title")}</h2>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-gravity/62 dark:text-white/65 lg:text-lg">
             Serious prospects only. Begin with the engagement readiness diagnostic.
@@ -337,12 +333,11 @@ function HoldingTree() {
 
   return (
     <section className="relative isolate overflow-hidden border-b border-hairline bg-soft">
-      <div className="absolute inset-0 bg-grid opacity-35" aria-hidden="true" />
       <div className="absolute inset-x-0 top-0 h-px rule-x" aria-hidden="true" />
       <div className="relative mx-auto max-w-[1440px] px-6 py-20 lg:px-12 lg:py-28">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.8fr)] lg:items-end">
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-signal">§ 00 · Structure</p>
+            <p className="context-label-x mb-3">Holding company structure</p>
             <h2 className="font-display max-w-3xl text-4xl font-semibold leading-tight text-gravity lg:text-6xl">
               Holding company
             </h2>
@@ -358,7 +353,7 @@ function HoldingTree() {
                 <Building2 className="h-5 w-5" />
               </span>
               <div className="min-w-0">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-signal">Parent company</p>
+                <p className="text-sm font-semibold text-signal">Parent company</p>
                 <p className="mt-1 truncate text-xl font-semibold text-gravity">{parentName}</p>
                 <p className="mt-2 text-sm leading-6 text-gravity/60">
                   Capital allocation, product governance, and operating doctrine sit at the centre.
@@ -368,15 +363,15 @@ function HoldingTree() {
             <div className="mt-5 grid grid-cols-3 gap-3 border-t border-hairline pt-5">
               <div>
                 <p className="text-2xl font-semibold text-gravity">1</p>
-                <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-gravity/45">Parent</p>
+                <p className="mt-1 text-xs font-medium text-gravity/50">Parent</p>
               </div>
               <div>
                 <p className="text-2xl font-semibold text-gravity">{divisions.length}</p>
-                <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-gravity/45">Arms</p>
+                <p className="mt-1 text-xs font-medium text-gravity/50">Arms</p>
               </div>
               <div>
                 <p className="text-2xl font-semibold text-gravity">{totalUnits}</p>
-                <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-gravity/45">Units</p>
+                <p className="mt-1 text-xs font-medium text-gravity/50">Units</p>
               </div>
             </div>
           </div>
@@ -387,7 +382,7 @@ function HoldingTree() {
             <div key={step.label} className="rounded-lg border border-hairline bg-foundation/80 p-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-signal">{step.label}</p>
+                  <p className="text-sm font-semibold text-signal">{step.label}</p>
                   <p className="mt-2 text-sm font-semibold text-gravity">{step.title}</p>
                 </div>
                 {index < flow.length - 1 && <ArrowRight className="mt-1 hidden h-4 w-4 text-signal md:block" />}
@@ -424,7 +419,7 @@ function HoldingTree() {
                 </div>
 
                 <div className="mt-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-signal">{m.eyebrow}</p>
+                  <p className="context-label-x">{m.eyebrow}</p>
                   <h3 className="mt-2 text-2xl font-semibold text-gravity transition-colors group-hover:text-signal">
                     {div.name}
                   </h3>
@@ -432,12 +427,12 @@ function HoldingTree() {
                 </div>
 
                 <div className="mt-6 border-t border-hairline pt-5">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gravity/45">Mandate</p>
+                  <p className="text-xs font-semibold text-gravity/50">Mandate</p>
                   <p className="mt-2 text-sm leading-6 text-gravity/65">{m.mandate}</p>
                 </div>
 
                 <div className="mt-6">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gravity/45">Live entries</p>
+                  <p className="text-xs font-semibold text-gravity/50">Live entries</p>
                   <ul className="mt-3 space-y-2">
                     {visibleItems.map((name) => (
                       <li key={name} className="flex items-start gap-2 text-sm leading-5 text-gravity/70">
@@ -505,7 +500,7 @@ function LiveTicker() {
             <p className="text-3xl lg:text-4xl font-bold text-signal">
               {ticker.ActiveEngagements}
             </p>
-            <p className="mt-1 text-xs font-medium uppercase tracking-wider text-gravity/40">
+            <p className="mt-1 text-sm font-medium text-gravity/50">
               {tt("active_engagements")}
             </p>
           </div>
@@ -513,7 +508,7 @@ function LiveTicker() {
             <p className="text-3xl lg:text-4xl font-bold text-signal">
               {ticker.SectorsCovered}
             </p>
-            <p className="mt-1 text-xs font-medium uppercase tracking-wider text-gravity/40">
+            <p className="mt-1 text-sm font-medium text-gravity/50">
               {tt("sectors_covered")}
             </p>
           </div>
@@ -521,7 +516,7 @@ function LiveTicker() {
             <p className="text-3xl lg:text-4xl font-bold text-signal">
               {ticker.CapabilitiesDeployed}
             </p>
-            <p className="mt-1 text-xs font-medium uppercase tracking-wider text-gravity/40">
+            <p className="mt-1 text-sm font-medium text-gravity/50">
               {tt("capabilities_deployed")}
             </p>
           </div>
@@ -529,7 +524,7 @@ function LiveTicker() {
             <p className="text-3xl lg:text-4xl font-bold text-signal">
               {ticker.TotalDeliverables}
             </p>
-            <p className="mt-1 text-xs font-medium uppercase tracking-wider text-gravity/40">
+            <p className="mt-1 text-sm font-medium text-gravity/50">
               {tt("deliverables_in_flight")}
             </p>
           </div>

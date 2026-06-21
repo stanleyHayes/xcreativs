@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { Ticket, Clock, AlertCircle, CheckCircle, Plus, Pencil, Trash2, X, Save } from "lucide-react";
 
 interface SupportTicket {
@@ -24,6 +25,19 @@ const priorityColor = (p: string) => {
   if (p === "medium") return "text-yellow-400 bg-yellow-400/10";
   return "text-green-400 bg-green-400/10";
 };
+
+const PRIORITY_OPTIONS = [
+  { value: "low", label: "Low" },
+  { value: "medium", label: "Medium" },
+  { value: "high", label: "High" },
+];
+
+const TICKET_STATUS_OPTIONS = [
+  { value: "open", label: "Open" },
+  { value: "in_progress", label: "In Progress" },
+  { value: "resolved", label: "Resolved" },
+  { value: "closed", label: "Closed" },
+];
 
 const statusIcon = (s: string) => {
   if (s === "resolved" || s === "closed") return <CheckCircle className="w-4 h-4 text-signal" />;
@@ -156,20 +170,11 @@ export default function TicketsPage() {
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Priority</label>
-              <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })} className="portal-field-x w-full">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
+              <CustomSelect value={form.priority} onChange={(value) => setForm({ ...form, priority: value })} options={PRIORITY_OPTIONS} variant="portal" />
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">Status</label>
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="portal-field-x w-full">
-                <option value="open">Open</option>
-                <option value="in_progress">In Progress</option>
-                <option value="resolved">Resolved</option>
-                <option value="closed">Closed</option>
-              </select>
+              <CustomSelect value={form.status} onChange={(value) => setForm({ ...form, status: value })} options={TICKET_STATUS_OPTIONS} variant="portal" />
             </div>
             <div>
               <label className="text-xs text-white/50 mb-1 block">SLA Target (hours)</label>

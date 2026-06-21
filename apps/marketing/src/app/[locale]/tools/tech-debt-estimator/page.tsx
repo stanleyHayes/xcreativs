@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { Activity, ArrowRight, AlertTriangle, Gauge, CheckCircle, RotateCcw, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import BannerWatermark from "@xc/ui/BannerWatermark";
 
 const ageWeights = { lt2: 5, two5: 10, five10: 20, gt10: 35 };
 const stackWeights = { modern: 5, mixed: 15, legacy: 30, critical: 45 };
@@ -64,9 +65,9 @@ export default function TechDebtEstimatorPage() {
   return (
     <main>
       <section className="relative overflow-hidden border-b border-hairline bg-soft">
-        <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_75%_10%,black,transparent_70%)]" />
+        <BannerWatermark icon={Activity} />
         <div className="shell-x relative py-16 lg:py-20">
-          <p className="kicker-x mb-4">§ 07 · Interactive Tool</p>
+          <p className="context-label-x mb-4">Systems diagnostic</p>
           <h1 className="font-display flex items-center gap-3 text-4xl font-semibold tracking-tight lg:text-5xl">
             <Activity className="w-8 h-8 text-yellow-400" />
             Tech Debt Estimator
@@ -182,7 +183,7 @@ export default function TechDebtEstimatorPage() {
               <div className="panel-x sticky top-24 p-6">
                 {showResults ? (
                   <>
-                    <p className="text-xs font-medium uppercase tracking-wider text-gravity/40 mb-4">Debt Rating</p>
+                    <p className="mb-4 text-sm font-medium text-gravity/45">Debt rating</p>
                     <div className="mb-6">
                       <div className="text-5xl font-bold">{result.percentage}%</div>
                       <div className={`mt-2 inline-block px-3 py-1 rounded text-sm font-medium ${result.rating.bg} ${result.rating.color}`}>

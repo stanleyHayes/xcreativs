@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@xc/api";
+import CustomSelect from "@xc/ui/CustomSelect";
 import { Calendar, CheckCircle, Clock, XCircle, Loader2 } from "lucide-react";
 
 const statusColors: Record<string, string> = {
@@ -17,6 +18,11 @@ const statusLabels: Record<string, string> = {
   completed: "Completed",
   cancelled: "Cancelled",
 };
+
+const BOOKING_FILTER_OPTIONS = [
+  { value: "", label: "All statuses" },
+  ...Object.entries(statusLabels).map(([value, label]) => ({ value, label })),
+];
 
 interface ListBookingsResponse {
   bookings?: Booking[];
@@ -103,12 +109,7 @@ export default function AdminBookingsPage() {
               </p>
             </div>
           </div>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="portal-field-x sm:w-48">
-            <option value="">All statuses</option>
-            {Object.keys(statusLabels).map((s) => (
-              <option key={s} value={s}>{statusLabels[s]}</option>
-            ))}
-          </select>
+          <CustomSelect value={filter} onChange={setFilter} options={BOOKING_FILTER_OPTIONS} variant="portal" className="sm:w-48" />
         </div>
       </section>
 

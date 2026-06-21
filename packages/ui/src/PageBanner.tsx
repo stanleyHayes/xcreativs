@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { ChevronRight } from "lucide-react";
+import BannerWatermark from "./BannerWatermark";
 
 export type Crumb = { label: string; href?: string };
 
@@ -26,35 +27,9 @@ export default function PageBanner({
 
   return (
     <section className="relative isolate overflow-hidden border-b border-hairline bg-soft/90">
-      {/* decorative atmosphere */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="animate-drift absolute -right-[8%] -top-[55%] h-[42vmax] w-[42vmax] rounded-full bg-signal/10 blur-[120px]" />
-        <div className="animate-float absolute -left-[10%] bottom-[-60%] h-[34vmax] w-[34vmax] rounded-full bg-signal/[0.06] blur-[120px]" />
-        <div className="bg-grid absolute inset-0 [mask-image:radial-gradient(ellipse_at_75%_25%,black,transparent_70%)]" />
-        <div className="bg-grain absolute inset-0 opacity-40" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-signal/40 to-transparent" />
-        <div className="absolute inset-y-10 left-0 hidden w-px bg-gradient-to-b from-transparent via-signal/30 to-transparent lg:block" />
-        {/* corner constellation */}
-        <svg
-          className="absolute right-0 top-0 h-48 w-48 text-signal/25"
-          viewBox="0 0 100 100"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={0.5}
-        >
-          <path d="M20 20 L55 30 L40 60 L75 50 L60 85" />
-          <path d="M55 30 L75 50" />
-          {[
-            [20, 20],
-            [55, 30],
-            [40, 60],
-            [75, 50],
-            [60, 85],
-          ].map(([cx, cy], i) => (
-            <circle key={i} cx={cx} cy={cy} r={1.6} fill="currentColor" stroke="none" />
-          ))}
-        </svg>
-      </div>
+      <BannerWatermark icon={Icon} />
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-hairline" />
+      <div aria-hidden className="pointer-events-none absolute inset-y-0 left-6 hidden w-px bg-hairline lg:block" />
 
       <div
         className={`relative mx-auto max-w-[1440px] px-6 py-16 lg:px-12 lg:py-24 ${
@@ -87,19 +62,15 @@ export default function PageBanner({
           className={`flex items-start gap-5 ${centered ? "flex-col items-center" : "max-w-5xl"}`}
         >
           <span
-            className="animate-rise relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-hairline bg-foundation/85 text-signal shadow-[0_18px_45px_-28px_currentColor] backdrop-blur"
+            className="animate-rise relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-hairline bg-foundation text-signal"
             style={{ animationDelay: "0.05s" }}
           >
             <Icon className="h-7 w-7" />
-            <span
-              className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-signal"
-              style={{ animation: "xc-pulse 4s ease-in-out infinite" }}
-            />
           </span>
 
           <div className={centered ? "max-w-2xl" : ""}>
             {eyebrow && (
-              <p className="animate-rise mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-signal">
+              <p className="context-label-x animate-rise mb-3">
                 {eyebrow}
               </p>
             )}
