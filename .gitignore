@@ -17,6 +17,9 @@ Thumbs.db
 production.env
 *production.env
 *.production.env
+# Production credentials + user seed (real account material) — never commit
+credentials.txt
+seeds/seed_portal_users.sql
 
 # Python
 .venv/
