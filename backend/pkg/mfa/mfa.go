@@ -19,12 +19,22 @@ func GenerateSecret() (string, error) {
 	return base32.StdEncoding.EncodeToString(secret), nil
 }
 
-// GenerateQRCodeURL generates a QR code URL for TOTP enrollment.
+// GenerateQRCodeURL generates a QR code (otpauth) URL for TOTP enrollment.
+//
+// `secret` is the base32-encoded string from GenerateSecret. totp.Generate
+// base32-encodes whatever raw bytes it is given, so the secret must be decoded
+// back to raw bytes first — passing the base32 string directly double-encodes
+// it, producing a QR secret that never matches ValidateCode (which checks the
+// single-encoded secret). That mismatch is what made every code fail with 400.
 func GenerateQRCodeURL(issuer, accountName, secret string) string {
+	raw, err := base32.StdEncoding.DecodeString(strings.ToUpper(strings.ReplaceAll(secret, " ", "")))
+	if err != nil {
+		return ""
+	}
 	key, err := totp.Generate(totp.GenerateOpts{
 		Issuer:      issuer,
 		AccountName: accountName,
-		Secret:      []byte(secret),
+		Secret:      raw,
 	})
 	if err != nil {
 		return ""
