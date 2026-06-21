@@ -188,6 +188,20 @@ async function fetchAPI<T = unknown>(path: string, options?: RequestInit, retry 
 
   if (!res.ok) {
     const err: APIError = await res.json().catch(() => ({ error: "Request failed" }));
+    // Authenticated but MFA isn't enrolled yet — the backend returns 403
+    // "mfa_required" on protected endpoints. Route the user to enrollment
+    // instead of surfacing a generic failure. (The /portal/mfa page calls only
+    // MFA-exempt endpoints, so it loads fine; the endsWith guard avoids a loop.)
+    if (
+      res.status === 403 &&
+      err.error === "mfa_required" &&
+      typeof window !== "undefined" &&
+      !window.location.pathname.endsWith("/portal/mfa")
+    ) {
+      const localeMatch = window.location.pathname.match(/^\/(fr)(?:\/|$)/);
+      const localePrefix = localeMatch ? `/${localeMatch[1]}` : "";
+      window.location.href = `${localePrefix}/portal/mfa`;
+    }
     throw new Error(err.error || `HTTP ${res.status}`);
   }
   return (await res.json()) as T;
