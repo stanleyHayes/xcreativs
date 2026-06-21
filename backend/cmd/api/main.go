@@ -11,6 +11,7 @@ import (
 
 	"xcreatives.com/backend/internal/adapters/db"
 	httpadapter "xcreatives.com/backend/internal/adapters/http"
+	"xcreatives.com/backend/internal/bootstrap"
 	"xcreatives.com/backend/internal/config"
 	"xcreatives.com/backend/pkg/jwt"
 	"xcreatives.com/backend/pkg/logger"
@@ -37,6 +38,10 @@ func main() {
 		os.Exit(1)
 	}
 	defer pool.Close()
+
+	// Startup tasks (migrations + admin seed), gated by env vars. The production
+	// image is distroless — no migrate CLI — so the schema is applied here.
+	bootstrap.RunStartup(context.Background(), log, pool, cfg.DBURL)
 
 	// Seed permissions on startup
 	identityRepo := db.NewIdentityRepo(pool)

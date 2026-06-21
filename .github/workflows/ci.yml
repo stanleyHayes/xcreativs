@@ -78,8 +78,8 @@ jobs:
         env:
           DB_URL: postgres://xcreatives:xcreatives_dev@localhost:5432/xcreatives?sslmode=disable
         run: |
-          migrate -path migrations -database "$DB_URL" up
-          migrate -path migrations -database "$DB_URL" down -all
+          migrate -path backend/migrations -database "$DB_URL" up
+          migrate -path backend/migrations -database "$DB_URL" down -all
 
   frontend:
     name: Frontend (${{ matrix.app }})

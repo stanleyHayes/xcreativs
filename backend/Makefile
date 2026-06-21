@@ -1,7 +1,8 @@
 .PHONY: build run dev test test-cover migrate-up migrate-down migrate-force migrate-version migrate-create seed lint fmt vet openapi clean docker-build
 
-# Location of SQL migrations and seed data (repo root, one level up from backend/)
-MIGRATIONS_DIR ?= ../migrations
+# SQL migrations now live in the backend module (backend/migrations) so they can
+# be embedded into the binary; seed data is still at repo root (one level up).
+MIGRATIONS_DIR ?= migrations
 SEEDS_DIR ?= ../seeds
 
 # Load DB_URL from .env for migrate/seed targets

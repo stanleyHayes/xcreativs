@@ -69,3 +69,12 @@ services:
         sync: false
       - key: MFA_REQUIRED
         value: "true"
+      # Apply embedded migrations automatically on boot (distroless image has no
+      # migrate CLI). Safe to leave on — it only applies pending migrations.
+      - key: RUN_MIGRATIONS
+        value: "true"
+      # Optional admin bootstrap: set in the dashboard as "email:password,email:password".
+      # Passwords are bcrypt-hashed at runtime; remove after first successful login
+      # so a restart can't reset a password changed in the UI.
+      - key: SEED_ADMINS
+        sync: false
