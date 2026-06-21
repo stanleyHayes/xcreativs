@@ -213,9 +213,11 @@ export const api = {
     return (await res.json()) as UploadResponse;
   },
 
-  // Auth
-  register: (data: Record<string, unknown>) => fetchAPI("/api/v1/auth/register", { method: "POST", body: JSON.stringify(data) }),
-  login: (data: Record<string, unknown>) => fetchAPI<LoginResponse>("/api/v1/auth/login", { method: "POST", body: JSON.stringify(data) }),
+  // Auth — pass retry=false so a 401 (e.g. "invalid credentials") surfaces the
+  // real backend error instead of triggering the token-refresh/redirect path
+  // (which would mislabel a bad password as "Session expired").
+  register: (data: Record<string, unknown>) => fetchAPI("/api/v1/auth/register", { method: "POST", body: JSON.stringify(data) }, false),
+  login: (data: Record<string, unknown>) => fetchAPI<LoginResponse>("/api/v1/auth/login", { method: "POST", body: JSON.stringify(data) }, false),
   logout: () => {
     const refreshToken = getRefreshToken();
     clearTokens();

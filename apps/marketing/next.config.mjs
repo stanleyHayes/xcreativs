@@ -2,9 +2,11 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("../../packages/i18n/src/request.ts");
 
-// Backend API origin used by the dev/preview proxy. In production the platform
-// is fronted by a reverse proxy, but this keeps `/api/*` working when the
-// frontend is run standalone. Configurable via API_PROXY_URL.
+// Backend API origin for the `/api/*` rewrite below. This proxy runs in every
+// environment (including production on Vercel), so browser calls stay
+// same-origin and CORS-free, while SSR uses the same absolute URL. Set
+// API_PROXY_URL to override; otherwise it falls back to NEXT_PUBLIC_API_URL
+// (the deployed Render backend URL).
 const API_PROXY_URL = process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
 
 const securityHeaders = [

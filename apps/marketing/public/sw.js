@@ -169,6 +169,11 @@ self.addEventListener('fetch', (event) => {
   if (IS_DEV) return;
   const { request } = event;
 
+  // Only handle http(s) requests. Browser-extension requests (chrome-extension:,
+  // moz-extension:), data: and blob: URLs cannot be written to the Cache API and
+  // would throw "Request scheme '…' is unsupported".
+  if (!request.url.startsWith('http')) return;
+
   // Skip non-GET requests (except for background sync)
   if (request.method !== 'GET') {
     return;
