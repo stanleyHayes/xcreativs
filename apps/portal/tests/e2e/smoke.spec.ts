@@ -9,9 +9,9 @@ test("portal landing renders brand + sign-in", async ({ page }) => {
   await expect(page.getByRole("link", { name: /Sign in/i })).toBeVisible();
 });
 
-test("login shows form + SSO options", async ({ page }) => {
+test("login shows credential form", async ({ page }) => {
   await page.goto("/login");
   await expect(page.getByRole("button", { name: /Sign In/i })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Google/i })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Microsoft/i })).toBeVisible();
+  await expect(page.getByPlaceholder(/you@organisation\.com/i)).toBeVisible();
+  await expect(page.getByPlaceholder(/Enter your password/i)).toBeVisible();
 });
