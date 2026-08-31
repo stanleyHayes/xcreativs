@@ -106,13 +106,16 @@ export default function ToolsPage() {
       <main>
         <section className="border-b border-hairline bg-soft">
           <div className="shell-x py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {tools.map((tool) => (
-              <div key={tool.slug} className={`group card-x p-6 ${tool.available ? "cursor-pointer" : "opacity-60"}`}>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-12">
+            {tools.map((tool, index) => (
+              <div key={tool.slug} className={`group card-x p-7 lg:col-span-4 lg:[&:nth-child(5n+1)]:col-span-7 lg:[&:nth-child(5n+2)]:col-span-5 ${tool.available ? "cursor-pointer" : "opacity-60"}`}>
                 {tool.available ? (
                   <Link href={`/tools/${tool.slug}`} className="block">
-                    <div className={`w-10 h-10 rounded-lg ${tool.bg} flex items-center justify-center mb-4`}>
-                      <tool.icon className={`w-5 h-5 ${tool.color}`} />
+                    <div className="mb-8 flex items-start justify-between gap-4">
+                    <div className="flex h-11 w-11 items-center justify-center border border-signal/25 bg-signal/8">
+                      <tool.icon className="h-5 w-5 text-signal" />
+                    </div>
+                    <span className="font-mono text-[10px] font-semibold tracking-[0.12em] text-gravity/30">UTILITY/{String(index + 1).padStart(2, "0")}</span>
                     </div>
                     <h3 className="font-semibold group-hover:text-signal transition-colors">{tool.title}</h3>
                     <p className="text-sm text-gravity/60 mt-2">{tool.desc}</p>
@@ -120,8 +123,8 @@ export default function ToolsPage() {
                   </Link>
                 ) : (
                   <>
-                    <div className={`w-10 h-10 rounded-lg ${tool.bg} flex items-center justify-center mb-4`}>
-                      <tool.icon className={`w-5 h-5 ${tool.color}`} />
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center border border-hairline bg-soft">
+                      <tool.icon className="h-5 w-5 text-signal" />
                     </div>
                     <h3 className="font-semibold">{tool.title}</h3>
                     <p className="text-sm text-gravity/60 mt-2">{tool.desc}</p>

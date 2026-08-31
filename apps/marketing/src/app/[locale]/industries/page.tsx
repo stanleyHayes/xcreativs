@@ -72,7 +72,7 @@ export default async function IndustriesPage() {
         crumbs={[{ label: "Home", href: "/" }, { label: "Industries" }]}
       />
       <main className="shell-x py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-12">
         {industries.length === 0 && (
           <div className="col-span-full">
             <EmptyState
@@ -83,17 +83,20 @@ export default async function IndustriesPage() {
             />
           </div>
         )}
-        {industries.map((ind: Industry) => {
+        {industries.map((ind: Industry, index: number) => {
           const Icon = getIndustryIcon(ind);
           return (
             <Link
               key={ind.Slug}
               href={`/industries/${ind.Slug}`}
-              className="group card-x p-8"
+              className="group card-x p-8 lg:col-span-4 lg:[&:nth-child(5n+1)]:col-span-7 lg:[&:nth-child(5n+2)]:col-span-5"
             >
-              <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg border border-signal/20 bg-signal/8 text-signal transition-colors group-hover:border-signal/45 group-hover:bg-signal/12">
+              <div className="mb-8 flex items-start justify-between gap-4">
+              <span className="flex h-11 w-11 items-center justify-center border border-signal/25 bg-signal/8 text-signal transition-colors group-hover:border-signal/55 group-hover:bg-signal/12">
                 <Icon className="h-5 w-5" />
               </span>
+              <span className="font-mono text-[10px] font-semibold tracking-[0.12em] text-gravity/30">SECTOR/{String(index + 1).padStart(2, "0")}</span>
+              </div>
               <h2 className="text-xl font-semibold transition-colors group-hover:text-signal">
                 {ind.Title}
               </h2>

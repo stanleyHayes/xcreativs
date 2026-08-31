@@ -2,21 +2,23 @@
    and `@source`s this package before importing this file. */
 
 /* ---------------------------------------------------------------------------
-   XCreativs — "Sovereign Editorial" design system
-   Display: Fraunces (high-contrast serif) · Body: Hanken Grotesk (grotesque)
-   Brand accent: signal blue, kept deliberate over warm paper / near-black ink.
+   XCreativs — "Signal Infrastructure" design system
+   Display/body: Outfit · Operational labels: Geist Mono
+   Brand accent: signal blue, retained as the system's navigational thread.
    --------------------------------------------------------------------------- */
 
 :root {
   --color-signal: #0066cc;        /* brand blue — matches the mark */
   --color-signal-ink: #0a4ea0;    /* pressed / active */
   --color-foundation: #ffffff;    /* clean white */
-  --color-gravity: #0b0c0f;       /* cool near-black ink */
-  --color-hairline: #e4e7ec;      /* cool grey hairline */
-  --color-soft: #f4f6fa;          /* cool light panel */
-  --color-mist: #697086;          /* cool secondary text */
-  --shadow-soft: 0 24px 70px -44px color-mix(in oklab, var(--color-gravity) 42%, transparent);
-  --shadow-signal: 0 22px 50px -30px color-mix(in oklab, var(--color-signal) 65%, transparent);
+  --color-gravity: #0a0d14;
+  --color-hairline: #d9e0ea;
+  --color-soft: #f1f5f9;
+  --color-mist: #526071;
+  --shadow-soft: 0 18px 50px -38px rgb(10 13 20 / 0.45);
+  --shadow-signal: 0 16px 36px -24px rgb(0 102 204 / 0.68);
+  --radius-panel: 0.4rem;
+  --radius-control: 0.25rem;
 }
 
 .dark {
@@ -61,12 +63,27 @@
   --color-soft: var(--color-soft);
   --color-mist: var(--color-mist);
 
-  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
-  --font-body: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
 }
 
 body {
@@ -75,6 +92,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: var(--color-foundation);
   color: var(--color-gravity);
+  background-image: linear-gradient(90deg, color-mix(in oklab, var(--color-gravity) 3%, transparent) 1px, transparent 1px);
+  background-size: min(7.5vw, 7.5rem) 100%;
 }
 
 .site-footer-x {
@@ -222,7 +241,7 @@ textarea::placeholder {
 .font-display {
   font-family: var(--font-display);
   font-optical-sizing: auto;
-  letter-spacing: 0;
+  letter-spacing: -0.045em;
 }
 
 .bg-grain {
@@ -305,6 +324,223 @@ textarea::placeholder {
 }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   2026 system reset — one visual language across marketing and portal.
+   Rectilinear surfaces, indexed labels, signal-blue rails, and quiet depth.
+   --------------------------------------------------------------------------- */
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.shell-x {
+  width: min(100%, 96rem);
+  padding-inline: clamp(1.25rem, 4vw, 4.5rem);
+}
+
+.kicker-x,
+.context-label-x,
+.portal-meta-x {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.context-label-x::before,
+.kicker-x::before {
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--color-signal);
+  opacity: 1;
+}
+
+.panel-x,
+.panel-x-soft,
+.legal-copy-x,
+.card-x {
+  border-radius: var(--radius-panel);
+}
+
+.panel-x,
+.card-x {
+  box-shadow: none;
+}
+
+.panel-x::after,
+.card-x::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--color-signal);
+  opacity: 0;
+  transition: opacity 180ms ease;
+  pointer-events: none;
+}
+
+.panel-x:hover::after,
+.card-x:hover::after {
+  opacity: 1;
+}
+
+.card-x:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--color-signal) 52%, var(--color-hairline));
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-x,
+.btn-x-secondary,
+.field-x,
+.custom-select-trigger-x,
+.chip-x {
+  border-radius: var(--radius-control);
+}
+
+.btn-x,
+.btn-x-secondary {
+  min-height: 2.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.btn-x:active,
+.btn-x-secondary:active,
+.portal-btn-x:active,
+.portal-btn-secondary-x:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.field-x {
+  min-height: 3rem;
+  background: var(--color-foundation);
+}
+
+.legal-copy-x {
+  box-shadow: none;
+}
+
+/* Portal surfaces inherit the same geometry while retaining their secure,
+   high-contrast operating canvas. */
+.portal-shell-x {
+  --color-foundation: #edf2f8;
+  --color-gravity: #090d14;
+  --color-hairline: #27303d;
+  --color-soft: #111823;
+  --color-mist: #94a2b4;
+  background-image:
+    linear-gradient(90deg, rgb(255 255 255 / 0.025) 1px, transparent 1px),
+    linear-gradient(rgb(255 255 255 / 0.018) 1px, transparent 1px);
+  background-size: 6rem 6rem;
+  color-scheme: dark;
+}
+
+.dark .portal-shell-x {
+  --color-foundation: #edf2f8;
+  --color-gravity: #090d14;
+  --color-hairline: #27303d;
+  --color-soft: #111823;
+  --color-mist: #94a2b4;
+}
+
+.portal-card-x,
+.portal-panel-x,
+.portal-field-x,
+.portal-login-input-x,
+.portal-btn-x,
+.portal-btn-secondary-x,
+.portal-chip-x,
+.portal-admin-header-x,
+.portal-admin-action-x,
+.portal-admin-tabs-x,
+.portal-skeleton-x {
+  border-radius: var(--radius-panel);
+}
+
+.portal-card-x,
+.portal-panel-x {
+  border-color: rgb(255 255 255 / 0.105);
+  background: rgb(255 255 255 / 0.035);
+  box-shadow: none;
+}
+
+.portal-card-x::after,
+.portal-panel-x::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--color-signal);
+  opacity: 0;
+  transition: opacity 180ms ease;
+  pointer-events: none;
+}
+
+.portal-card-x:hover::after,
+.portal-panel-x:hover::after {
+  opacity: 1;
+}
+
+.portal-card-x:hover {
+  transform: translateY(-2px);
+  border-color: rgb(91 147 255 / 0.42);
+  background: rgb(255 255 255 / 0.052);
+}
+
+.portal-btn-x,
+.portal-btn-secondary-x {
+  min-height: 2.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.portal-field-x {
+  min-height: 2.85rem;
+  border-radius: var(--radius-control);
+}
+
+.portal-chip-x {
+  border-radius: 0.2rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.portal-stat-x::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--color-signal);
+  opacity: 0.75;
+}
+
+.portal-skeleton-x::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.075), transparent);
+  animation: xc-splash-sweep 1.45s ease-in-out infinite;
+}
+
+@media (max-width: 640px) {
+  .shell-x { padding-inline: 1.1rem; }
+  .card-x:hover,
+  .portal-card-x:hover { transform: none; }
 }
 
 /* Splash screen */
@@ -1228,4 +1464,305 @@ textarea::placeholder {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Cascade lock: these system-reset primitives intentionally follow the legacy
+   compatibility layer so every route resolves to the new geometry. */
+.shell-x { width: min(100%, 96rem); padding-inline: clamp(1.25rem, 4vw, 4.5rem); }
+.kicker-x, .context-label-x, .portal-meta-x {
+  font-family: var(--font-mono); font-size: .68rem; font-weight: 650;
+  letter-spacing: .09em; line-height: 1.25; text-transform: uppercase;
+}
+.context-label-x::before, .kicker-x::before {
+  width: .45rem; height: .45rem; background: var(--color-signal); opacity: 1;
+}
+.panel-x, .panel-x-soft, .legal-copy-x, .card-x { border-radius: var(--radius-panel); }
+.panel-x, .card-x { box-shadow: none; }
+.card-x:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+.btn-x, .btn-x-secondary, .field-x, .custom-select-trigger-x, .chip-x { border-radius: var(--radius-control); }
+.btn-x, .btn-x-secondary {
+  min-height: 2.75rem; font-family: var(--font-mono); font-size: .74rem;
+  letter-spacing: .035em; text-transform: uppercase;
+}
+.portal-card-x, .portal-panel-x, .portal-field-x, .portal-login-input-x,
+.portal-btn-x, .portal-btn-secondary-x, .portal-chip-x, .portal-admin-header-x,
+.portal-admin-action-x, .portal-admin-tabs-x, .portal-skeleton-x { border-radius: var(--radius-panel); }
+.portal-card-x, .portal-panel-x { border-color: rgb(255 255 255 / .105); background: rgb(255 255 255 / .035); box-shadow: none; }
+.portal-card-x:hover { transform: translateY(-2px); border-color: rgb(91 147 255 / .42); background: rgb(255 255 255 / .052); }
+.portal-btn-x, .portal-btn-secondary-x {
+  min-height: 2.65rem; font-family: var(--font-mono); font-size: .7rem;
+  letter-spacing: .045em; text-transform: uppercase;
+}
+.portal-field-x { min-height: 2.85rem; border-radius: var(--radius-control); }
+.portal-chip-x { border-radius: .2rem; font-family: var(--font-mono); letter-spacing: .04em; text-transform: uppercase; }
+.portal-skeleton-x::after {
+  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / .075), transparent);
+  animation: xc-splash-sweep 1.45s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Surface architecture — cards no longer share one generic container style.
+   Content = chamfered folio. Work areas = framed panel. Portal = instruments.
+   --------------------------------------------------------------------------- */
+
+.card-x {
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--color-gravity) 13%, var(--color-hairline));
+  border-radius: 0;
+  background:
+    linear-gradient(135deg, color-mix(in oklab, var(--color-signal) 5%, transparent), transparent 42%),
+    var(--color-foundation);
+  box-shadow: none;
+  clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 1rem, 100% 100%, 1rem 100%, 0 calc(100% - 1rem));
+  transition: transform 260ms cubic-bezier(.2,.7,.2,1), border-color 220ms ease,
+    background-color 220ms ease, box-shadow 260ms ease;
+}
+
+.card-x::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-signal) 0 4.5rem, transparent 4.5rem);
+  opacity: .85;
+  pointer-events: none;
+}
+
+.card-x::after {
+  content: "+";
+  position: absolute;
+  inset: auto .65rem .45rem auto;
+  width: auto;
+  color: color-mix(in oklab, var(--color-signal) 55%, transparent);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  line-height: 1;
+  opacity: .65;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 220ms ease;
+}
+
+.card-x:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in oklab, var(--color-signal) 62%, var(--color-hairline));
+  background:
+    linear-gradient(135deg, color-mix(in oklab, var(--color-signal) 9%, transparent), transparent 48%),
+    var(--color-foundation);
+  box-shadow: 0 24px 55px -42px color-mix(in oklab, var(--color-signal) 75%, transparent);
+}
+
+.card-x:hover::after {
+  opacity: 1;
+  transform: rotate(90deg);
+}
+
+.card-x > svg:first-child,
+.card-x > span:first-child:has(> svg) {
+  transition: transform 260ms cubic-bezier(.2,.7,.2,1), color 220ms ease, background-color 220ms ease;
+}
+
+.card-x:hover > svg:first-child,
+.card-x:hover > span:first-child:has(> svg) {
+  transform: translate(2px, -2px);
+}
+
+.panel-x {
+  overflow: visible;
+  border: 1px solid color-mix(in oklab, var(--color-gravity) 16%, var(--color-hairline));
+  border-radius: .2rem;
+  background:
+    linear-gradient(90deg, color-mix(in oklab, var(--color-gravity) 3%, transparent) 1px, transparent 1px),
+    var(--color-foundation);
+  background-size: 3.5rem 100%;
+  box-shadow: .65rem .65rem 0 color-mix(in oklab, var(--color-signal) 7%, var(--color-soft));
+}
+
+.panel-x::before {
+  content: "";
+  position: absolute;
+  inset: -.35rem auto auto -.35rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-left: 2px solid var(--color-signal);
+  border-top: 2px solid var(--color-signal);
+  pointer-events: none;
+}
+
+.panel-x::after {
+  content: "";
+  position: absolute;
+  inset: auto -.35rem -.35rem auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-right: 2px solid var(--color-signal);
+  border-bottom: 2px solid var(--color-signal);
+  background: transparent;
+  opacity: .7;
+  pointer-events: none;
+}
+
+.panel-x-soft {
+  border: 0;
+  border-left: 3px solid var(--color-signal);
+  border-radius: 0;
+  background:
+    linear-gradient(110deg, color-mix(in oklab, var(--color-signal) 9%, transparent), transparent 48%),
+    var(--color-soft);
+}
+
+.legal-copy-x {
+  border-radius: 0;
+  border-width: 0 0 0 1px;
+  border-color: var(--color-hairline);
+  background: transparent;
+  padding-left: clamp(1.5rem, 4vw, 4rem);
+}
+
+.portal-card-x {
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / .11);
+  border-radius: 0;
+  background:
+    linear-gradient(135deg, rgb(91 147 255 / .075), transparent 38%),
+    rgb(255 255 255 / .035);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .025);
+  clip-path: polygon(0 0, calc(100% - .75rem) 0, 100% .75rem, 100% 100%, 0 100%);
+}
+
+.portal-card-x::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--color-signal);
+  opacity: .28;
+  transition: opacity 180ms ease, width 220ms ease;
+}
+
+.portal-card-x::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto auto;
+  width: .75rem;
+  height: .75rem;
+  border-left: 1px solid rgb(91 147 255 / .4);
+  transform: rotate(45deg) translate(.18rem, -.52rem);
+  background: transparent;
+  opacity: .7;
+  pointer-events: none;
+}
+
+.portal-card-x:hover {
+  transform: translateY(-2px);
+  border-color: rgb(91 147 255 / .48);
+  background:
+    linear-gradient(135deg, rgb(91 147 255 / .13), transparent 44%),
+    rgb(255 255 255 / .05);
+  box-shadow: 0 22px 52px -42px rgb(0 102 204 / .85);
+}
+
+.portal-card-x:hover::before {
+  width: 3px;
+  opacity: 1;
+}
+
+.portal-panel-x {
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / .105);
+  border-radius: .15rem;
+  background:
+    linear-gradient(90deg, rgb(255 255 255 / .018) 1px, transparent 1px),
+    linear-gradient(rgb(255 255 255 / .014) 1px, transparent 1px),
+    rgb(255 255 255 / .025);
+  background-size: 4rem 4rem;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .025);
+}
+
+.portal-panel-x::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-signal) 0 6rem, rgb(255 255 255 / .08) 6rem 100%);
+  opacity: .9;
+  pointer-events: none;
+}
+
+.portal-panel-x::after {
+  content: none;
+}
+
+.portal-stat-x {
+  min-height: 8.5rem;
+  padding-top: 1.35rem;
+  background:
+    radial-gradient(circle at 100% 0, rgb(91 147 255 / .16), transparent 48%),
+    rgb(255 255 255 / .035);
+}
+
+.portal-stat-x::before {
+  inset: auto auto 0 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-signal) 0 38%, rgb(255 255 255 / .08) 38%);
+  opacity: .95;
+}
+
+.portal-stat-x .font-display {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.06em;
+}
+
+.portal-empty-x {
+  border-radius: 0;
+  border-style: dashed;
+  background:
+    radial-gradient(circle at 50% 18%, rgb(91 147 255 / .12), transparent 32%),
+    rgb(255 255 255 / .02);
+}
+
+.portal-empty-x::after {
+  content: "NO DATA / READY";
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  font-family: var(--font-mono);
+  font-size: .55rem;
+  letter-spacing: .12em;
+  color: rgb(255 255 255 / .24);
+}
+
+.portal-admin-table-x {
+  border-collapse: separate;
+  border-spacing: 0 .35rem;
+}
+
+.portal-admin-table-x thead tr {
+  background: transparent;
+}
+
+.portal-admin-table-x tbody tr {
+  background: rgb(255 255 255 / .025);
+  box-shadow: inset 2px 0 0 rgb(91 147 255 / .22);
+}
+
+.portal-admin-table-x tbody tr:hover {
+  background: rgb(91 147 255 / .07);
+  box-shadow: inset 3px 0 0 var(--color-signal);
+}
+
+.portal-admin-table-x td:first-child {
+  padding-left: 1rem;
+}
+
+@media (max-width: 640px) {
+  .card-x {
+    clip-path: polygon(0 0, calc(100% - .7rem) 0, 100% .7rem, 100% 100%, .7rem 100%, 0 calc(100% - .7rem));
+  }
+  .panel-x { box-shadow: .4rem .4rem 0 color-mix(in oklab, var(--color-signal) 7%, var(--color-soft)); }
+  .portal-stat-x { min-height: 7.5rem; }
 }

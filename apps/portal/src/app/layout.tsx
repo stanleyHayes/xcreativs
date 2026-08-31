@@ -1,22 +1,23 @@
 import type { Metadata } from "next";
-import { Fraunces, Hanken_Grotesk } from "next/font/google";
+import { Outfit, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import ThemeProvider from "@xc/ui/ThemeProvider";
 import CurrencyProvider from "@xc/ui/CurrencyProvider";
 import PortalSplashScreen from "@/components/PortalSplashScreen";
+import AlertBridge from "@xc/ui/AlertBridge";
 import "./globals.css";
 
-const display = Fraunces({
+const display = Outfit({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-fraunces",
+  variable: "--font-outfit",
 });
 
-const body = Hanken_Grotesk({
+const mono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-hanken",
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
@@ -34,7 +35,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${display.variable} ${body.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html lang={locale} className={`${display.variable} ${mono.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#0066CC" />
       </head>
@@ -43,6 +44,7 @@ export default async function RootLayout({
           <CurrencyProvider>
             <NextIntlClientProvider messages={messages}>
               <PortalSplashScreen />
+              <AlertBridge />
               {children}
             </NextIntlClientProvider>
           </CurrencyProvider>

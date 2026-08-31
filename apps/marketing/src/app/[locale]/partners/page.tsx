@@ -118,12 +118,12 @@ export default function PartnersPage() {
           <h2 className="font-display text-2xl font-semibold tracking-tight lg:text-4xl">
             Build on national-scale infrastructure.
           </h2>
-          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-12">
             {BENEFITS.map((b) => {
               const Icon = b.icon;
               return (
-                <div key={b.title} className="card-x p-7">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-hairline bg-foundation text-signal">
+                <div key={b.title} className="card-x p-7 md:col-span-4 md:[&:nth-child(1)]:col-span-5 md:[&:nth-child(2)]:col-span-7">
+                  <span className="flex h-11 w-11 items-center justify-center border border-hairline bg-foundation text-signal">
                     <Icon className="h-5 w-5" />
                   </span>
                   <h3 className="mt-5 text-lg font-semibold">{b.title}</h3>

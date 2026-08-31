@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Link as LocaleLink } from "@xc/i18n/navigation";
 import { useState } from "react";
+import { flushSync } from "react-dom";
 import type { LucideIcon } from "lucide-react";
 import {
   Menu,
@@ -96,17 +97,81 @@ export default function Navigation() {
     pathnameWithoutLocale === href || pathnameWithoutLocale.startsWith(href + "/");
   const groupActive = (g: MenuGroup) => g.items.some((i) => isActive(i.href));
 
+  const handleThemeToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const startViewTransition = document.startViewTransition?.bind(document);
+
+    if (prefersReducedMotion) {
+      toggleTheme();
+      return;
+    }
+
+    const x = event.clientX;
+    const y = event.clientY;
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    if (!startViewTransition) {
+      const reveal = document.createElement("span");
+      reveal.setAttribute("aria-hidden", "true");
+      reveal.dataset.themeReveal = "true";
+      Object.assign(reveal.style, {
+        position: "fixed",
+        left: `${x - radius}px`,
+        top: `${y - radius}px`,
+        width: `${radius * 2}px`,
+        height: `${radius * 2}px`,
+        borderRadius: "50%",
+        background: theme === "dark" ? "#ffffff" : "#07070a",
+        pointerEvents: "none",
+        zIndex: "200",
+        transform: "scale(0)",
+      });
+      document.body.appendChild(reveal);
+
+      const wipe = reveal.animate(
+        { transform: ["scale(0)", "scale(1)"] },
+        { duration: 560, easing: "cubic-bezier(0.76, 0, 0.24, 1)", fill: "forwards" }
+      );
+      wipe.finished.then(() => {
+        flushSync(() => toggleTheme());
+        const clear = reveal.animate(
+          { opacity: ["1", "0"] },
+          { duration: 180, easing: "ease-out", fill: "forwards" }
+        );
+        void clear.finished.then(() => reveal.remove());
+      });
+      return;
+    }
+
+    const transition = startViewTransition(() => {
+      flushSync(() => toggleTheme());
+    });
+
+    void transition.ready.then(() => {
+      document.documentElement.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+        {
+          duration: 720,
+          easing: "cubic-bezier(0.76, 0, 0.24, 1)",
+          pseudoElement: "::view-transition-new(root)",
+        }
+      );
+    });
+  };
+
   return (
-    <header className="sticky top-0 z-[70]">
-      <div className="h-[3px] w-full bg-signal" />
-      <div className="border-b border-hairline bg-foundation">
-        <div className="mx-auto max-w-[1440px] px-5 lg:px-10">
-          <div className="flex h-[68px] items-center justify-between gap-6">
+    <header className="sticky top-0 z-[70] border-t-4 border-signal">
+      <div className="border-b border-hairline bg-foundation/92 backdrop-blur-xl">
+        <div className="mx-auto max-w-[1536px] px-5 lg:px-[7.5%]">
+          <div className="flex h-[76px] items-center justify-between gap-6">
             {/* Wordmark */}
             <Link
               href={localizeHref("/")}
               onClick={() => setOpen(false)}
-              className="group flex shrink-0 items-center gap-2.5"
+              className="group flex shrink-0 items-center gap-3"
             >
               <Image
                 src="/logo.svg"
@@ -114,9 +179,9 @@ export default function Navigation() {
                 width={32}
                 height={32}
                 priority
-                className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[8deg]"
+                className="h-8 w-8 transition-transform duration-300 group-hover:rotate-45"
               />
-              <span className="font-display text-[22px] font-semibold leading-none tracking-tight">
+              <span className="font-display text-[21px] font-semibold leading-none tracking-[-0.05em]">
                 XCreativs
               </span>
             </Link>
@@ -136,7 +201,7 @@ export default function Navigation() {
                     type="button"
                     onClick={() => setOpenMenu(openMenu === g.key ? null : g.key)}
                     aria-expanded={openMenu === g.key}
-                    className={`flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1 px-3.5 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors ${
                       groupActive(g) || openMenu === g.key
                         ? "bg-signal/10 text-signal"
                         : "text-gravity/75 hover:bg-soft hover:text-gravity"
@@ -152,7 +217,7 @@ export default function Navigation() {
 
                   {openMenu === g.key && (
                     <div className="animate-pop absolute left-0 top-full pt-2.5">
-                      <div className="w-[460px] rounded-2xl border border-hairline bg-foundation/95 p-2 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+                      <div className="w-[460px] border border-hairline bg-foundation/98 p-2 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.32)] backdrop-blur-xl">
                         <p className="px-3 pb-2 pt-1 text-[11px] font-medium uppercase tracking-[0.18em] text-mist">
                           {g.tagline}
                         </p>
@@ -164,9 +229,9 @@ export default function Navigation() {
                                 key={i.href}
                                 href={localizeHref(i.href)}
                                 onClick={() => setOpenMenu(null)}
-                                className="group/item flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-soft"
+                                className="group/item flex items-start gap-3 px-3 py-3 transition-colors hover:bg-soft"
                               >
-                                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-hairline bg-foundation text-signal transition-colors group-hover/item:border-signal/40">
+                                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center border border-hairline bg-foundation text-signal transition-colors group-hover/item:border-signal/40">
                                   <Icon className="h-[18px] w-[18px]" />
                                 </span>
                                 <span className="min-w-0">
@@ -188,7 +253,7 @@ export default function Navigation() {
 
               <Link
                 href={localizeHref("/work")}
-                className={`rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+                className={`px-3.5 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors ${
                   isActive("/work") ? "bg-signal/10 text-signal" : "text-gravity/75 hover:bg-soft hover:text-gravity"
                 }`}
               >
@@ -206,7 +271,7 @@ export default function Navigation() {
                 <Search className="h-[18px] w-[18px]" />
               </button>
               <button
-                onClick={toggleTheme}
+                onClick={handleThemeToggle}
                 aria-label="Toggle theme"
                 className="rounded-full p-2 text-gravity/70 transition-colors hover:bg-soft hover:text-gravity"
               >
@@ -237,7 +302,7 @@ export default function Navigation() {
               </Link>
               <Link
                 href={localizeHref("/contact")}
-                className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-gravity px-4 py-2 text-sm font-semibold text-foundation transition-transform hover:-translate-y-0.5 hover:bg-signal"
+                className="ml-1 inline-flex items-center gap-1.5 bg-gravity px-4 py-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.06em] text-foundation transition-transform hover:-translate-y-0.5 hover:bg-signal"
               >
                 {t("contact")}
                 <ArrowUpRight className="h-4 w-4" />

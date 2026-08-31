@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Hanken_Grotesk } from "next/font/google";
+import { Outfit, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -13,17 +13,18 @@ import OfflineIndicator from "@/components/OfflineIndicator";
 import PWAUpdatePrompt from "@/components/PWAUpdatePrompt";
 import SplashScreen from "@/components/SplashScreen";
 import ScrollToTop from "@/components/ScrollToTop";
+import AlertBridge from "@xc/ui/AlertBridge";
 
-const display = Fraunces({
+const display = Outfit({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-fraunces",
+  variable: "--font-outfit",
 });
 
-const body = Hanken_Grotesk({
+const mono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-hanken",
+  variable: "--font-geist-mono",
 });
 
 const SITE_URL = "https://xcreativs.com";
@@ -91,7 +92,7 @@ export default async function LocaleLayout({
   ];
 
   return (
-    <html lang={locale} className={`${display.variable} ${body.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html lang={locale} className={`${display.variable} ${mono.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0066CC" />
@@ -112,6 +113,7 @@ export default async function LocaleLayout({
               <Footer />
               <ChatWidget />
               <ScrollToTop />
+              <AlertBridge />
               <AnalyticsScript />
               <PWAUpdatePrompt />
             </NextIntlClientProvider>

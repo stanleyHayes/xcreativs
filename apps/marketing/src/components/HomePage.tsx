@@ -85,24 +85,25 @@ export default function HomePage() {
       {/* Hero */}
       <section className="relative isolate overflow-hidden border-b border-hairline">
         <HeroBackdrop />
-        <div className="relative mx-auto max-w-[1440px] px-6 lg:px-12 py-28 lg:py-44">
+        <div className="relative mx-auto grid min-h-[78dvh] max-w-[1536px] content-end px-6 py-20 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-14 lg:px-[7.5%] lg:py-28">
+          <div>
           <div
-            className="animate-rise inline-flex items-center gap-2 rounded-full border border-hairline bg-foundation/60 px-3.5 py-1.5 text-xs font-medium text-gravity/70 backdrop-blur"
+            className="animate-rise context-label-x"
           >
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
             </span>
-            Sovereign-by-design · National-scale systems
+            Systems / Strategy / Intelligence
           </div>
           <h1
-            className="animate-rise font-display mt-6 max-w-4xl text-[2.7rem] font-semibold leading-[1.02] tracking-tight lg:text-7xl"
+            className="animate-rise font-display mt-8 max-w-5xl text-[3.2rem] font-semibold leading-[0.88] tracking-[-0.075em] sm:text-6xl lg:text-[7.4rem]"
             style={{ animationDelay: "0.08s" }}
           >
             {t("hero")}
           </h1>
           <p
-            className="animate-rise mt-7 max-w-2xl text-lg leading-relaxed text-gravity/65 lg:text-xl"
+            className="animate-rise mt-9 max-w-2xl border-l-2 border-signal pl-5 text-base leading-relaxed text-gravity/65 lg:text-xl"
             style={{ animationDelay: "0.16s" }}
           >
             {t("hero_sub")}
@@ -113,18 +114,27 @@ export default function HomePage() {
           >
             <Link
               href="/work"
-              className="group inline-flex items-center gap-2 rounded-full bg-signal px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-signal/25 transition-transform hover:-translate-y-0.5"
+              className="btn-x group"
             >
               {t("cta_work")}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full border border-gravity/20 px-6 py-3.5 text-sm font-semibold text-gravity transition-colors hover:border-gravity hover:bg-gravity hover:text-foundation"
+              className="btn-x-secondary"
             >
               {t("cta_engage")}
             </Link>
           </div>
+          </div>
+          <aside className="animate-rise mt-14 border-t border-hairline pt-5 lg:mt-0 lg:self-end" style={{ animationDelay: "0.32s" }}>
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-mist">Operating from Accra</p>
+            <p className="mt-3 text-sm leading-relaxed text-gravity/60">Independent technology infrastructure for institutions carrying public and commercial weight.</p>
+            <div className="mt-6 grid grid-cols-2 gap-px bg-hairline">
+              <div className="bg-foundation p-3"><span className="font-display text-2xl font-semibold">01</span><span className="mt-1 block font-mono text-[9px] uppercase tracking-wider text-mist">Strategy</span></div>
+              <div className="bg-foundation p-3"><span className="font-display text-2xl font-semibold">02</span><span className="mt-1 block font-mono text-[9px] uppercase tracking-wider text-mist">Delivery</span></div>
+            </div>
+          </aside>
         </div>
       </section>
 
@@ -141,12 +151,12 @@ export default function HomePage() {
             Operating model
           </p>
           <h2 className="text-2xl lg:text-3xl font-bold mb-10">{t("services_title")}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-px bg-hairline md:grid-cols-2 lg:grid-cols-12">
             {data.services?.map((s) => (
               <Link
                 key={s.Slug}
                 href={`/services/${s.Slug}`}
-                className="group card-x p-6"
+                className="group card-x rounded-none border-0 p-7 lg:col-span-4 lg:[&:nth-child(4)]:col-span-6 lg:[&:nth-child(5)]:col-span-6"
               >
                 <Briefcase className="w-5 h-5 text-signal mb-4" />
                 <h3 className="text-lg font-semibold group-hover:text-signal transition-colors">
@@ -169,12 +179,12 @@ export default function HomePage() {
           </p>
           <h2 className="text-2xl lg:text-3xl font-bold mb-4">{t("labs_title")}</h2>
           <p className="text-gravity/60 mb-10 max-w-xl">{t("labs_sub")}</p>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-px bg-hairline lg:grid-cols-[1.15fr_.85fr]">
             {data.labs?.map((p) => (
               <Link
                 key={p.Slug}
                 href={`/labs/${p.Slug}`}
-                className="group card-x p-8"
+                className="group card-x rounded-none border-0 p-8 lg:p-10"
               >
                 <FlaskConical className="w-5 h-5 text-signal mb-4" />
                 <h3 className="text-xl font-semibold group-hover:text-signal transition-colors">
@@ -197,17 +207,17 @@ export default function HomePage() {
             Field evidence
           </p>
           <h2 className="text-2xl lg:text-3xl font-bold mb-10">{t("dossiers_title")}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-12">
             {data.dossiers?.slice(0, 5).map((d, i) => (
               <Link
                 key={d.Slug}
                 href={`/work/${d.Slug}`}
-                className="group card-x overflow-hidden"
+                className="group card-x overflow-hidden lg:col-span-4 lg:[&:nth-child(1)]:col-span-7 lg:[&:nth-child(2)]:col-span-5"
               >
                 <div className="relative h-40 overflow-hidden">
                   <Image
                     src={MEDIA[i % MEDIA.length]}
-                    alt=""
+                    alt={`Project field study for ${d.Title}`}
                     fill
                     sizes="(max-width: 1024px) 100vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"

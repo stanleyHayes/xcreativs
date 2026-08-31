@@ -45,7 +45,7 @@ export default async function LabsPage() {
         crumbs={[{ label: "Home", href: "/" }, { label: "XCreativs Labs" }]}
       />
       <main className="shell-x py-16">
-        <div className="mt-12 space-y-8">
+        <div className="mt-12 grid gap-6 lg:grid-cols-12">
         {products.length === 0 && (
           <EmptyState
             icon={FlaskConical}
@@ -53,15 +53,16 @@ export default async function LabsPage() {
             description="Lab products will appear here as they move from research into the open."
           />
         )}
-        {products.map((p) => (
+        {products.map((p, index) => (
           <Link
             key={p.Slug}
             href={`/labs/${p.Slug}`}
-            className="group card-x block p-8"
+            className="group card-x block p-8 lg:col-span-6 lg:[&:nth-child(3n+1)]:col-span-7 lg:[&:nth-child(3n+2)]:col-span-5"
           >
             <div className="flex items-start gap-6">
-              <div className="hidden sm:flex items-center justify-center w-16 h-16 rounded bg-soft border border-hairline shrink-0">
-                <FlaskConical className="w-6 h-6 text-signal" />
+              <div className="hidden w-16 shrink-0 border-r border-hairline pr-5 sm:block">
+                <span className="font-mono text-[10px] font-semibold text-signal">LAB/{String(index + 1).padStart(2, "0")}</span>
+                <FlaskConical className="mt-5 h-7 w-7 text-signal" />
               </div>
               <div>
                 <h2 className="text-2xl font-semibold group-hover:text-signal transition-colors">
@@ -71,7 +72,7 @@ export default async function LabsPage() {
                 <p className="mt-3 text-gravity/60">{p.ProblemStatement}</p>
                 <div className="mt-4 flex gap-2">
                   {p.Sectors?.map((s: string) => (
-                    <span key={s} className="text-xs px-2 py-1 rounded bg-soft border border-hairline text-gravity/60">
+                    <span key={s} className="chip-x rounded-none font-mono text-[9px] uppercase tracking-wider">
                       {s}
                     </span>
                   ))}

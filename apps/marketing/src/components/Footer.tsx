@@ -87,24 +87,24 @@ export default function Footer() {
   };
 
   return (
-    <footer className="site-footer-x bg-grain relative overflow-hidden border-t">
+    <footer className="relative overflow-hidden border-t border-signal bg-[#080c13] text-white">
       <div className="site-footer-rule-x h-px w-full opacity-80" />
 
       <div className="relative mx-auto max-w-[1440px] px-5 lg:px-10">
-        <div className="grid gap-10 border-b border-hairline py-12 dark:border-white/10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.65fr)] lg:py-14">
+        <div className="grid gap-14 border-b border-white/10 py-16 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.7fr)] lg:py-20">
           <div>
             <Link href={localizeHref("/")} className="group flex items-center gap-2.5">
               <Image src="/logo.svg" alt="XCreativs" width={34} height={34} className="h-[34px] w-[34px]" />
-              <span className="font-display text-2xl font-semibold tracking-tight">XCreativs</span>
+              <span className="font-display text-2xl font-semibold tracking-[-0.05em]">XCreativs</span>
             </Link>
-            <p className="site-footer-muted-x mt-5 max-w-md text-sm leading-relaxed">{t("tagline")}</p>
+            <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/55">{t("tagline")}</p>
 
             <div className="mt-6 flex flex-wrap gap-2">
-              <span className="site-footer-pill-x inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-medium tracking-wide shadow-sm">
+              <span className="inline-flex items-center gap-1.5 border border-white/10 px-3 py-1.5 font-mono text-[9px] font-medium uppercase tracking-[0.1em] text-white/60">
                 <ShieldCheck className="h-3.5 w-3.5 text-signal" />
                 {t("sovereignty")}
               </span>
-              <span className="site-footer-pill-x inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-medium tracking-wide shadow-sm">
+              <span className="inline-flex items-center gap-1.5 border border-white/10 px-3 py-1.5 font-mono text-[9px] font-medium uppercase tracking-[0.1em] text-white/60">
                 <Network className="h-3.5 w-3.5 text-signal" />
                 {t("bilingual")}
               </span>
@@ -112,7 +112,7 @@ export default function Footer() {
 
             <Link
               href={localizeHref("/contact")}
-              className="site-footer-cta-x mt-7 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-transform hover:-translate-y-0.5"
+              className="mt-8 inline-flex items-center gap-1.5 bg-white px-4 py-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#080c13] transition-transform hover:-translate-y-0.5 hover:bg-signal hover:text-white"
             >
               {t("contact")}
               <ArrowUpRight className="h-4 w-4" />
@@ -124,7 +124,7 @@ export default function Footer() {
               const TitleIcon = col.icon;
               return (
                 <div key={col.title}>
-                  <p className="site-footer-heading-x mb-4 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  <p className="mb-5 flex items-center gap-2 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-white/38">
                     <TitleIcon className="h-3.5 w-3.5 text-signal" />
                     {col.title}
                   </p>
@@ -135,7 +135,7 @@ export default function Footer() {
                         <li key={l.href}>
                           <Link
                             href={localizeHref(l.href)}
-                            className="site-footer-link-x flex items-center gap-2.5 text-sm transition-colors"
+                            className="flex items-center gap-2.5 text-sm text-white/58 transition-colors hover:text-signal"
                           >
                             <LinkIcon className="site-footer-link-icon-x h-4 w-4 transition-colors" />
                             {l.label}

@@ -210,7 +210,7 @@ self.addEventListener('fetch', (event) => {
     case 'api':
       // Only cache safe API calls (GET requests to certain endpoints)
       event.respondWith(
-        networkFirst(request, API_CACHE, null).catch((err) => {
+        networkFirst(request, API_CACHE, null).catch(() => {
           // Return a JSON error for failed API calls
           return new Response(
             JSON.stringify({ error: 'You are offline. This data is not cached.' }),
@@ -244,7 +244,7 @@ async function processFormSubmissions() {
       if (response.ok) {
         await db.delete('formSubmissions', submission.id);
       }
-    } catch (err) {
+    } catch {
       // Will retry on next sync
     }
   }
